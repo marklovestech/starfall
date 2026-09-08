@@ -1,0 +1,1747 @@
+
+
+                        TABLE OF CONTENTS
+
+
+                                                  Page
+Chapter 1           Introduction to STARFALL
+     Introduction                                 1-1
+                                                          
+Chapter 2           Play of the Game
+     The opening scene                            2-1
+     The Major Actions                            2-2 to 2-3
+     Useful Concepts                              2-3 to 2-4
+
+Chapter 3           Maps and Map Control
+     World Map                                    3-1 to 3-2
+     Sector Map                                   3-2 to 3-3
+     Block Text Screen                            3-3 to 3-4     
+
+Chapter 4           Commands
+     Resource Window                              4-1 to 4-3
+     Trading                                      4-3 to 4-4
+     Exploration                                  4-4 to 4-6
+     Extraction                                   4-6 to 4-7
+     Development                                  4-8 to 4-9
+     Refinement                                   4-9 to 4-11
+     Production                                   4-11 to 4-12
+     Transportation                               4-13 to 4-14
+     Pending                                      4-14 to 4-15
+     Log                                          4-15
+     Help                                         4-16
+     Base                                         4-16 to 4-17
+     Quitting the game                            4-17
+     Saving the game                              4-17 to 4-18
+     Loading a world                              4-18
+     World inventory                              4-18 to 4-19
+     Time Control                                 4-19
+
+Chapter 5           World Creation
+     Generating New Worlds                        5-1 to 5-2
+
+.PAŠ
+
+                        TABLE OF CONTENTS
+
+
+                                                  Page
+Chapter 6           Warnings and Hints
+     Warnings and Hints                           6-1
+
+Appendix A          Installation Instructions
+     Requirements                                 A-1
+     Installing STARFALL onto a Ramdisk           A-2
+     Install - Getting Started                    A-3
+
+Appendix B          Tables
+     Transportation                               B-1
+     Detection Percentages                        B-2
+     Detection Equipment Speed                    B-2
+     Extraction Paramenters                       B-3
+     Extraction Equipment Speeds                  B-3
+     Resource Development Parameters              B-4
+     Tool Development Speeds                      B-4
+     Resource Refinement Parameters               B-5
+     Refinery Speeds                              B-5
+     Production Requirements                      B-6 to B-13
+
+Glossary                                          G-1 to G-3
+
+Index                                             I-1                                             
+
+.PAŠ.FÏ                         Pagå 1-#
+.PN 1
+
+
+
+
+
+
+
+
+
+                            CHAPTER 1
+
+
+                    Introductioî tï STARFALL
+
+INTRODUCTION‚ 
+
+    Witè  thå advenô oæ fasteò thaî lighô travel¬  thå peoplå  oæ 
+thå  eartè havå founä relieæ froí thå pressureó oæ overpopulatioî 
+anä  depletioî  oæ naturaì  resources®   Thousandó  oæ  automatiã 
+probeó  havå  beeî senô  tï thå mosô promisinç staò  systems¬  iî 
+hopeó  oæ findinç habitablå planets.
+
+    Oî  Earth¬  carefullù selecteä teamó arå traineä tï  colonizå     
+theså  planets¬  explorinç  anä preparinç theí  foò  thå  teeminç 
+millionó  whï  wilì follow®   Iî ordeò tï ensurå  success¬  everù 
+colonisô  musô havå á workinç knowledgå oæ geology¬  mining¬  anä 
+agriculture®   Thå  directoró  oæ  theså  teamó  arå  hand-pickeä 
+specialists®   Theù musô bå ablå tï coordinatå thå effortó oæ thå 
+foundlinç colonù iî growinç food¬ buildinç shelter¬ anä explorinç 
+thå vasô reacheó oæ theiò ne÷ home.
+
+    Aó  onå  oæ thå memberó oæ thió elitå  group¬  yoõ  anä  youò 
+personallù choseî teaí oæ engineers¬  technicians¬  anä colonistó 
+havå  beeî assigneä tï á newlù discovereä planet®   Yoõ havå onlù 
+thå mapó madå bù thå roboô probes¬ thå equipmenô yoõ requisition¬ 
+anä  youò poweró oæ judgemenô tï aiä you®   Yoõ colonù  maù  gro÷ 
+intï á statå thaô rivaló motheò Earth¬ oò iô maù bå remembereä aó 
+onå  oæ thå greaô disasteró oæ alì time®   Iô dependó oî ho÷ welì 
+yoõ caî allocatå youò manpower¬  equipment¬ anä naturaì resourceó 
+tï thå taskó yoõ musô perform.
+.PAŠ.FÏ                         Pagå 2-#
+.PÎ 1
+
+
+
+
+
+                            CHAPTEÒ 2
+
+
+                        Play of the Game
+
+The opening scene:
+
+    Wheî thå gamå begins¬ yoõ arå aboarä aî interstellaò lineò iî 
+orbiô  abouô á newlù discovereä planet®   Alsï oî boarä arå  manù 
+potentiaì  colonists¬  whï arå awaitinç youò worä  tï  disembark®  
+Thå  cargï bayó arå fulì oæ alì manneò oæ equipmenô anä supplies®  
+Yoõ  musô  paù  thå  cosô  oæ  transportatioî  oæ  anythinç   yoõ 
+requisition¬ includinç passagå oæ colonists®  Youò initiaì budgeô 
+ió  ¶  millioî  credits®    Withiî  thió  budget¬   therå  ió  nï 
+restrictioî oî thå resourceó yoõ takå tï thå planeô witè you.
+
+    However¬  beforå thå lineò wilì lanä anythinç planetside¬ yoõ 
+musô  establisè  á base®   Alì equipmenô thaô yoõ requisitioî  ió 
+depositeä  aô youò base®   Becauså thå captaiî oæ thå  lineò  haó 
+orderó  tï assisô yoõ iî anù waù possible¬  hå wilì permiô yoõ tï 
+changå thå locatioî oæ youò maiî baså whilå hå ió iî orbit®   Anù 
+furtheò  supplieó  yoõ  requisitioî arå  placeä  aô  thå  currenô 
+locatioî  oæ  youò  base¬  buô  otheró  remaiî  aô  thå  originaì 
+location®   Merchanô  traderó  wilì  noô  permiô  thå  hiatuó  oæ 
+changinç á baså whilå theù arå iî orbit» alì itemó tradeä musô bå 
+takeî froí oò depositeä aô thå currenô locatioî oæ thå base.
+
+    Wheî   yoõ   arå  satisfieä  witè  thå  supplieó   yoõ   havå 
+requisitioned¬  oò thå interstellaò lineò leaves¬ whicheveò comeó 
+first¬  yoõ  musô  begiî thå colonizatioî  iî  earnest®   Highesô 
+prioritù  shoulä  bå giveî tï thå basiã needó oæ  thå  colonists¬ 
+sucè  aó  food®   Findinç anä developinç arablå lanä foò  farminç 
+wilì bå easiesô neaò thå temperatå latitudes®  Oncå starvatioî ió 
+nï  longeò  aî  imminenô danger¬  yoõ wilì wisè  tï  exploiô  thå 
+mineraì  wealtè  oæ  thå  newfounä  planet®    Thió  beginó  witè 
+exploratioî anä culminateó witè thå fabricatioî oæ ne÷ resources®  
+Yoõ may¬  oæ course¬  tradå awaù surpluó materialó tï reducå youò 
+debô  tï motheò Earth¬  ratheò thaî consuminç everythinç  iî  thå 
+productioî phase® 
+
+    Thå  gamå  endó wheî alì oæ youò colonistó havå dieä oò  wheî 
+yoõ chooså tï terminatå it¬  whicheveò comeó first®   Scorinç  ió 
+baseä  oî thå finaì debô leveì tï Earth®   Bonuseó arå giveî  foò 
+thå numbeò oæ livinç colonists¬  thå numbeò oæ majoò constructioî 
+projects¬ anä foò alì equipmenô anä extracteä mineraló presenô aô 
+thå enä oæ thå game® 
+.PAŠ
+
+EXPLORE
+
+    Iæ  thå  colonù ió tï prosper¬  iô musô exploiô thå  untappeä 
+resourceó  oæ  thå ne÷ planet®   Tï dï  so¬  thå  colonistó  musô 
+explorå  faò anä widå witè speciaì detectinç equipmenô untiì  thå 
+necessarù  resourceó arå found®   Thå differenô propertieó oæ thå 
+variouó resourceó makå theí morå likelù tï bå founä witè onå typå 
+oæ equipmenô thaî another®   Thå colonù cannoô afforä tï overlooë 
+valuablå resourceó bù failinç tï explorå á sectoò thoroughly¬ noò 
+caî  iô wastå timå anä energù bù repeatedlù  searchinç  worthlesó 
+territory®   You¬  aó colonizatioî director¬  musô decidå wheî tï 
+keeğ looking¬ anä wheî tï givå uğ anä movå on® 
+
+EXTRACT
+
+    Eveî wheî resourceó arå found¬ theù remaiî uselesó untiì theù 
+arå  extracteä  froí thå ground®   Thå oreó wilì becomå  thå  ra÷ 
+materialó  foò thå colonù tï makå everythinç iô needs®   Althougè 
+manù  differenô mineraì depositó maù havå beeî  discovered¬  you¬ 
+thå director¬  musô decidå whicè arå morå cruciaì anä devotå youò 
+personneì anä mininç equipmenô tï those®   Carefuì planninç  wilì 
+bå  necessarù  tï foreseå whaô wilì bå needeä iî thå  future¬  iî 
+ordeò tï prevenô á supplù shortagå oò surplus.
+
+DEVELOP
+
+    Thå colony'ó initiaì supplieó wilì noô lasô forever®  Surfacå 
+resourceó  maù  bå  developeä intï á forí usablå  bù  thå  colonù 
+withouô havinç tï bå extracted¬  refined¬ oò produced®  Deciduouó 
+forest¬  coniferouó  forest¬  anä junglå wilì alì  yielä  timber® 
+Heath¬  prairie¬  steppe¬  anä  savannaè  caî bå  developeä  intï 
+farmlanä foò thå growinç anä harvestinç oæ crops.
+
+REFINE
+
+    Somå  mineraì  resourceó  maù bå useä iî thå  forí  theù  arå 
+extracteä  froí  thå  ground¬  buô mosô wilì havå tï  bå  refineä 
+beforå theù caî bå useä tï satisfù thå needó oæ thå colony®   Thå 
+mosô  commoî metalliã oreó arå oxideó  anä  sulfides®   Sometimeó 
+theù  occuò together¬  buô á giveî metaì wilì preferentiallù bonä 
+tï onå oò thå other®   Becauså oæ this¬ processinç aî orå througè 
+á refinerù oæ thå appropriatå typå ió mucè morå efficient®   Somå 
+oreó occuò aó onlù oxidå oò sulfide»   theså musô bå refineä witè 
+thå correcô separatioî procesó iî ordeò tï succeeä aô all®   Fueì 
+sourceó  musô alsï bå refineä intï synthetiã forí foò uså iî  alì 
+typeó oæ equipment.
+.PAŠ
+
+PRODUCE
+
+    Productioî  ió  thå  finaì steğ iî  buildinç  equipmenô  froí 
+naturaì resources®   Yoõ maù producå anythinç thaô yoõ caî buù aô 
+thå beginninç oæ thå game¬  anä manù thingó thaô yoõ cannot®   Iî 
+ordeò  tï  successfullù producå aî item¬  yoõ musô havå  alì  thå 
+necessarù  materialó collecteä aô onå sitå beforå  executinç  thå 
+command®   Failurå  tï  meeô thió requiremenô wilì givå aî  erroò 
+messagå indicatinç thaô materialó arå lacking® 
+
+
+TRADE
+
+    Wheî time¬  personnel¬  oò resourceó arå iî shorô supplù  foò 
+equipmenô  thaô  yoõ  need¬  yoõ maù wisè tï emploù tradå  aó  aî 
+alternative®   Á tradeò wilì noô permiô yoõ tï buù oî credit¬  sï 
+yoõ musô selì hií resourceó and/oò equipmenô aô leasô aó valuablå 
+aó thå thingó yoõ wisè tï buy®  (Aô thå beginninç oæ thå game¬ oæ 
+course¬  yoõ  havå  nothinç tï trade®   Aô thió  point¬  yoõ  maù 
+purchaså anythinç withiî thå budgeô giveî yoõ bù Earth.©   Withiî 
+thió limit¬ yoõ maù purchaså anythinç thå tradeò has¬ anä yoõ maù 
+selì  hií anythinç smalì enougè tï bå transporteä uğ tï hió ship®  
+Alì itemó thaô yoõ wisè tï selì musô bå aô youò designateä  base¬ 
+anä  anythinç yoõ buù wilì appeaò aô youò base®   Iæ yoõ summoî á 
+trader¬  hå  wilì chargå á substantiaì feå foò cominç ouô oæ  hió 
+way.
+
+TRANSPORT
+
+    Iô ió unlikelù thaô refineä ores¬  equipment¬  oò peoplå wilì 
+alwayó  bå exactlù wherå theù arå needed®   Manù oæ  thå  actionó 
+describeä  sï faò wilì requirå yoõ tï transporô whaô yoõ neeä  tï 
+thå  sitå wherå yoõ wanô tï perforí thå action®   Tï dï  so¬  yoõ 
+musô  selecô  á  vehiclå anä determinå itó cargï  anä  passengeró 
+usinç thå groupinç command®  Yoõ musô ploô thå courså thå vehiclå 
+takes¬ sï yoõ shoulä avoiä unnecessarù backtracking.
+
+
+GROUP
+
+    Thió  ió  á  miscellaneouó commanä thaô ió  verù  usefuì  foò 
+simplifyinç  alì  oæ  thå  otheò  commands®   Iô  allowó  yoõ  tï 
+designatå  á  hierarchù oæ ownershiğ betweeî  variouó  pieceó  oæ 
+equipmenô  anä  groupó  oæ people®   Passengeró anä  cargï  oî  á 
+vehiclå arå groupeä undeò thaô vehicle®   Equipmenô musô havå thå 
+necessarù  operatoró anä fueì groupeä undeò them®   Groupinç fooä 
+undeò  peoplå  ió necessarù tï makå surå thå  computeò  wilì  noô 
+allo÷  anyonå tï starve®   Groupó caî bå manipulateä bù thå otheò 
+commandó aó singlå entities¬ whicè ió simpleò thaî accountinç foò 
+everù iteí thaô ió needeä foò aî action.
+.PAŠ
+
+SELECTION
+
+    Foò  everù actioî yoõ initiatå yoõ wilì bå prompteä  foò  thå 
+equipmenô  yoõ  wisè  tï  use®   Onlù itemó aô  thå  toğ  oæ  thå 
+hierarchù arå selectable® Wheî yoõ selecô aî iteí withiî á group¬ 
+anythinç groupeä underneatè iô ió alsï selected®   So¬  tï selecô 
+aî entirå grouğ oæ itemó tï perforí aî action¬  simplù selecô thå 
+toğ  iteí  oæ thå group®  Takå notå thaô anù actioî yoõ  wisè  tï 
+perforí  requireó  thaô yoõ havå sufficienô personneì presenô  aô 
+thå  sitå  iî ordeò tï operatå thå equipment®   Thereforå  iô  ió 
+importanô tï includå peoplå iî youò selectioî process.
+
+COMPRESS/EXPAND
+
+    Wheî groupinç anä selectinç itemó foò variouó actionó iô wilì 
+bå necessarù tï breaë uğ multiplå items®  Thió allowó itemó tï bå 
+purchaseä  oò transporteä iî bulë anä separateä lateò  foò  otheò 
+actions®   Aô otheò times¬  manù entrieó oæ thå samå typå oæ iteí 
+wilì  appeaò iî thå resourcå window®   Yoõ maù reducå thå clutteò 
+oæ entrieó iî thå windo÷ bù compressinç likå itemó intï á  singlå 
+entry.
+.PAŠ.FÏ                         Pagå 3-#
+.PÎ 1
+
+
+
+
+
+
+
+
+
+                            CHAPTEÒ 3
+
+
+                      Mapó anä Mağ Control
+
+WORLÄ MAP
+
+    Thå maiî displaù showó thå mağ oæ thå newlù discovereä world® 
+Bluå areaó arå oceans¬  lakes¬  anä inlanä seas®  Greeî areaó arå 
+continents¬  islands¬ anä otheò lanä masses®  Reä sectoró oî lanä 
+masseó indicatå thå presencå oæ humaî resources»   youò maiî baså 
+ió markeä witè á blinkinç reä dot.
+
+    Thå  equatoò  divideó  thå  mağ intï  northerî  anä  southerî 
+hemispheres®   Thå  temperatå latitudeó arå markeä  witè  anotheò 
+paiò  oæ horizontaì lines®   Iæ thå temperatå latitudeó arå closå 
+tï thå equator¬  thå planeô haó á coldeò climatå  thaî   Earth's® 
+Wheî  thå temperatå latitudeó arå neaò thå poles¬  thå equatoriaì 
+regionó  arå  abnormallù hot®   Thå maiî baså shoulä  usuallù  bå 
+placeä neaò thå temperatå latitudes¬  wherå arablå lanä ió easieò 
+tï finä anä develop.
+
+    Locatioî  oî thå worlä mağ ió indicateä bù á reä opeî  squarå 
+cursor®   Thå centeò ió markeä witè á whitå dot¬  whicè pinpointó 
+thå blocë thaô yoõ woulä enteò iæ yoõ initiateä aî  action®   Uså 
+thå  cursoò  keyó tï movå á blocë aô á time®   Holdinç  dowî  thå 
+shifô  aô  thå  samå timå moveó thå cursoò ¸ blockó  aô  á  time® 
+Becauså thå worlä ió á sphere¬ yoõ maù movå freelù ofæ eitheò thå 
+righô  (east©  oò lefô (west© edgå oæ thå map»   thå cursoò  wilì 
+reappeaò aô thå otheò edge®   However¬  thå mağ convergeó aô  thå 
+poles¬ sï yoõ maù noô gï beyonä thå northerî oò southerî edges.
+
+    Tï  helğ  yoõ  determinå blocë coordinateó  wheî  movinç  thå 
+cursor¬  therå  arå tiã markó oî thå edgeó oæ thå map®   Thå  tiã 
+markó  arå  ¸ blockó apart®   Iî addition¬  thå locatioî  oæ  thå 
+centeò  oæ  thå  cursoò  ió displayeä iî  blocë  coordinateó  anä 
+longitudå anä latitude®   Tï zooí iî anä studù thå sectoò defineä 
+bù thå cursoò iî detail¬ strikå thå spacå bar.
+.PAŠ
+
+World Map Commands
+
+  Command     Description/Purpose
+-----------   --------------------------------------------------
+     F2       Enter the trading mode.
+     F9       Examine the World Pending List.
+    F10       Examine the World Log List.
+      l       Load a world from disk.
+      s       Save the current world to disk.
+      h       Enter the General Help Utility mode.
+      t       Enter Time Expansion/Compression mode.
+      b       Change the current location of the colonist BASE.
+      i       Examine the World Inventory List.
+      q       Quit and exit to the Main Menu.
+<SPACE BAR>   Display Sector Map for current area.
+   <up>       Moves the 'viewport' 1 block NORTH
+  <down>      Moves the 'viewport' 1 block SOUTH
+  <left>      Moves the 'viewport' 1 block EAST
+  <right>     Moves the 'viewport' 1 block WEST
+<Shift up>    Moves the 'viewport' 8 blocks NORTH
+<Shift down>  Moves the 'viewport' 8 blocks SOUTH
+<Shift left>  Moves the 'viewport' 8 blocks EAST
+<Shift right> Moves the 'viewport' 8 blocks WEST
+
+Oncå  thå 'viewport§ haó beeî positioneä oveò thå  desireä  area¬ 
+pressinç  thå  <SPACÅ BAR¾ wilì displaù thå Sectoò Mağ  foò  thaô 
+sector.
+
+SECTOÒ MAP
+
+    Thå  sectoò  mağ ió aî enlargemenô oæ á portioî oæ thå  worlä 
+map¬  reacheä bù strikinç thå spacå bar®   Tï returî tï thå worlä 
+map¬  hiô  return®   Thå  sectoò showó á squarå sectoò oæ ¹  Ø  ¹ 
+blocks¬  witè thå locatioî oæ youò "viewport¢ iî thå center®  Yoõ 
+maù movå á blocë aô á timå usinç thå cursoò keys®  Notå thaô youò 
+viewporô wilì remaiî iî thå centeò anä thå terraiî wilì shifô  aó 
+yoõ move.
+
+    Iæ  yoõ  havå  performeä  aî  actioî iî  thå  blocë  iî  youò 
+'viewport'¬  yoõ  maù  geô detaileä informatioî oî thå  blocë  bù 
+strikinç  thå  spacå  bar®   Thió placeó yoõ iî  thå  blocë  texô 
+screen.
+.PAŠ
+
+Sector Map Commands
+
+  Command     Description/Purpose
+-----------   --------------------------------------------------
+    F1        Display the World Map
+    F3        Enter Block Screen and begin an EXPLORE command.
+    F4        Enter Block Screen and begin a EXTRACT command.
+    F5        Enter Block Screen and begin a DEVELOP command.
+    F6        Enter Block Screen and begin a REFINE command.
+    F7        Enter Block Screen and begin a PRODUCE command.
+    F8        Enter Block Screen and begin a TRANSPORT command.
+    F9        Enter Block Screen and edit the Block Pending List.
+   F10        Enter Block Screen and edit the Block Log List.
+<SPACE BAR>   View Block Screen for current block.
+ <RETURN>     Display the World Map
+     b        Change the current location of the colonist BASE.
+   <up>       Moves the 'viewport' square 1 block NORTH
+  <down>      Moves the 'viewport' square 1 block SOUTH
+  <left>      Moves the 'viewport' square 1 block EAST
+  <right>     Moves the 'viewport' square 1 block WEST
+
+Oncå  thå desireä blocë haó beeî selected¬  pressinç  thå  <SPACÅ 
+BAR¾  wilì opeî á windo÷ oî thaô block¬  anä thå BLOCË SCREEÎ foò 
+thaô blocë wilì bå displayed.
+
+BLOCË TEXÔ SCREEN
+
+    Thå blocë texô screeî giveó detaileä informatioî oî aî block®  
+Thå  screeî  ió  displayeä bù strikinç thå  spacå  baò  wheî  thå 
+desireä  blocë  ió iî thå sectoò maù viewport®   Tï  displaù  thå 
+sectoò mağ again¬ hiô return.
+
+    Thió  screeî consistó oæ á headeò sectioî anä threå  windows® 
+Thå  headeò informatioî includeó twï timå clocks®   Thå clocë  iî 
+thå centeò oæ thå screeî displayó gamå timå anä date®   Thå clocë 
+iî  thå  uppeò righô hanä corneò showó reaì time¬  iî  accordancå 
+witè thå internaì machinå clock®   Aó oî thå worlä map¬  locatioî 
+ió  giveî   iî termó oæ botè blocë coordinateó anä  latitudå  anä 
+longitude®   Climatiã informatioî oî altitude¬  temperature¬  anä 
+moisturå  ió includeä primarilù foò determinatioî oæ  suitabilitù 
+foò farming.
+
+    Thå  toğ  windo÷  ió  thå  resourcå  window®   Iô  listó  alì 
+resourceó  availablå  tï  yoõ iî  thió  block¬  includinç  nativå 
+vegetation¬  equipment¬  personnel¬  anä discovereä minerals® Thå 
+middlå windo÷ ió thå pendinç list®   Anù actioî initiateä iî thió 
+blocë  buô noô yeô completeä appearó iî thå locaì  pendinç  list®  
+Thå  bottoí windo÷ ió thå locaì log®   Actionó completeä iî  thió 
+blocë  appeaò here¬  aó welì aó iî thå globaì systeí  log¬  whicè 
+includeó reportó froí alì blockó oî thå planet.
+.PAŠ
+
+Blocë Screeî Commands
+
+  Commanä     Description/Purpose
+-----------   --------------------------------------------------
+    F1        Display the World Map
+    F3        Begin an EXPLORE command.
+    F4        Begin a EXTRACT command.
+    F5        Begin a DEVELOP command.
+    F6        Begin a REFINE command.
+    F7        Begin a PRODUCE command.
+    F8        Begin a TRANSPORT command.
+    F9        Edit the Block Pending List.
+   F10        Edit the Block Log List.
+ <RETURN>     Close Block Screen Window and display Sector Map.
+.PAŠ.FÏ                         Pagå 4-#
+.PÎ 1
+
+
+
+
+
+
+
+
+
+                            CHAPTER 4
+
+
+                          The Commands
+
+Resource Window
+
+Purpose:
+--------
+   Foò  thå  majoò actioî commandó yoõ wilì bå requireä  tï  makå 
+decisionó  regardinç whaô equipmenô anä naturaì resourceó tï  uså 
+iî performinç thå action® Yoõ maù neeä tï manipulatå thå itemó iî 
+thå  resourcå  lisô iî ordeò tï makå thå correcô combinationó  oæ 
+itemó foò thå variouó selections.
+
+
+Explanations/Definitions:
+-------------------------
+GROUP
+    Thió  ió  á  miscellaneouó commanä thaô ió  verù  usefuì  foò 
+simplifyinç  alì  oæ  thå  otheò  commands®   Iô  allowó  yoõ  tï 
+designatå  á  hierarchù oæ ownershiğ betweeî  variouó  pieceó  oæ 
+equipmenô  anä  groupó  oæ people®   Passengeró anä  cargï  oî  á 
+vehiclå arå groupeä undeò thaô vehicle®   Equipmenô musô havå thå 
+necessarù  operatoró anä fueì groupeä undeò them®   Groupinç fooä 
+undeò  peoplå  ió necessarù tï makå surå thå  computeò  wilì  noô 
+allo÷  anyonå tï starve®   Groupó caî bå manipulateä bù thå otheò 
+commandó aó singlå entities¬ whicè ió simpleò thaî accountinç foò 
+everù iteí thaô ió needeä foò aî action.
+
+
+COMPRESS/EXPAND
+    Wheî groupinç anä selectinç itemó foò variouó actionó iô wilì 
+bå necessarù tï breaë uğ multiplå items®  Thió allowó itemó tï bå 
+purchaseä  oò  transporteä iî bulë anä separateä lateò foò  otheò 
+actions®   Aô otheò times¬  manù entrieó oæ thå samå typå oæ iteí 
+wilì appeaò iî thå resourcå window®   Yoõ maù reducå thå  clutteò 
+oæ  entrieó iî thå windo÷ bù compressinç likå itemó intï á singlå 
+entry.
+.PAŠ
+
+SELECTION
+    Foò  everù  actioî yoõ initiatå yoõ wilì bå prompteä foò  thå 
+equipmenô  yoõ  wisè  tï  use®   Onlù itemó aô  thå  toğ  oæ  thå 
+hierarchù arå selectable® Wheî yoõ selecô aî iteí withiî á group¬ 
+anythinç groupeä underneatè iô ió alsï selected®   So¬  tï selecô 
+aî entirå grouğ oæ itemó tï perforí aî action¬  simplù selecô thå 
+toğ  iteí  oæ thå group®  Takå notå thaô anù actioî yoõ  wisè  tï 
+perforí  requireó thaô yoõ havå sufficienô personneì  presenô  aô 
+thå  sitå  iî ordeò tï operatå thå equipment®   Thereforå  iô  ió 
+importanô tï includå peoplå iî youò selectioî process.
+
+Manipulation Commands:
+
+<up>          Move the cursor up one item in the resource list.
+<down>        Move the cursor down one item in the resource list.
+<Home>        Move the cursor to the top of the resource list.
+<End>         Move the cursor to the bottom of the resource list.
+<PgUp>        Move the cursor one screen page down ion the list.
+<PgDn>        Move the cursor on screen page up in the list.
+
+« (Plus)      Thió switcheó thå positionó iî thå resourcå list¬ oæ              
+              thå  currenô  iteí anä thå iteí oî thå  samå  leveì              
+              belo÷  it®   Thå  iteí thaô beginó aó  thå  currenô              
+              item¬ remainó thå currenô item.
+
+- (Minus)     Thió  switcheó thå positionó iî thå resourcå  list¬ 
+              of thå currenô iteí anä thå iteí oî thå samå  leveì              
+              abovå it®  Thå iteí thaô begaî aó thå currenô item¬              
+              remainó thå currenô item.
+Compress
+<Del¾         Wheî  therå  ió morå thaî onå iteí  entrù  oæ  likå 
+              resourceó  aô thå samå level¬  theù maù bå  clumpeä 
+              togetheò  witè thió command®  Thå itemó musô  occuò 
+              sequentiallù  iî  thå resourcå  list®   Thå  cursoò 
+              shoulä bå placeä oî thå iteí yoõ wisè tï  designatå 
+              aó thå currenô item® Onlù thå currenô iteí maù havå 
+              otheò itemó subordinatå tï it.
+Expand
+<Ins¾         Wheî á quantitù oæ á resourcå ió listeä aó onå entrù 
+              iî  thå resourcå list¬  thió commanä wilì breaë  uğ 
+              thå originaì iteí entrù intï twï iteí entries®  Yoõ 
+              wilì bå prompteä foò thå numbeò oæ thå unitó oæ thå 
+              resourcå  yoõ  wanô tï separatå out®  Notå thaô  iî 
+              ordeò  tï typå numberó oî thå numeriã keù  paä  yoõ 
+              musô presó Nuí Lock®  Also¬  dï noô forgeô tï presó 
+              Nuí  Locë agaiî wheî yoõ arå finisheä enterinç  thå 
+              amount®   Foò   thió  reasoî  iô  ió  usuallù  morå 
+              convenienô tï uså thå numberó acrosó thå toğ oæ thå 
+              keyboard® Alì itemó groupeä undeò thå originaì iteí 
+              entrù  wilì staù witè thå remaininç resources®  Thå 
+              cursoò ió lefô oî thå remaininç resources.
+.PAŠ
+
+Grouping Commands:
+
+<Shifô Right¾ Thió commanä wilì attempô tï grouğ thå currenô iteí 
+              undeò thå previouó iteí aô thå samå leveì abovå it®  
+              Iæ  therå  arå otheò itemó subordinatå tï thå  iteí 
+              above¬  thå  placemenô  oæ thå currenô iteí  beforå 
+              thió  commanä ió executed¬  musô bå directlù  afteò 
+              thå lasô subordinatå iteí tï thå abovå item.
+
+<Shifô  Left¾ Thió commanä wilì attempô tï movå thå currenô iteí 
+              ouô onå leveì (i.e®  ungrouğ thå item)®   Anù itemó 
+              subordinatå   tï  thå  currenô  iteí  wilì   remaiî 
+              subordinatå tï it.
+
+Selection Commands:
+
+<right¾       Thió commanä wilì selecô thå currenô iteí anä  alì               
+              itemó  subordinatå  tï  iô foò uså iî  thå  currenô 
+              function®   Noteº  Thå actuaì removaì oæ itemó froí 
+              thå  availablå  resourcå lisô wilì noô  takå  placå 
+              untiì  selectioî ió complete®   Á coloò changå wilì 
+              indicatå thaô aî iteí haó beeî selected.
+
+<left¾        Thió  commanä  unselectó aî  iteí  thaô  haó  beeî 
+              selected®   Thió workó onlù prioò tï completinç thå 
+              selectioî   phase®   Thió  commanä  wilì  bå   useä 
+              primarilù  wheî  á mistakå iî  selectioî  haó  beeî 
+              made.
+
+<RETURN¾      Wheî  thió keù ió presseä thå selectioî  phaså  ió 
+              completå  anä  selecteä resourceó wilì  bå  removeä 
+              froí thå availablå resourcå list.
+
+
+TRADING
+
+Purpose:
+--------
+    Initiallù tradinç ió ho÷ yoõ acquirå alì oæ thå resourceó yoõ 
+need®   Afteò     thå initiaì purchaseó arå made¬  tradinç serveó 
+aó  á vehiclå bù whicè yoõ     maù reducå youò debô tï Earth¬  oò 
+acquirå additionaì resources.
+.PA Š
+
+Access/Scope:
+-------------
+    Tradinç  maù bå initiateä froí anywherå oî thå worlä  mağ  oò 
+froí  eitheò  thå sectoò mağ oò blocë texô screeî oæ  youò  base®  
+Yoõ  musô  establisè á baså beforå yoõ caî  trade®   Becauså  thå 
+initiaì tradinç actioî serveó tï geô yoõ started¬  yoõ maù changå 
+thå  locatioî  oæ  youò  baså  durinç  thió  speciaì  case®   Foò 
+subsequenô  tradinç actionó yoõ maù noô changå youò baså whilå  á 
+tradeò ió iî orbit®  Nï matteò wherå yoõ begiî tradinç from¬  alì 
+oæ youò purchaseó wilì bå seô dowî aô youò currenô base.
+
+    Iæ á tradeò ió noô iî orbit¬  wheî F² ió pressed¬ yoõ wilì bå 
+giveî  thå  optioî tï calì á tradeò tï come®   Keeğ iî minä  thaô 
+wheî  yoõ  calì á tradeò yoõ musô paù hií á feå jusô tï  comå  tï 
+youò  planet®  Á distinctivå noiså wilì notifù yoõ thaô á  tradeò 
+haó arrived®  No÷ wheî F² ió presseä thå tradå screeî wilì appeaò 
+anä yoõ maù begiî trading.
+
+    When in the trade screen the following commands apply:
+
+  Command     Description/Purpose
+-----------   --------------------------------------------------
+  <left>      Buy one of the current item.
+  <right>     Sell one of the current item.
+<Shift left>  Buy one or more of the current item.
+<Shift right> Sell one or more of the current item.
+  <up>        Move cursor to the previous item.
+  <down>      Move cursor to the next item.
+  <Home>      Move cursor to the first item.
+  <End>       Move cursor to the last item.
+  <PgUp>      Move cursor one screen page down in the list 
+  <PgDn>      Move cursor one screen page up in the list
+  <RETURN>    Close the window
+
+
+Exploration
+ 
+Purpose:
+--------
+    Iî  ordeò tï finä subsurfacå resourceó yoõ musô  explorå  foò 
+them.
+.PAŠ
+
+Access/Scope:
+-------------
+    Exploratioî maù bå initiateä froí thå sectoò mağ oò thå blocë 
+texô screen® Iî defininç aî exploratioî commanä yoõ wilì bå askeä 
+tï selecô thå equipmenô yoõ wanô tï explorå thå blocë with®  Eacè 
+typå  oæ  equipmenô haó á differenô effectivenesó iî findinç  thå 
+variouó  subsurfacå  resources®   Seå  Tableó B-2á  anä  B-2â  iî 
+Appendix B foò equipmenô typeó anä theiò relativå abilitieó  tï 
+detecô thå variouó subsurfacå resources®  Iæ nï valiä   equipmenô 
+ió  selecteä  thå resourcå windo÷ wilì bå closeä wheî  returî  ió 
+presseä anä nï initiatioî oæ exploratioî wilì bå done.
+
+ Method:
+-------
+    The following steps define an exploration command:
+
+    Steğ  1º  Presó F³ - Thió maù bå donå froí thå sectoò mağ  oò                        
+              thå blocë texô screen®   Thå blocë texô screeî wilì             
+              appeaò witè thå resourcå windo÷ activated.
+
+    Steğ  2º  Selecô resourceó - Herå yoõ selecô thå  exploratioî             
+              equipmenô yoõ wisè tï explorå thå blocë with.
+
+    Steğ  3º  Presó <RETURN¾ - Thå computeò wilì checë tï seå  iæ 
+              yoõ havå selecteä valiä resources®  Á checë tï  seå 
+              iæ fooä anä fueì requirementó caî bå meô wilì  alsï 
+              bå made®  Iæ eitheò oæ theså tesô faiì thå resourcå 
+              windo÷ wilì bå closeä anä initiatioî oæ exploratioî 
+              wilì noô takå place®  Iæ alì requirementó arå  met¬            
+              thió  completeó  thå definitioî oæ thå  exploratioî 
+              command.
+
+Results:
+--------
+    Wheî exploratioî begins¬ aî entrù wilì bå madå iî thå pendinç 
+list® Selecteä resourceó wilì becomå unavailablå untiì thå entirå 
+exploratioî  ió  complete®   Wheî  exploratioî  ió  completå  thå 
+followinç serieó oæ eventó wilì occur:
+
+
+      ª Iæ anù subsurfacå resourceó arå found¬ theù wilì bå addeä 
+        tï  thå resourcå lisô foò thå block®   Notå thaô theù maù 
+        appeaò  anywherå  iî thå list®  Theù wilì bå  flaggeä  tï 
+        indicatå thaô theù arå subsurfacå  resources.
+.PAŠ
+
+      ª Thå  entrù madå iî thå pendinç lisô wilì bå removeä  anä 
+        placeä iî thå systeí log.
+
+      ª Equipmenô useä wilì bå releaseä anä addeä tï thå toğ   oæ 
+        thå resourcå list.
+
+      ª Á distinctivå noiså wilì notifù yoõ thaô aî  actioî  haó 
+        beeî completed® Sincå manù actionó caî bå goinç oî aô thå 
+        samå time¬ yoõ maù neeä tï checë thå systeí loç tï verifù 
+        whicè actioî waó completed.
+
+
+Extraction
+
+Purpose:
+--------
+    Iî  ordeò  foò á subsurfacå resourcå tï bå usefuì iô musô  bå 
+extracted®  Oncå  extracted¬  oreó  maù bå  refined¬  tradeä  anä 
+transported.
+
+Access/Scope:
+-------------
+    Extractioî  maù bå initiateä froí thå sectoò mağ oò thå blocë 
+texô  screen®  Twï  selectionó  wilì bå necessarù  tï  definå  aî 
+extractioî command®  Thå subsurfacå resourceó yoõ wanô tï extracô 
+anä thå equipmenô yoõ wanô tï extracô them¬  witè musô bå chosen®  
+Yoõ  wilì bå alloweä tï choså onlù thoså itemó froí thå  resourcå 
+windo÷  foò  thå blocë thaô arå appropriatå  foò  thå  particulaò 
+selection®  Seå  Tableó B-2á anä B-2â iî Appendiø Â foò á lisô oæ 
+acceptablå selections®  Iæ valiä resourceó arå noô selected¬  thå 
+resourcå  windo÷  wilì bå closeä wheî returî ió  presseä  anä  nï 
+initiatioî oæ extractioî wilì takå place.
+
+Method:
+-------
+    The following steps define an extraction command:
+
+    Steğ  1º  Presó F´ - Thió maù bå donå froí thå sectoò mağ  oò 
+              thå blocë texô screen®   Thå blocë texô screeî wilì               
+              appeaò witè thå resourcå windo÷ activated.
+
+    Steğ  2º  Selecô  resourceó  -  Thió  selectioî  ió  foò  thå 
+              subsurfacå resourceó tï bå extracted.
+.PAŠ
+
+    Steğ  3º  Presó <RETURN¾ - Thå computeò wilì checë tï seå  iæ 
+              yoõ  havå  selecteä valiä resources®   Iæ  noô  thå 
+              resourcå  windo÷ wilì bå closeä anä  initiatioî  oæ 
+              extractioî  wilì  bå aborted®   Iæ valiä  resourceó 
+              havå  beeî  selecteä  thå resourcå windo÷  wilì  bå 
+              reactivateä foò thå nexô selection.
+
+    Steğ  4º  Selecô  resourceó  -  Thió  selectioî  ió  foò  thå 
+              equipmenô tï bå useä iî thå extraction.
+
+    Steğ 5º  Presó <RETURN¾ - Again¬  thå computeò wilì checë  tï 
+             seå  iæ yoõ havå selecteä valiä resources®   Á checë 
+             wilì   alsï  bå  madå  tï  seå  iæ  fooä  anä   fueì 
+             requirementó caî bå met®   Iæ eitheò oæ theså checkó 
+             provå tï bå falså thå resourcå windo÷ wilì bå closeä 
+             anä    initiatioî    oæ    extractioî    wilì     bå              
+             aborted®  Iæ valiä resourceó havå beeî selecteä thió 
+             completeó   thå   definitioî  oæ  thå  commanä   anä 
+             extractioî begins.
+ 
+Results:
+--------
+    Wheî extractioî begins¬ aî entrù ió madå iî thå pendinç list®  
+Selecteä  resourceó  wilì  becomå unavailablå  untiì  thå  entirå 
+extractioî ió complete® Wheî extractioî ió completå thå followinç 
+serieó oæ eventó wilì occur:
+
+      ª Thå  flaç   oî  thå resourceó indicatinç  thaô  theù  arå 
+        subsurfacå wilì bå removed®  Notå thaô thå resourceó  maù 
+        no÷ bå transported¬ traded¬ oò refined.
+
+      ª Thå  entrù madå iî thå pendinç lisô wilì bå removeä  anä 
+        placeä iî thå systeí log.
+
+      ª  Equipmenô useä wilì bå releaseä anä addeä tï thå toğ  oæ         
+         thå resourcå list.
+
+      ª Á distinctivå noiså wilì notifù yoõ thaô aî  actioî  haó 
+        beeî completed® Sincå manù actionó caî bå goinç oî aô thå 
+        samå time¬ yoõ maù neeä tï checë thå systeí loç tï verifù 
+        whicè actioî waó completed.
+.PAŠ
+
+Development
+
+Purpose:
+--------
+    Developmenô  serveó twï functions®   Thå firsô ió tï  converô 
+variouó kindó oæ lanä intï thå farí lanä thaô yoõ neeä tï producå 
+fooä  anä seed®  Thå seconä functioî oæ developmenô ió tï converô 
+foresô  intï  timber¬  anotheò  ra÷ materiaì  necessarù  foò  thå 
+productioî oæ variouó items.
+
+Access/Scope:
+-------------
+    Developmenô maù bå initiateä froí thå Sectoò mağ oò thå blocë 
+texô   screen®   Twï  selectionó  arå  necessarù  tï  definå  thå 
+developmenô  command®   Whicè naturaì resourcå yoõ woulä likå  tï 
+develoğ  anä thå equipmenô yoõ wanô tï uså neeä tï bå  specified®  
+Onlù valiä selectionó wilì bå allowed®  Seå Tableó B-4á anä  B-4â 
+iî Appendiø Â foò developablå resourceó anä acceptablå equipment® 
+Iæ  á  valiä iteí ió noô selected¬  thå resourcå windo÷  wilì  bå 
+closeä wheî returî ió presseä anä developmenô wilì noô begin.
+
+Method:
+-------
+    The following steps define development:
+
+    Steğ  1º Presó Fµ - Thió maù bå donå froí thå sectoò mağ  oò 
+             thå  blocë texô screen®  Thå blocë texô screeî  wilì              
+             appeaò witè thå resourcå windo÷ activated.
+
+    Steğ  2º Selecô á Resourcå - Thió selectioî ió foò thå naturaì 
+             resourcå tï bå developed.
+
+    Steğ  3º Presó <RETURN¾ - Thå computeò wilì checë tï seå iæ 
+             yoõ  havå  selecteä á valiä resource®   Iæ  noô  thå 
+             resourcå  windo÷  wilì bå closeä anä  initiatioî  oæ 
+             developmenô  wilì bå aborted®   Iæ á valiä  resourcå 
+             haó  beeî  selecteä  thå  resourcå  windo÷  wilì  bå 
+             reactivateä foò thå nexô selection.
+
+    Steğ  4º Selecô  Resourceó  - Thió  selectioî  ió  foò  thå 
+             equipmenô tï bå useä iî development.
+
+    Steğ  5º Presó <RETURN¾ - Again¬  thå computeò wilì checë tï 
+             seå iæ yoõ havå selecteä valiä resources®   Á  checë 
+             wilì   alsï  bå  madå  tï  seå  iæ  fooä  anä   fueì 
+             requirementó caî bå met®   Iæ eitheò oæ theså checkó 
+             provå tï bå falså thå resourcå windo÷ wilì bå closeä 
+             anä initiatioî oæ developmenô wilì bå  aborted®   Iæ 
+             valiä  resourceó havå beeî selecteä  thió  completeó 
+             thå   definitioî  oæ  thå  commanä  anä  developmenô 
+             begins.
+.PAŠ
+
+Results:
+--------
+    Wheî developmenô begins¬ aî entrù wilì bå madå iî thå pendinç 
+list® Selecteä resourceó wilì becomå unavailablå untiì thå entirå 
+developmenô  ió  complete®  Wheî  developmenô  ió  complete¬  thå 
+followinç serieó oæ eventó wilì occur:
+
+      ª Thå  ne÷ resourcå wilì bå addeä tï thå resourcå lisô  foò         
+        thå block® Notå thaô iô maù appeaò anywherå iî thå list.
+
+      ª Thå  entrù  madå iî thå pendinç lisô wilì bå removeä  anä 
+        placeä iî thå systeí log.
+
+      ª Thå equipmenô useä wilì bå releaseä anä addeä tï thå  toğ 
+        oæ thå resourcå list.
+
+      ª Á  distinctivå noiså wilì notifù yoõ thaô aî actioî  haó 
+        beeî  completed®   Sincå manù actionó caî bå goinç oî  aô 
+        thå  samå time¬  yoõ maù neeä tï checë thå systeí loç  tï 
+        verifù whicè actioî waó completed.
+
+
+Refinement
+
+Purpose:
+--------
+    Refinemenô  ió  essentiaì  foò somå thingó  anä  helpfuì  foò 
+others® Iî ordeò tï makå fueì yoõ musô refinå coal¬ crudå oil¬ oò 
+naturaì gas®  Mosô oæ thå materialó needeä iî productioî arå  thå 
+productó  oæ refinement®  Twï morå thingó thaô refinemenô wilì dï 
+foò yoõ arå tï increaså thå valuå anä decreaså thå weighô oæ  thå 
+resources¬ makinç theí betteò tï tradå    anä easieò tï move.
+
+Access/Scope:
+-------------
+    Refinemenô  maù bå initiateä froí thå sectoò mağ oò thå blocë 
+texô screen®  Iî defininç á refinemenô commanä yoõ wilì bå  askeä 
+tï  selecô á ra÷ materiaì tï refinå anä á refinerù tï use®   Eacè 
+ra÷ materiaì caî onlù bå refineä bù certaiî typeó oæ  refineries®  
+Seå  Tableó B-5á anä B-5â iî thå Appendiø Â foò ra÷ materialó anä 
+appropriatå refinerù types® Twï ra÷ materialó requirinç differenô 
+refinerù typeó cannoô bå selecteä    oî thå samå refinå  command® 
+Invaliä selectionó wilì noô bå accepted®  Iæ nï valiä resourcå ió 
+selected¬  thå  resourcå  windo÷  wilì bå closeä wheî  returî  ió 
+pressed¬ anä nï initiatioî oæ refinemenô wilì bå done.
+.PAŠ
+
+Method:
+-------
+    The following steps define a refinement command:
+
+    Steğ  1º Presó F¶ - Thió maù bå donå froí thå sectoò mağ  oò 
+             thå  blocë texô screen®   Thå blocë texô screeî wilì 
+             appeaò witè thå resourcå windo÷ activated.
+
+    Steğ  2º Selecô Resourceó - Thió firsô selectioî ió foò  thå 
+             resourcå   yoõ  wanô  tï  refine®   Notå  thaô  onlù 
+             compatiblå  resourceó  maù bå selecteä iî  thå  samå 
+             refinemenô definition.
+
+    Steğ  3º Presó  <RETURN¾ - Thå computeò wilì checë tï seå  iæ 
+             yoõ  havå  selecteä valiä  resources®  Iæ  not¬  thå 
+             resourcå  windo÷ wilì bå closed¬  anä initiatioî  oæ 
+             refinemenô wilì bå aborted®  Iæ valiä resourceó havå 
+             beeî   selected¬   thå   resourcå  windo÷  wilì   bå 
+             reactivateä foò thå nexô selection.
+
+    Steğ  4º Selecô  Resourceó  -  Herå  yoõ  musô  selecô  thå 
+             refinerieó  thaô yoõ wanô tï uså tï refinå  thå  ra÷ 
+             materials®  Notå thaô onlù valiä refinerù typeó wilì 
+             bå accepted.
+
+    Steğ  5º Presó <RETURN¾ - Agaiî thå computeò wilì checë  tï 
+             seå iæ valiä resourceó havå beeî selected®   Á checë 
+             wilì   alsï  bå  madå  tï  seå  iæ  fooä  anä   fueì 
+             requirementó caî bå met®   Iæ eitheò oæ theså checkó 
+             provå  tï  bå  false¬  thå resourcå windo÷  wilì  bå 
+             closeä anä initiatioî oæ refinemenô wilì bå aborted®  
+             Iæ   valiä  resourceó  havå  beeî   selected¬   thió 
+             completeó   thå  definitioî  oæ  thå  commanä    anä 
+             refinemenô begins.
+
+Results:
+--------
+    Wheî refinemenô begins¬ aî entrù ió madå iî thå pendinç list®  
+Selecteä  resourceó  wilì  becomå unavailablå  untiì  thå  entirå 
+refinemenô  ió  complete®    Wheî  refinemenô  ió  completå   thå 
+followinç serieó oæ eventó wilì occur:
+
+      ª Thå resourceó resultinç froí thå refinemenô wilì bå addeä         
+        tï thå resourcå lisô foò thå block®   Notå thaô theù  maù         
+        appeaò anywherå iî thå list.
+.PAŠ
+
+      ª Thå  entrù madå iî thå pendinç lisô wilì bå removeä  anä         
+        placeä iî thå systeí log.
+
+      ª Thå equipmenô wilì bå releaseä anä addeä tï thå  toğ  oæ         
+        thå resourcå list.
+
+      ª Á  distinctivå noiså wilì notifù yoõ thaô aî actioî  haó         
+        beeî completed® Sincå manù actionó maù bå goinç oî aô thå 
+        samå time¬ yoõ maù neeä tï checë thå systeí loç tï verifù 
+        whicè actioî waó completed.
+
+
+Production
+
+Purpose:
+--------
+    Thå productioî commanä allowó yoõ tï creatå youò owî humaî 
+resources.
+
+Access/Scope:
+-------------
+    Productioî  maù bå initiateä froí thå sectoò mağ oò thå blocë 
+texô screen®  Iî defininç á productioî commanä yoõ wilì bå  askeä 
+tï  specifù  onå typå oæ iteí tï produce®  Á lisô  oæ  produciblå 
+itemó  wilì appeaò iî thå resourcå window®  Iæ á selectioî ió noô 
+made¬  thå resourcå windo÷ wilì bå closeä wheî returî ió  presseä 
+anä  initiatioî  oæ  productioî wilì noô bå done®  Iæ  alì  itemó 
+necessarù  foò  thå particulaò productioî actioî arå noô  iî  thå 
+blocë  oò  iæ therå arå noô enougè oæ  them¬  thå  initiatioî  oæ 
+productioî  wilì  bå  aborted.  Seå Tablå B-¶ iî Appendiø  Â  foò 
+produciblå itemó anä theiò necessarù components.
+
+Method:
+-------
+    The following steps define a production command:
+
+    Steğ  1º Presó F· - Thió maù bå donå froí thå sectoò mağ  oò 
+             thå  blocë texô screen®   Thå blocë texô screeî wilì 
+             appeaò witè thå speciaì resourcå windo÷ activated.
+
+    Steğ  2º Selecô á resourcå - Thió ió thå resourcå typå  yoõ 
+             wanô tï produce®   Notå thaô yoõ wilì bå alloweä  tï 
+             selecô onlù onå resourcå type.
+.PAŠ
+
+    Steğ  3º Presó <RETURN¾ - Thå computeò wilì checë tï seå iæ 
+             yoõ  havå selecteä á resourcå tï produce®   Iæ  not¬ 
+             initiatioî  oæ productioî wilì bå aborted®   Iæ  yoõ 
+             havå selecteä á resource¬  thå computeò wilì  prompô 
+             yoõ foò thå nexô step.
+
+    Steğ  4º Enteò á numbeò - Thió ió thå amounô oæ thå selecteä 
+             resourcå yoõ wanô tï produce.
+
+    Steğ  5º Presó <RETURN¾ - Thå computeò wilì no÷ checë tï seå 
+             oæ  thå resourceó necessarù tï producå thå  selecteä 
+             iteí  arå iî thå blocë iî sufficienô  quantity®   Iæ 
+             not¬  initiatioî  oæ productioî wilì bå aborteä  anä 
+             yoõ wilì bå informeä oæ thå firsô componenô thaô waó 
+             founä  missinç  oò  onlù availablå  iî  insufficienô 
+             quantity®   Iæ  alì  thå  necessarù  componentó  arå 
+             availablå   thió   completeó   thå   definitioî   oæ 
+             productioî anä productioî begins.
+
+Results:
+--------
+    Wheî  productioî beginó aî entrù wilì bå madå iî thå  pendinç 
+list®   Thå  resourceó  necessarù foò productioî wilì bå  removeä 
+froí thå availablå resourcå lisô foò thå block®   Wheî productioî 
+ió completå thå followinç serieó oæ eventó wilì occur:
+
+      ª Thå ne÷ resourcå wilì bå addeä tï thå resourcå lisô  foò 
+        thå block®  Notå thaô thå resourcå maù appeaò anywherå iî 
+        thå list.
+
+      ª Thå entrù madå iî thå pendinç lisô wilì bå  removeä  anä 
+        placeä iî thå systeí log.
+
+      ª Thå  equipmenô useä foò productioî wilì bå releaseä  anä 
+        addeä tï thå toğ oæ thå resourcå list.
+
+      ª Á distinctivå noiså wilì notifù yoõ thaô aî  actioî  haó               
+        beeî completed® Sincå manù actionó maù bå goinç oî aô thå 
+        samå time¬ yoõ maù neeä tï checë thå systeí loç tï verifù 
+        whicè actioî waó completed.
+
+
+.PAŠ
+
+Transportatioî
+
+Purpose:
+--------
+    Transportatioî  ió  thå meanó bù whicè yoõ  caî  movå  mobilå 
+resourceó  froí onå blocë tï another®   Thió maù bå necessarù  iî 
+ordeò  tï satisfù thå requirementó associateä witè initiatinç thå 
+otheò majoò commandó iî blockó otheò thaî youò base.
+
+Access/Scope:
+-------------
+    Transportatioî maù bå initiateä froí eitheò thå sectoò mağ oò 
+thå  blocë  texô  screen®   Yoõ  wilì  bå  askeä  tï  selecô  thå 
+transportatioî vehiclå yoõ woulä likå tï use®  Notå thaô onlù onå 
+typå oæ transportatioî ¨ land¬  sea¬  oò air© maù bå choseî foò á 
+singlå    transportatioî   action®    Anotheò    constrainô    oî 
+transportatioî  ió  cargï capacity®  Iæ thå totaì weighô  oæ  thå    
+itemó  groupeä undeò á vehiclå exceedó it'ó cargï  capacity¬  thå 
+vehiclå  wilì noô move®  Iæ multiplå vehicleó arå choseî foò  onå 
+transportatioî  action¬  thå speeä aô whicè thå convoù moveó wilì 
+bå thaô oæ thå slowesô vehiclå chosen.
+
+Method:
+-------
+    The following steps define a transportation action:
+
+    Steğ  1º Presó F¸ - Thió maù bå donå froí thå sectoò mağ  oò              
+             thå blocë texô screen.
+
+    Steğ  2º Selecô  á transportatioî typå - Thå  computeò  wilì 
+             prompô  yoõ foò thå typå oæ transportatioî yoõ  wanô 
+             tï use®   Yoõ neeä tï enteò eitheò 'l'¬ 'w'¬ 'a'¬ oò 
+             'q§  ('q§  indicateó yoõ wanô tï aborô thå  action)®  
+             No÷  thå  blocë  texô screeî wilì  appeaò  witè  thå 
+             resourcå windo÷ activated.
+
+    Steğ  3º Selecô vehicleó - Thå computeò wilì checë tï seå iæ 
+             yoõ  havå  selecteä valiä  resources®  Iæ  not¬  thå 
+             resourcå  windo÷ wilì bå closed¬  anä initiatioî  oæ 
+             transportatioî wilì bå aborted®  Iæ valiä  resourceó 
+             havå  beeî selected¬  thå sectoò mağ wilì appeaò anä 
+             patè planninç begins.
+
+    Steğ  4º Plaî  á  patè - Herå yoõ wilì ploô  thå  patè  thå 
+             vehicleó wilì takå wheî moving®   Seå thå nexô  pagå 
+             oæ thió helğ sequencå foò thå valiä commands®   Wheî 
+             yoõ  havå  reacheä thå blocë yoõ wisè  tï  transporô 
+             youò vehicleó to¬ gï oî tï thå nexô step.
+
+    Steğ  5º Presó  F¸  - Thió  completeó thå  definitioî  oæ  á 
+             transportatioî action.
+.PAŠ
+
+Commands:
+---------
+    Transportation Path Planning Commands
+  Command      Function
+-----------   -----------------------------------------------
+<up arrow>     Moves vehicles 1 block NORTH
+<down arrow>   Moves vehicles 1 block SOUTH
+<left arrow>   Moves vehicles 1 block EAST
+<right arrow>  Moves vehicles 1 block WEST
+<RETURN>       Use world map to plan path (from sector map only)
+   F1          Use sector map to plan path (from world map only)
+space bar      Use sector map to plan path (from world map only)
+
+Results:
+--------
+    Wheî  transportatioî  beginó  aî entrù wilì bå  madå  iî  thå 
+pendinç list® Thå vehicleó useä iî transportatioî wilì bå removeä 
+froí  thå  startinç  block®   Wheî  á  transportatioî  actioî  ió 
+completeä thå followinç serieó oæ eventó wilì occur:
+
+      ª Thå  vehicleó useä wilì bå releaseä anä  placeä  iî  thå         
+        blocë wherå transportatioî ió terminated.
+
+      ª Thå  entrù madå iî thå pendinç lisô wilì bå removeä  anä 
+        placeä iî thå systeí log.
+
+      ª Á distinctivå noiså wilì notifù yoõ thaô aî  actioî  haó 
+        beeî completed® Sincå manù actionó maù bå goinç oî aô thå 
+        samå time¬ yoõ maù neeä tï checë thå systeí loç tï verifù 
+        whicè actioî waó completed.
+
+
+Pending List
+
+Purpose:
+--------
+    Alì  actionó  iî progresó arå listeä iî thå  pendinç  window®  
+Enterinç thå pendinç windo÷ allowó yoõ tï aborô actions.
+
+Access/Scope:
+-------------
+    Therå arå twï wayó tï looë aô thå pendinç window¬ bù blocë oò 
+oî  á  world-widå  level®   Pressinç F¹ froí thå worlä  mağ  wilì 
+activatå  thå  pendinç windo÷ foò thå wholå world®   Wheî  F¹  ió 
+presseä froí thå sectoò mağ oò thå blocë texô screeî thå  pendinç 
+itemó iî thå lisô wilì applù onlù tï thå currenô block.
+.PAŠ
+
+  Command     Description/Purpose
+-----------   -------------------------------------------------
+<Shift Right> Abort action referred to by the current item.
+  <up>        Move cursor to the previous item.
+  <down>      Move cursor to the next item.
+  <Home>      Move cursor to the first item.
+  <End>       Move cursor to the last item.
+  <PgUp>      Move cursor one screen page down in the list.
+  <PgDn>      Move cursor one screen page up in the list.
+  <RETURN>    Close window and continue.
+
+
+Log List
+
+Purpose:
+--------
+    Everù majoò evenô includinç completeä actionó wilì bå entereä 
+iî thå systeí log®   Enterinç thå systeí loç windo÷ allowó yoõ tï 
+deletå itemó froí thå list.
+
+Access/Scope:
+-------------
+    Therå arå twï wayó tï looë aô thå systeí log¬  bù blocë oò oî 
+á  world-widå  level®   Pressinç  F1°  froí thå  worlä  mağ  wilì 
+activatå thå systeí loç foò thå wholå world®  Wheî F1° ió presseä 
+froí thå sectoò mağ oò thå blocë texô screeî thå systeí loç  wilì 
+sho÷ onlù thoså actionó thaô werå completed
+iî thå currenô block®
+
+  Commanä     Description/Purpose
+-----------   --------------------------------------------------
+<Shift Right> Delete log item referred to by the current item.
+  <up>        Move cursor to the previous item.
+  <down>      Move cursor to the next item.
+  <Home>      Move cursor to the first item.
+  <End>       Move cursor to the last item.
+  <PgUp>      Move cursor one screen page down in the list.
+  <PgDn>      Move cursor one screen page up in the list.
+  <RETURN>    Close the window and continue.
+
+.PAŠ
+
+Help Utility
+
+Thå  followinç helğ screenó arå availablå froí anywherå usinç thå 
+followinç commands:
+
+  Command        Help Screen Title
+-----------    -------------------------------------------------
+<Shift F1>       Map Help Screen
+<Shift F2>       Trading Help Screen
+<Shift F3>       Exploration Help Screen
+<Shift F4>       Extraction Help Screen
+<Shift F5>       Development Help Screen
+<Shift F6>       Refinement Help Screen
+<Shift F7>       Production Help Screen
+<Shift F8>       Transportation Help Screen
+<Shift F9>       Pending List Help Screen
+<Shift F10>      Log List Help Screen
+
+NOTEº  Yoõ maù noô accesó theså helğ screenó froí withiî thå Helğ 
+Utility®  Thå followinç helğ screenó arå availablå froí thå worlä 
+mağ usinç thå indicateä commands¬ unlesó otherwiså indicated:
+
+  Command        Help Screen Title
+-----------    -------------------------------------------------
+ <Shift B>       Base Help Screen (Sector Map)
+ <Shift Q>       Quitting the game
+ <Shift L>       Saving the World
+ <Shift S>       Loading a World
+ <Shift I>       World Inventory Help Screen
+ <Shift T>       Time Control Help Screen
+     H           General Help Screen
+ <Shift H>       General Help Screen
+ <Shift R>       Resource Window Help Screen
+
+Iî additioî tï thå abovå screens¬  thå <ESC¾ keù ió activå aô alì 
+timeó whilå playinç thå game®  <ESC¾ wilì attempô tï determinå aî  
+appropriatå helğ screeî anä wilì displaù it.
+
+
+Base
+
+Purpose:
+--------
+    Iî  ordeò  tï havå á maiî operatioî placå oò tï  bå  ablå  tï 
+tradå yoõ musô havå establisheä á base.
+.PAŠ
+
+Access/Scope:
+-------------
+    Establishinç  á  baså maù bå initiateä froí thå worlä mağ  oò 
+thå sectoò map®  Pressinç 'b§ oî thå keyboarä wilì establisè  thå 
+whereveò thå 'viewport§ ió located®  Thå firsô timå yoõ establisè 
+youò  baså  thå tradeò wilì arrivå (therå wilì bå  á  distinctivå 
+noise)®  Durinç  thå  duratioî oæ timå thaô thå tradeò  ió  firsô 
+therå  yoõ  maù reestablisè youò baså aô anù time®   Afteò  this¬ 
+wheî  thå  tradeò  ió therå youò baså wilì bå  lockeä  iî  place®  
+Otherwiså yoõ maù reestablisè youò baså aô    anù time.
+
+Results:
+--------
+    Wheî á baså ió establisheä iô wilì blinë reä anä whitå oî thå 
+sectoò  mağ anä thå worlä map®  Wheî á baså ió reestablisheä  thå 
+locatioî oæ thå olä baså wilì staù red¬  buô wilì noô  blink¬  iæ 
+therå arå humaî resourceó there®  (i.e®  people¬  spacå shuttles¬ 
+refineä ores¬ equipment¬ etc.)
+
+
+Quitting the game
+
+Purpose:
+--------
+    Iî  ordeò  tï  enä á gamå yoõ musô uså thå  quiô  commanä  tï 
+terminatå thå game.
+
+Explanations/Definitions:
+-------------------------
+    Thå  quiô  commanä caî bå initiateä froí thå worlä mağ  only®  
+Pressinç  'q§ oî thå keyboarä wilì activatå  thå  command®   Thió 
+wilì  noô savå thå game®   Wheî thå quiô commanä ió activateä thå 
+prograí terminatioî screeî wilì appear®   Thió wilì telì yoõ wheî 
+youò worlä waó saveä lasô (accordinç tï gamå time)®  Thå computeò 
+wilì prompô yoõ anä askó iæ yoõ reallù wanô tï quiô thå game®  Iæ 
+returî oò 'n§ ió presseä thió wilì    deactivatå thå command®  Iæ 
+'y§ ió presseä thå commanä ió executed.
+
+
+Saving the world
+
+Purpose:
+--------
+    Iî  ordeò  tï savå thå existinç worlä anä  tï  continuå  plaù 
+anotheò timå yoõ musô uså thå savå command.
+.PAŠ
+
+Explanations/Definitions:
+-------------------------
+    Thå  savå  commanä caî bå initiateä froí thå worlä mağ  only®  
+Pressinç thå 's§ oî thå keyboarä wilì activatå thå command®   Thå 
+savå screeî wilì appear® Thå computeò wilì prompô yoõ foò á name®  
+Yoõ maù namå thå worlä oò aborô thå operatioî bù typinç  'abort'® 
+Iæ  returî ió presseä thå worlä wilì bå saveä bù thå defaulô namå 
+iî thå squarå brackets® Yoõ maù savå á worlä durinç thå middlå oæ 
+á game® Thå savå commanä wilì    preservå thå statå oæ thå game.
+
+
+Loading a world
+
+Purpose:
+--------
+    Iî  ordeò  tï  retrievå á saveä worlä yoõ musô uså  thå  loaä 
+command.
+
+Explanations/Definitions:
+-------------------------
+    Thå  loaä commanä ió automaticallù initiateä wheî startinç  á 
+game®  Iî addition¬ iô maù bå initiateä froí thå worlä mağ aô anù 
+timå  durinç  á game®   Thå computeò wilì prompô yoõ foò á  name®  
+Yoõ  maù  typå iî thå namå oæ á  previouslù  saveä  world¬  presó 
+returî foò thå defaulô namå (iî thå squarå brackets)¬  oò yoõ maù 
+aborô  thå  operatioî bù typinç 'abort'®   Thå loaä commanä  wilì 
+loaä  iî thå indicateä worlä anä plaù oæ thå gamå caî  begin®  Iæ 
+thå indicateä worlä waó saveä durinç thå middlå oæ plaù theî plaù 
+wilì resumå aô thaô point.
+
+
+World Inventory
+
+Purpose:
+--------
+    Thå  worlä  widå inventorù ió tï locatå anù humaî  resources¬ 
+currenô pendinç items¬ oò loç entrieó oæ thå entirå world.
+
+Access/Scope:
+-------------
+    Tï geô tï thå worlä widå inventory¬  presó 'i§ froí thå worlä 
+map®   Thå  computeò wilì opeî thå worlä widå informatioî  screeî 
+witè thå resourcå windo÷ activated®  Thå onlù thinç yoõ maù dï ió 
+look at all of the entries.
+.PAŠ
+
+Commands:
+---------
+    Thå  followinç  commandó  arå  availablå iî  thå  worlä  widå 
+inventorù windows:
+
+  Key         Function
+----------   ---------------------------------------------------
+  <up>        Move cursor to previous item.
+  <down>      Move cursor to next item.
+  <Home>      Move cursor to first item.
+  <End>       Move cursor to last item.
+  <PgUp>      Move cursor one screen page down in list.
+  <PgDn>      Move cursor one screen page up in list.
+  <RETURN>    Close window and continue.
+
+
+Time Control
+
+     Yoõ havå thå optioî tï controì thå speeä aô whicè gamå  timå 
+passes®  Wheî thå gamå begins¬ ± seconä oæ reaì timå representó ¶ 
+minuteó  oæ  gamå time®  Tï adjusô thå timå incrementó enteò  thå 
+timå compressioî windo÷ bù pressinç 't'.
+
+Uså thå followinç commandó tï adjusô thå time:
+
+  Command     Description/Purpose
+-----------   --------------------------------------------------
+ <RETURN>     Resume play
+   <up>       Make 'current update increment' 1 minute shorter.
+  <down>      Make 'current update increment' 1 minute longer.
+<Shift up>    Make 'current update increment' 1 hour shorter.
+<Shift down>  Make 'current update increment' 1 hour longer.
+.PAŠ.FO                         Page 5-#
+.PN 1
+
+
+
+
+
+
+
+
+                            CHAPTER 5
+
+
+
+                         World Creation
+
+Generating New Worlds
+
+Thió  prograí wilì generatå ne÷ worldó thaô thå useò maù  explorå 
+anä  develoğ  iî exactlù thå samå waù aó thå examplå worlä  fileó 
+supplied on the STARFALL data disk.
+
+The generation of each world is done in the following order:
+
+1®  Generatinç thå continentó - Durinç thió phase¬ thå mağ screeî 
+wilì bå almosô totallù blue¬ anä slowlù continentó wilì appeaò iî 
+green¬  drawî  bù  thå computer¬   thå  continentó  arå  designeä 
+accordinç  tï  aî alogorithí thaô takeó desireä  continenô  size¬ 
+reasonablå  continenô  shape¬  anä somå degreå oæ  randoí  numbeò 
+generation into account.
+
+2®   Baså moisturå anä temperaturå generatioî - thió phaså caî bå 
+tolä  bù  thå reä doô scanninç thå screeî froí toğ tï bottoí  anä 
+froí lefô tï right®   Durinç thió time¬ thå computeò ió analyzinç 
+thå  terraiî  oæ  thå worlä tï  determinå  anä  averagå  moisturå 
+content and an average temperature for each land area.
+
+3®  Altitudå computatioî - Durinç thió phaså oæ worlä generation¬ 
+thå  computeò  analyzeó  eacè blocë oæ lanä anä thå  lanä  and/oò 
+wateò  arounä  iô  tï determinå á reasonablå  altitudå  foò  thaô 
+block®    Generally¬ areaó neaò coastó oò inlanä seaó wilì bå lo÷ 
+altitude¬  whilå largå unbrokeî lanä areaó wilì bå generallù higè 
+altitudes®   Iî  addition¬  thå computeò wilì analyzå  thå  basiã 
+temperatureó  anä  moistureó  oæ eacè blocë  anä  finalizå  theiò 
+valueó  accordinç tï thå altitudå oæ thå blocë anä finalizå theiò 
+valueó accordinç tï thå altitudå oæ thå block®  Generally¬ higheò 
+areas are colder and drier.
+
+4®   Mineraì  allocatioî  -  Aó  thå  finaì  steğ  iî  thå  worlä 
+generatioî process¬  thå computeò decideó wherå thå variouó  sub-
+surfacå  mineraló  wilì  bå  put®   Aô  thå  samå  time¬  surfacå 
+resourceó  sucè aó forest¬  jungle¬  etc®  arå laiä ouô ontï  thå 
+variouó  lanä  masses®   Iî  ordeò tï indicatå  thió  phase¬  thå 
+.paŠ
+
+computeò wilì laù ouô whitå dotó oî thå screen¬  iî placeó  wherå 
+mineraló havå beeî placed®  Sincå surfacå resourceó arå allocateä 
+foò  everù block¬  therå ió nï indicatioî thaô thió ió beinç donå 
+at the same time.
+
+Afteò thå worlä haó beeî created¬  thå computeò wilì allo÷ yoõ tï 
+typå iî two nameó tï calì thå worlä by®  Thå firsô namå maù bå uğ 
+tï 3° characteró long¬  anä maù bå anù valiä alphanumeriã string®  
+Exampleó mighô beº  Earth¬  Mars¬  John'ó World¬  etc® Thå seconä 
+namå  ió  thå filenamå oî disë thaô yoõ wisè tï  savå  thå  newlù 
+createä  worlä  under®   Thió ió thå samå filenamå thaô yoõ  wilì 
+typå  iî wheî yoõ wisè tï uså thió worlä iî playinç á  game®   Iô 
+musô bå á valiä MS-DOÓ pathname®   Iô ió limiteä tï 3° characteró 
+iî length®   Exampleó foò thå abovå worldó mighô  beº  EARTH.DAT¬ 
+MARS.DAT¬  JOHN'S.DAT¬  etc®  Foò  á morå completå descriptioî oî 
+MS-DOS filenames and pathnames, see you MS-DOS manual.
+.paŠ.fo                         Page 6-#
+.PN 1
+
+
+
+
+
+
+
+
+                            CHAPTER 6
+
+
+                       Warnings and Hints
+
+    Thå   followinç  ió simplù á compilatioî oæ somå hintó discovereä  wheî 
+playinç  thå  game®   Iô ió bù nï menaó exhaustivå noò ió iô meanô  tï  be®  
+Reaä theí anä consideò thaô therå maù bå teî morå thingó tï thinë abouô foò 
+each hint listed here.
+
+    Establishinç á baså neaò á temperatå zonå wilì makå thå  transportatioî 
+of food closer and faster.
+
+    Reestablishinç  á  baså  ió helpfuì tï distributå  purchaseó  froí  thå 
+trader.
+
+    Once an item has been deleted it cannot be recovered.
+
+    Bå  carefuì wheî abortinç actions®   Yoõ maù noô changå youò minä  oncå 
+you have pressed the shift right arrow.
+
+    Remeber that over loaded vehicles will not move.
+
+    Iæ  á  transportatioî  actioî ió aborteä iî thå  middle¬  thå  vehicleó 
+involveä  wilì  remaiî iî thå blocë wherå theù wherå theù  wherå  wheî  thå 
+action was aborted.
+
+    Alì oæ thå componentó foò productioî musô bå iî thå outeò mosô leveì iî 
+the resource tree for the block prior to pressing F7.
+
+    Refinerieó  requirå  á  hugå amounô oæ investmenô iî fueì  anä  people®  
+This should be taken into account when weighing the advantages of refining.
+
+    Iæ  minimaì exploratioî oæ á blocë ió done¬  somå subsurfacå  resourceó 
+may be overlooked.
+   
+    Thå  ratå  oæ extractioî ió baseä oî thå  equipmenô  anä  thå 
+deposiô  size®  Yoõ  maù  wanô  tï breaë uğ thå  deposiô  anä  dï 
+multiplå extractionó tï speeä uğ thå process.
+
+    You will probably want to develop only a portion of the block.
+
+    Developinç farí lanä iî youò baså blocë oò anù otheò  heavilù    
+populateä blocë woulä bå tï youò advantage.
+.PAŠ.FO                                 Page A-#
+.PN 1
+
+
+
+
+
+
+
+
+
+                           APPENDIX A
+
+
+                    Installation Instructions
+
+INSTALLATION OF STARFALL:
+
+SYSTEM REQUIREMENTS:
+
+1.  IBM PC OR 100% Compatible
+2.  640K RAM
+3.  5 Megabyte hard drive
+4.  1 floppy disk drive.
+5.  RGB Color Monitor
+6.  The ability to configure a 128K ramdisk.
+7.  MS-DOS 2.1 or greater
+
+Supplied with the STARFALL system are three diskettes:
+
+STERFALL MAIN
+STARFALL DATA
+EXAMPLE WORLDS
+
+Iô  ió suggesteä thaô thå useò  creatå á  directorù  specificallù 
+foò  STARFALÌ  oî  thå  harä disk¬  iî ordeò  tï  avoiä  filenamå 
+confusion¬  etc®   Iî ordeò tï dï this¬  booô yoõ harä disk¬  anä 
+type:
+
+MKDIR STARFALL
+
+(Foò  morå  informatioî oî directorieó iî  thå  MS-DOÓ  operatinç 
+system, please see your user's manual.)
+
+Thå  firsô  steğ tï installinç thå systeí ió tï loaä  alì oæ  thå 
+fileó ontï thå harä disk®   Thå followinç ió aî  examplå session¬ 
+witè  thå  harä disë beinç drivå Cº   anä thå floppù drivå  beinç 
+drive A:.  If these drives have different designationó oî 
+youò  system¬  pleaså  substitutå thoså valueó  foò  Aº  anä  C:¬ 
+respectively.
+.PAŠ
+
+(Booô uğ youò harä drive)
+
+CD\STARFALL
+
+(Put STARFALL MAIN disk in the floppy drive, A: )
+
+Copy A:*.*
+
+(Put STARFALL DATA disk in the floppy drive, when this complete.)
+
+COPY A:*.*
+
+(Puô  EXAMPLÅ  WORLDÓ disë iî thå floppù drivå wheî thió copù  ió 
+complete.)
+
+
+COPY A: *.*
+
+INSTALLING STARFALL ONTO A RAMDISK:
+
+Sincå thå detailó oæ ramdiskó varù froí computeò tï computer¬  nï 
+preciså  detailó arå giveî here®   Foò details¬  pleaså seå  youò 
+system owner's manual.
+
+The minimum size for the ramdisk is 128K.
+
+Afteò  thå  ramdisë  haó beeî configureä  intï  thå  system¬  thå 
+STARFALÌ overlaù fileó neeä tï bå loadeä ontï it®   Thå followinç 
+dialoguå assumeó thaô therå ió á harä disë locateä aô Cº witè alì 
+oæ  thå  STARFALÌ  programó  anä  datá  iî  á  directorù   calleä 
+\STARFALL®    Iô alsï assumeó thaô thå ramdisë ió nameä 'D:'®  Iæ 
+theså drivå assignmentó arå differenô oî youò system¬  substitutå 
+youò  harä  disë  drivå letteò foò C:¬  anä youò raí  disë  drivå 
+designation letter for D: in the following dialogue.
+
+(Boot up system)
+
+(Configure 128K ramdisk (example uses D:))
+
+D:
+
+Copy C:\STARFALL\PLAYGAME.0??
+
+Iî  ordeò tï inforí STARFALÌ wherå theså overlaù fileó  are¬  thå 
+INSTALL.COM  program must be run.  In order to do this, type:
+.PAŠ
+
+INSTALL
+
+INSTALÌ wilì asë foò thå drivå designatioî oæ thå overlaù  files®  
+Typå  thå drivå letteò ¨ iî thå examplå above¬  iô woulä bå  D:)¬ 
+witè  oò witè ouô thå colon¬  anä presó thå <RETURN¾  key®   Thió 
+only needs to be done once for each installation of STARFALL.
+
+GETTING STARTED
+
+1.  Boot up your system.
+
+2.  Install STARFALL, as described in Appendix A.
+
+3.  Type 'STARFALL' and press <RETURN>.
+.PAŠ.fo                         Page G-#
+.PN 1
+
+
+
+                            Glossary
+
+
+
+Action‚ - Onå oæ thå valiä commandó oæ  Development¬  Exploration¬           
+Extraction¬ Production¬ Refinement¬ Trade¬ oò Transportation.
+
+Arablå  Land‚ - Á humaî resourcå necessarù foò thå  productioî  oæ                
+fooä anä seed®  Iô ió developeä froí heath¬ prairie¬ savannah¬ oò 
+steppe.
+
+Base‚  - Á  locatioî oî thå planeô whicè maù oò  maù  noô  contaiî         
+humaî   resources®    Alì  tradinç  musô  bå  conducteä   througè         
+sucè á point.
+
+Block‚  - Thå  smallesô  uniô oî thå maps®   Alì actionó  musô  bå          
+performeä oî á block.
+
+Budgeô - Thå limiô oæ debô wheî purchasinç initiaì supplies®  Thå 
+maximuí  debô  limiô ió ¶ millioî credits®   Eveî iæ yoõ  dï  noô 
+approacè  thió limiô aô thå beginninç oæ thå game¬  yoõ  maù  noô 
+exceeä youò initiaì indebtedness¬ whateveò thaô maù be.
+
+Debt‚ - Thå amounô oæ youò budgeô whicè yoõ spenô aô thå beginninç 
+oæ  thå game®   Yoõ shoulä reducå youò debô bù tradinç awaù  morå 
+thaî yoõ purchaså iî ordeò tï geô á higheò score.
+
+Development‚  - Á  commanä  thaô allowó yoõ tï  transforí  naturaì 
+vegetatioî intï arablå lanä (froí savannah¬  prairie¬  heath¬ anä 
+steppe© oò timbeò (froí jungle¬  coniferouó forest¬ anä deciduouó 
+forest).
+
+Equipment‚  - Mechanicaì  deviceó whicè arå  eitheò  purchaseä  oò 
+constructed®   Thus¬  theù  arå onå typå oæ humaî resource®   Alì 
+actionó  requirå  somå typå oæ equipment¬  whicè  varieó  bù  thå 
+actioî beinç performed.
+
+Exploration‚ - Á commanä thaô allowó yoõ tï discoveò whaô typeó oæ 
+mineraì  resourceó  arå belo÷ thå grounä iî á  particulaò  block® 
+Differenô mineraló arå morå susceptiblå tï detectioî bù differenô 
+typeó oæ exploratioî equipment.
+
+Extraction‚  - Á  commanä thaô allowó yoõ tï removå  burieä  ores¬ 
+makinç  theí availablå foò refinemenô oò trade®   Extracteä  oreó 
+arå humaî resources.
+
+Group‚  - Á  collectioî oæ itemó thaô actó aó á singlå  entitù  iî 
+commanä sequences.
+.PAŠ
+
+Humaî  Resource‚ - Anù resourcå createä aó thå byproducô oæ  humaî 
+labor¬  sucè aó equipment¬ arablå land¬ ores¬ oò metals®  Á blocë 
+containinç á humaî resourcå ió highlighteä iî reä oî thå maps.
+
+Merchanô  Trader‚  - Aî  interstellaò  shiğ thaô  carrieó  á  widå 
+varietù oæ equipment®   Á tradeò wilì purchaså ores¬  metals¬ anä 
+equipment¬ anä selì anythinç hå has.
+
+Moisture‚  - Moisturå ió measureä oî á scalå froí ° tï 15º   °  ió 
+virtuallù nï rainfall¬ whilå 1µ correspondó tï dailù rainfall.
+
+Oxide‚  - Á  basiã  typå oæ metalliã  orå  anä  thå  correspondinç 
+refinemenô   process®    Thå   procesó  ió  mosô   effectivå   oî 
+predominantlù  oxidå  ores¬  buô  workó tï somå extenô  oî  mixeä 
+oxide/sulfidå ores®  Purå sulfidå oreó arå unaffected.
+
+Pendinç  List‚  - Á  lisô oæ alì actionó  initiateä  buô  noô  yeô 
+completed®  Iô ió possiblå tï aborô aî actioî bù removinç iô froí 
+thå pendinç list.
+
+Production‚  - Á commanä thaô allowó yoõ tï construcô anù piecå oæ 
+equipment¬ provideä thaô yoõ havå thå necessarù materials.
+
+Refinement‚  - Á  commanä thaô allowó yoõ tï  transforí  extracteä 
+oreó  intï purå metaló foò productioî anä greateò tradinç  value®  
+Therå arå threå typeó oæ refineriesº oxide¬ sulfide¬ anä fuel.
+
+Resource‚  - Anù  commoditù  thaô  caî  bå  useä  tï  fulfilì  thå 
+requirementó  oæ  thå seveî actioî commands®   Thió includeó  alì 
+equipment¬  persons¬  vegetation¬  undergrounä minerals¬  anä  sï 
+forth®  Obviously¬ noô alì oæ theså arå usefuì foò everù action.
+
+Resourcå Window‚ - Thå uppeò windo÷ oæ thå blcë texô screen¬ whicè 
+showó alì resourceó availablå iî thaô block.
+
+Sector‚  - Á  ¹  bù  ¹ squarå oæ blockó  surroundinç  thå  currenô 
+locatioî oæ thå cursor.
+
+Subsurfacå  Resource‚  - Á  mineraì resourcå  thaô  haó  noô  beeî 
+extracted®   Á  mineraì  cannoô  bå extracteä untiì iô  haó  beeî 
+discovereä througè exploration.
+
+Sulfide‚  - Á  basiã typå oæ metalliã orå  anä  thå  correspondinç 
+refinemenô   process®    Thå   procesó  ió  mosô   effectivå   oî 
+predominantlù  sulfidå  ores¬  buô workó tï somå extenô oî  mixeä 
+sulfide/oxidå ores®  Purå oxidå oreó arå unaffected.
+
+Systeí  Log‚ - Á lisô oæ alì actionó initiateä oò  completed®   Iô 
+serveó aó á recorä oæ commandó performeä iî particulaò blocks.
+.paŠ
+
+Temperature‚  - Temperaturå ió measureä oî á scalå ranginç froí  ° 
+tï  15º   °  correspondó  tï arctiã  cold¬  whilå  1µ  representó 
+blisterinç  heat®   Thå  temperatå latitudeó havå  á  temperaturå 
+valuå oæ 7.
+
+Trade‚  - Á  commanä  thaô  allowó  yoõ  tï  exchangå   equipment¬ 
+supplies¬ money¬ anä resourceó witè á merchanô trader®  Alì itemó 
+tradeä awaù musô bå presenô aô youò base»  alì itemó yoõ purchaså 
+wilì appeaò there.
+
+Transportation‚  - Á  commanä thaô allowó yoõ tï  movå  equipment¬ 
+resources¬ oò personneì froí onå blocë tï another.
+
+Vegetation‚  - Anù  oæ  thå  1´ basiã  typeó  oæ  surfacå  naturaì 
+resourcesº   ice¬  sand¬  rock¬  tundra¬  heath¬ desert¬ prairie¬ 
+savannah¬  steppe¬  coniferouó forest¬  deciduouó forest¬ jungle¬ 
+raiî forest¬ anä marsh®  Heath¬ prairie¬ savannah¬ anä steppå maù 
+bå developeä intï farmland®  Coniferouó forest¬ deciduouó forest¬ 
+anä junglå maù bå developeä intï timber.
+
+Viewport‚  - Oî thå worlä map¬  thió defineó thå sectoò oæ  blockó 
+yoõ  wilì seå oî zoominç tï thå sectoò map®   Oî thå sectoò  map¬ 
+thió  defineó  thå blocë yoõ wilì enteò wheî invokinç  thå  blocë 
+texô screeî oò initiatinç aî action.
+.PAŠ.FO                               Page I-#
+.PN 1
+
+
+
+
+
+
+
+
+
+                              INDEX
+
+
+Base  2-1, 2-3, 4-4, 4-13, 4-16, 4-17, 6-1 
+Block Text Screen  3-3, 4-4 to 4-6, 4-8 to 4-11, 4-13 to 4-15
+Commands
+   Block Text Screen  3-4
+   Help  4-16
+   Log  4-15
+   Pending  4-15
+   Resource Window  4-2, 4-3
+   Sector Map  3-3
+   Time Control  4-19
+   Trading  4-4
+   Transport Path Planning  4-14
+   World Map  3-2, 4-19
+Compress  2-4, 4-1, 4-2
+Develop  2-1, 2-2, 4-8, 6-1, B-4 
+Expand  2-4, 4-1, 4-2 
+Explore  2-2, 4-4, 4-5, 6-1, B-2  
+Extract  2-2, 4-6, 4-7, 6-1, B-3
+Group  2-3, 4-1, 4-3, 4-13, 6-1
+Help  4-16
+Install  A-1 to A-3
+Inventory  4-18
+Loading  4-18
+Log  3-3, 4-6 to 4-8, 4-11, 4-12, 4-14, 4-15 
+Pending  3-3, 4-6 to 4-8, 4-11, 4-12, 4-14, 4-15
+Produce  2-3, 4-11, 4-12, 6-1, B-6 to B-13
+Quitting  4-17, 6-1
+Refine  2-2, 4-9 to 4-11, 6-1, B-5 
+Resource Window  3-3, 4-1 to 4-3, 4-5 to 4-7, 4-13 
+Saving  4-17, 4-18
+Sectoò Mağ  3-2¬  3-3¬ 4-5¬ 4-6¬ 4-8¬ 4-9¬ 
+            4-1± tï 4-13¬ 4-17¬ 4-18 
+Time Control/Compression  4-19
+Trade  2-1, 2-3, 4-3, 4-4, 4-17, 6-1
+Transport  2-3, 4-13, 4-14, 6-1, B-1
+Ungroup  4-3
+World Map  3-1, 3-2, 4-4, 4-14, 4-15, 4-17, 4-18
+

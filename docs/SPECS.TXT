@@ -1,0 +1,446 @@
+.HE DESIGN SPECIFICATIONS FOR ACTION COMMANDS
+.FO                               Page (#)
+                     
+                    EXPLORE
+
+
+       F≥†:   FROÕ† ZOOÕ† O“ BLOCÀ ONLŸ ENTER” WINDO◊† Tœ† SELEC‘ 
+ç
+              EXPLORATION EQUIPMENT.
+
+              ONLY VALID  RESOURCES ALLOWED.
+
+              EXIT WINDOW BY <RETURN>.
+
+       ATTEMP‘† Tœ† FINƒ SELECTIOŒ TRE≈ I∆† NIÃ† - GIV≈† MESSAGE¨ 
+ç
+       ABORT.
+
+       OTHERWISE:
+
+          1Æ†  FIQUR≈† DURATIOŒ O∆ EXPLORATIOŒ (COMPUT≈ TIM≈† FO“ 
+             
+               EXPLORE).  
+
+          2Æ†   CHECÀ† BASI√ ANƒ ACTIV≈ RESORCE” FO“ TH≈ COMPUTEƒ 
+ç
+                TIME (MUST BE ONLY ONE LEVEL DOWN).  
+
+          3.    INFORM USER OF MISSING RESOURCES.
+
+          4.    ADDING TO PENDING LIST
+
+                A.  MAKE X,Y = CURRENT X,Y
+
+                B.  MAKE ACTION TYPE = EXPLORATION ACTION
+
+                C.  MAKE TIME STARTED = GAME TIME
+
+                D.  MAKE UPDATES LEFT = TIME FOR EXPLORE
+
+                E.  COMPUTE TIME FOR EXPLORE
+               
+                        EACH TOP LEVEL ITEM: 
+                         
+                        TH≈ TIM≈ NEEDEƒ Tœ EXPLOR≈ ± BLOCÀ EQUAL” ç
+                        THE QUANTITY OF THAT ITEM TIMES EXPLORATION
+                        SPEEDÆ 1Ø QUANTITŸ EXPOR≈ SPEEƒ Ω NUMBER ç
+                        O∆ TIM≈ UPDATE” Tœ EXPLOR≈ BLOCKÆ†  GOIN« ç
+                        THROUG»  ALÃ TO– LEVEÃ ITEM” FINDIN«† TH≈ ç
+                        MAXIMUM AMOUNT OF TIME.                     
+
+                F.  MAKE RESOURCES INVOLVED = SELECTION TREE
+
+                G.  MAKE TRANSPORTATION LIST = NIL
+
+                H.  CALL ADD TO PENDING LIST
+ä          5.  FINISH PENDING ITEM EXPLORATION
+
+              FOR EACH TOP LEVEL ITEM IN SELECTION TREE
+               FOR EACH RESOURCE IN X,Y RESOURCE TREE
+                 IF NOT FOUND AND NOT EXTRACTED THEN
+                   FOR EACH EXPLORATORY TEST
+                      CHANCE OF FINDING =
+                        ((%DONE)(RESOURCES[RNUM].TEST
+                                        EFFECTIVENESS[TESTNUMBER]
+                         (RESOURCES[EQUIPRUN]TEST
+                                        EFFECTIVENESS[TESTNUMBER])
+
+              ROLL RANDOM NUMBER
+                IF FOUND CHANGE FOUND FLAG TO TRUE
+
+              ADD SELECTION TREE TO TESOURCE TREE TO BLOCK
+              X,Y
+
+              CREATE LOG ITEM 
+                COPY X,Y ACTION TYPE
+                IF %DONE < 100 THEN
+                   MAKE ACTION TYPE ABORTED TYPE
+                   MAKE COMPLETION TIME = GAME TIME
+             
+              CALL ADD TO LOG LIST
+.PAä
+
+                           EXTRACTION
+
+
+       F4:    FROM ZOOM AND BLOCK TEST ONLY ENTER WINDOW FOR
+
+              SELECTION OF RESOURCE TO EXTRACT. (ACCEPTS ONLY
+              SINGLE TOP LEVEL ITEMS THAT ARE SUBSURFACE).
+
+              EXIT  WINDOW BY <RETURN>
+
+              ATTEMP TO FIND SELECTION TREE
+              IF NILL GIVE MESSAGE AND ABORT
+
+        
+          1.  FIND TIME FOR EXTRACTION
+
+          2.  CHECK BASIC AND ACTIVE RESOURCES FOR COMPUTED TIME
+
+          3.  INFORM USER OF MISSING RESOURCES
+
+          4.  ADDING TO PENDING LIST
+
+              A.  MAKE X,Y = CURRENT X,Y
+   
+              B.  MAKE ACTION TYPE = EXTRACTION ACTION
+ 
+              C.  MAKE TIME STARTED = TIME FOR EXTRACT
+
+              D.  COMPUTE TIME OF EXTRACTION
+
+               COMPUTE BASE TIME TO EXTRACT RESOURCE FOR EACH
+                  RESOURCE IN RESOURCE TREE ADD IN
+                  QUANTITY / EXTRACTION SPEED FOR THAT RESOURCE
+
+                  COMPUTE BACE EFFICIENCY OF EQUIPMENT FOR EACH 
+                  RESOURCE IN EQUIPMENT TREE ADD IN
+                  QUANTITY * EXTRACTION SPEED FOR THAT RESOURCE      
+
+                  TIME TO EXTRACT = BASE TIME/BASE EFFICIENCY
+
+          5.  FINISH PENDING ITEM EXTRACTION
+
+              FOR EACH RESOURCE IN OBJECT TREE 
+                IF % DONE = 100 THEN
+                   FLIP EXTRACTED FLAG TO TRUE
+                   FOUND FLAG TO TRUE
+
+              RESOURCE NUMBER = CURRENT RESOURCE OBJECT NUMBER
+       
+              QUANTITY = (%DONE)(QUANTITY OF CURRENT OBJECT       
+                                          RESOURCE)
+
+              LINK IN AFTER CURRENT OBJECTä
+              SUBTRACT FROM CURRENT OBJECT QUANTITY THE NEW 
+              OBJECT QUANTITY
+
+              ADD EQUIPMENT TREE TO RESOURCE TREE OF BLOCK X,Y
+
+              ADD OBJECT TREE TO RESOURCE TREE OF BLOCK X,Y
+
+              CREATE LOG ITEM
+                 COPY X,Y ACTION TYPE
+                 IF % DONE < 100 THEN
+                    MAKE ACTION TYPE ABORTED TYPE
+                    MAKE COMPLETION TIME = GAME TIME
+              
+              CALL ADD TO LOG LIST
+
+.PAä
+
+                     DEVELOPMENT/REFINEMENT
+
+
+       F5:F6  FROM ZOOM AND BLOCK TEXT ONLY ENTERS WINDOW FOR               
+
+              SELECTION OF RESOURCE TO DEVELOP
+
+              WHILE SELECTING SURFACE RESOURCE KEEP TRACK OF MIN
+              AND MAX RESOURCE NUMBER NEEDED TO DEVELOP
+
+              Dœ† NO‘† ALLO◊ SELECTIOŒ O∆ ¡ RESOURC≈ WIT»† MIŒ† º ç
+                  CURRENT MIN OR MAX > CURRENT MAX
+
+              EXIT WINDOW BY <RETURN>
+
+              GET SELECTION TREE AND ABORT IF NECESSARY
+
+              OTHERWISE
+
+                AUTOMATICALLŸ† REENTER”† WINDO◊ FO“† SELETIOŒ† O∆ ç
+                EQUIPMENT TO DEVELOP/REFINE WITH
+
+                Dœ† NO‘ ALLO◊ SELECTIOŒ O∆ RESOURC≈ OUTSID≈ (MIN¨ ç
+                MAX)RANGE
+ 
+              ATTEMPT TO FIND SELECTION TREE
+                IF NIL GIVE MESSAGE AND ABORT            
+
+                OTHERWISE 
+   
+                  FIND TIME FOR DEVELOPMENT/REFINEMENT
+
+                  CHECK BASIC AND ACTIVE NEEDS FOR COMPUTED
+                  TIME
+
+                  INFORM USER OF MISSING RESOURCES
+.PAä             ADDING TO PENDING LIST
+
+                A.  MAKE X,Y = CURRENT X,Y
+
+                B.  MAKE ACTION TYPE = DEVELOPMENT ACTION
+
+                C.  MAKE TIME STARTED = GAME TIME
+
+                D. MAKE UPDATE LEFT = TIME FOR DEVELOP/REFINE
+
+                E. FIND TIME FOR DEVELOP/REFINE
+  
+                  COMPUTE BASE TIME TO DEVELOP/REFINE RESOURCE FOR EACH
+                  RESOURCE IN RESOURCE TREE ADD IN
+                  QUANTITY / DEVELOPMENT/REFINMENT SPEED FOR THAT RESOURCE
+
+                  COMPUTE BACE EFFICIENCY OF EQUIPMENT FOR EACH 
+                  RESOURCE IN EQUIPMENT TREE ADD IN
+                  QUANTITY * DEVELOPMENT/REFINEMENT SPEED FOR THAT RESOURCE      
+                       
+                  TIM≈ Tœ DEVELO– Ω BAS≈ TIME/BAS≈ EFFICIENCY
+
+                 F.  MAKE RESOURCES INVOLVED = SELECTION TREE
+
+                 G.  MAKE TRANSPORTATION LIST = NIL
+
+                 H.  CALL ADD TO PENDING LIST                          
+                                                                                                                                          ç
+           FINISH PENDING ITEM DEVELOP/REFINE                                         ç
+                                                                                     ç
+              FOR EACH RESOURCE IN OBJECT TREE                                       ç
+                IF % DONE = 100 THEN                                                 ç
+                   FLIP EXTRACTED FLAG TO TRUE                                       ç
+                ELSE                                                                 ç
+                   CREATE NEW RESOURCE ITEM                                          ç
+                   SET EXTRACTED FLAG TO TRUE                                        ç
+                   FOUND FLAG TO TRUE                                                ç
+                                                                                     ç
+              RESOURC≈ NUMBE“† Ω CURREN‘ RESOURC≈ OBJEC‘†NUMBER                      ç
+                                                                                     ç
+              QUANTITŸ† Ω† (%DONE)(QUANTITŸ O∆ CURREN‘ OBJEC‘                        ç
+                                   RESOURCE)                                         ç
+                                                                                     ç
+              LINK IN AFTER CURRENT OBJECT                                           ç
+                                                                                     ç
+              SUBTRAC‘ FROÕ CURREN‘ OBJEC‘ QUANTITŸ TH≈ NE◊                          ç
+              OBJECT QUANTITY                                                        ç
+                                                                                     ç
+              ADD EQUIPMENT TREE TO RESOURCE TREE OF BLOCK X,Y                       ç
+                                                                                     ç
+              ADD OBJECT TREE TO RESOURCE TREE OF BLOCK X,Y                          ç
+
+
+              CREATE LOG ITEM                                                        ç
+                                                                                     çä                COPY X,Y ACTION TYPE                                                 ç
+                  IF % DONE < 100 THEN                                               ç
+                    MAKE ACTION TYPE ABORTED TYPE                                    ç
+                    MAKE COMPLETION TIME = GAME TIME                                 ç
+
+              TRANSFORMATION OF RESOURCE NUMBERS AND QUANTITY
+                                                                                     ç
+              CALL ADD TO LOG LIST                                   
+.PAä
+
+                           PRODUCTION
+
+
+       F7 :  FROM SECTOR MAP OR BLOCK TEXT MAP
+
+             CREAT A PRODUCABLE RESOURCE TREE
+ 
+             ONLY ALLOW SELECTION OF ONE TYPE
+
+             ASK USER HOW MAY THEY WANT TO PRODUCE
+
+             CHECK RESOURCES
+
+               FOR EACH LEVEL IN THE RESOURCE TREE START AT
+               FIRST ALTERNATIVE
+                 IF AMOUNT OF RESOURCE IN TOP LEVEL OF TREE
+                   IS ADEQUATE THEN GO TO NEXT LEVEL
+
+                 OTHERWISE GO TO NEXT ALTERNATIVE IF NEXT
+                   ALTERNATIVE IS NIL THE PRODUCTION IS
+                   IMPOSSIBLE
+
+             IF PRODUCTION IS IMPOSSIBLE THEN ABORT AND GIVE A
+                MESSAGE
+
+             OTHERWISE
+
+                COMPUTE TIME FOR PRODUCTION CHECK FOR ACTIVE
+                AND BASIC RESOURCES FOR THE COMPUTED TIME
+                IF NOT ENOUGH ABORT AND GIVE MESSAGE
+
+              ADDING TO PENDING LIST    
+
+                 A.  MAKE X,Y = CURRENT X,Y                            
+
+                 B.  MAKE ACTION TYPE = PRODUCTION ACTION             
+
+                 C.  MAKE TIME STARTED = GAME TIME                     
+
+                 DÆ  MAK≈ UPDATE” LEF‘ Ω TIM≈ FO“ PRODUCTION          
+                                                                       
+                 E.  FIND TIME FOR PRODUCTION                  
+
+                      COMPUTE BASE TIME TO PRODUCE FOR EACH     
+                      FOR EACH OBJECT IN OBJECT TREE ADD IN            
+                          QUANTITY / PRODUCTION SPEED      
+                                     FOR THAT RESOURCE                 
+
+              CREATE LOG ITEM                                        
+
+                COPY X,Y ACTION TYPE                                 
+                  IF % DONE < 100 THEN                               
+                    MAKE ACTION TYPE ABORTED TYPE                    ä                    MAKE COMPLETION TIME = GAME TIME                 
+
+              TRANSFORMATION OF RESOURCE NUMBERS AND QUANTITY        
+
+
+              CALL ADD TO LOG LIST                                   
+.PAä
+
+                         TRANSPORTATION
+ 
+
+       F8:    FROM SECTOR OR BLOCK TEXT ONLY
+              INITIALIZ≈† ALLOWABL≈ TRANSORTATIOŒ SE‘ ACTIVATE” ç
+              RESOURCE WINDOW FOR SELECTION OF TRANSPORTION 
+              VEHICLE
+
+              GET SELECTION TREE
+  
+                 IF NIL
+                    CLOSE WINDOW AND ABORT ACTION
+                 OTHERWISE
+ 
+              SELECTING A TRANSPORTATION VECHICLE
+
+                 1.  MUST BE USABLE FOR TRANSPORTATION
+
+                 2.  AT LEAST ONE TRANSPORTATION TYPE FOR THIS
+                     VECHICLE MUST BE IN SET OF CURRENT 
+                     TRANSPORTATION TYPES
+
+                 3.  CHECK WEIGHT OF CONTAINED TREE
+
+              WHEN UNSELECTING REFIGURE CURRENT TRANSPORTATION
+              SET
+
+              IF TRANSPORTATION TYPE IS AMBIGUOUS ASK THE USER
+              TO CLARIFY
+                 AT THIS POINT ALLOW USER TO ABORT ACTION
+
+              COMPUTE THE RANGE OF ALL SELECTED VEHICLES
+
+                 SET MINMUM RANGE TO A LARGE NUMBER
+
+                 FOR EACH TRANSPORTATION VEHICLE
+
+                     1.  FIND TIME BEFORE FIRST ACTIVE RESOURCE
+                         RUNS OUT
+
+                     2.  MULTIPLY TIME * APPROPRIATE TRANSPORTATION
+                                         SPEED
+
+                     3.  IF LESS THAN MIN SET MIN RANGE = CURRENT RANGE
+
+                 IF MIN RANGE = 0 THEN EXIT AND ABORT ACTION
+
+.PAä                 CASE MODE OF 
+         
+                     AIR - ANY MOVEMENT
+ 
+                     LAND - ANY LAND AT SQUARE
+   
+                     WATER - ON FIRST MOVE
+                             START ON LAND - MOVE TO ANY WATER(ONLY WATER)
+                             
+                             SUBSEQUENT MOVES
+                                START ON WATER MOVE TO ANY WATER OF LAND
+                                START ON LAND MOVE ONLY TO LAST SQUARE
+                                WATER
+
+                     IF MOVE IS BACK TO LAST SQUARE THEN DELETE
+                     THE LAST ITEM
+
+                     KEEP RUNNING ACCOUNT OF MILAGE IF CURRENT
+                     MOVE PUTS MILAGE OVER RANGE DO NOT ALLOW IT
+
+
+          F8:   COMPLETING DEFINITION OF TRANSPORTATION 
+   
+                PUT BACK IN BLOCK TEXT SCREEN WHERE TRANSPORTATION
+                BEGIN
+
+                FROM MILAGE USED/RANGE  COMPUTE COMPLETION TIME
+
+               ADD ITEM TO PENDING LIST
+      
+             ADDING TO PENDING LIST
+
+                A.  MAKE X,Y = CURRENT X,Y
+
+                B.  MAKE ACTION TYPE = TRANSPORTATION ACTION
+
+                C.  MAKE TIME STARTED = GAME TIME
+
+                D. MAKE UPDATE LEFT = TIME FOR TRANSPORTATION
+
+                E. FIND TIME FOR TRANSPORTATION
+  
+                  COMPUTE BASE TIME TO TRANSPORT RESOURCE FOR EACH
+                  RESOURCE IN RESOURCE TREE ADD IN
+                  QUANTITY / TRANSPORTATION SPEED FOR THAT RESOURCE
+
+                  COMPUTE BACE EFFICIENCY OF EQUIPMENT FOR EACH 
+                  RESOURCE IN EQUIPMENT TREE ADD IN
+                  QUANTITY * TRANSPORTATION SPEED FOR THAT RESOURCE      
+                       
+                  TIM≈ Tœ TRANSPORT Ω BAS≈ TIME/BAS≈ EFFICIENCY
+.PAä                 F.  MAKE RESOURCES INVOLVED = SELECTION TREE
+
+                 G.  MAKE TRANSPORTATION LIST = NIL
+
+                 H.  CALL ADD TO PENDING LIST
+
+            UPDATING A TRANSPORTATION PENDING ITEM
+
+                 NEED TO KEEP COUNTER IN THE PENDING ITEM
+                 FOR MILAGE UNTIL NEXT BLOCK
+
+                 FIGURE OUT MILAGE TRAVELED IN THE LAST EIGHT 
+                 HOURS ADD TO MILAGE COUNTER
+ 
+                 IF MILAGE COUNTER IS GREATER THAN MILAGE UNTIL
+                 NEXT BLOCK THEN MOVE INTO NEXT BLOCK
+
+
+           COMPLETING A TRANSPORTATION PENDING ITEM
+              
+                 ADD VECHICLES TO BLOCK AT HEAD OD TRANSPORTATION
+
+
+              CREATE LOG ITEM                                        
+
+                COPY X,Y ACTION TYPE                                 
+                  IF % DONE < 100 THEN                               
+                    MAKE ACTION TYPE ABORTED TYPE                    
+                    MAKE COMPLETION TIME = GAME TIME                 
+
+              TRANSFORMATION OF RESOURCE NUMBERS AND QUANTITY        
+
+
+              CALL ADD TO LOG LIST                                                    LINK LIST
+

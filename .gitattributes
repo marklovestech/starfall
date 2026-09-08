@@ -1,0 +1,14 @@
+# Treat DOS executables, overlays, and data files as binary so Git
+# does not attempt to diff or convert line endings in them.
+
+*.COM binary
+*.DAT binary
+*.PIC binary
+*.LTR binary
+*.doc binary
+*.[0-9][0-9][0-9] binary
+
+# Docs folder contains binary documents with no/unknown encoding.
+docs/CHARTS binary
+docs/MANUAL binary
+docs/SPECS.TXT binary

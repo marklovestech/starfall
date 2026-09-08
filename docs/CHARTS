@@ -1,0 +1,603 @@
+.FO                                 Page B-#
+                                 Table B-1
+                              Transportation
+
+
+
+ ResourcÂ†          ¸   CargÔ     ¸  AiÚ   ¸ Lan‰ ¸ WateÚ ¸ FueÏ† usagÂ| Number of
+ Name               |   capacity  |  speed | speed| speed |  per Time  | Operators
+                    |             |        |      |       |   Update   |  Needed             
+____________________|_____________|________|______|_______|____________|___________
+                    |             |        |      |       |            |  
+ Small Combine      |        1000 |    0   |  25  |   0   |     50     |    1
+ Medium Combine     |        1500 |    0   |  20  |   0   |     60     |    2
+ Large Combine      |        2000 |    0   |  15  |   0   |     70     |    3
+ Automatic combine  |        2500 |    0   |  30  |   0   |    100     |    0
+ Horse              |         120 |    0   |  13  |   0   |      0     |    1
+ Jeep               |        2000 |    0   | 100  |   0   |     13     |    1
+ Land Crawler       |        5000 |    0   |  60  |   0   |     20     |    1
+ Amphibious Crawler |        5000 |    0   |  50  |  25   |     25     |    1
+ Cargo Platform     |     500,000 |    0   |  20  |   0   |    500     |   10
+ Hydrofoil          |      10,000 |    0   |   0  | 680   |     55     |    5
+ Small Trawler      |      10,000 |    0   |   0  | 150   |     25     |    5 
+ Hovercraft         |      35,000 |    0   | 300  | 300   |    200     |   25
+ Cargo Ship         |     200,000 |    0   |   0  | 200   |    200     |   75
+ Ocean Liner        |  10,000,000 |    0   |   0  | 150   |    680     |  300 
+ Tanker             | 500,000,000 |    0   |   0  | 100   |   1000     |  500
+ Transport Rocket   |       3,500 | 48,000 |   0  |   0   |      0     |    0
+ Cargo Plane        |      20,000 |  2,000 |   0  |   0   |    150     |    3
+ Big Jet Transport  |      50,000 |  2,500 |   0  |   0   |    680     |    4
+ High Speed Jet     |      12,000 |  5,000 |   0  |   0   |    288     |    2
+ Space Shuttle      |      60,000 | 30,000 |   0  |   0   |  10000     |    6 
+ Huffer             |     150,000 |  1,300 |   0  |   0   |  20000     |   25
+ People             |          20 |    0   |  25  |   0   |      0     |    0
+                    |             |        |      |       |            |
+    
+                                                  
+ 
+.paä                                Table B-2a
+                           Detection Percentages
+
+
+
+   Resourse     |  Magneti„   ¸ GravitationaÏ ¸  ChemicaÏ   ¸  Seismi„     
+   Name         |     %       |       %       |     %       |     %    
+________________|_____________|_______________|_____________|____________
+                |             |               |             |
+   Copper ore   |     30      |       10      |     30      |     80
+   Gold ore     |     50      |        0      |     10      |     30
+   Iron ore     |     60      |       80      |     20      |     40
+   Uncut gems   |     70      |        0      |     30      |     10
+   Lead ore     |     80      |       30      |     10      |     30
+   Mercury      |     10      |       50      |     20      |     80
+   Poor coal    |     10      |        0      |     90      |     30
+   Rich coal    |     10      |        0      |     90      |     30
+   Crude oil    |     10      |        0      |     80      |     30
+   Natural gas  |     10      |        0      |     80      |     30
+   Aluminum ore |     60      |        0      |     60      |     60
+   Tin          |     40      |       10      |     40      |     70
+   Magnesium    |     10      |       10      |     20      |     80
+   Salt         |     90      |        0      |     30      |     70
+   Clay         |     40      |        0      |     40      |     80
+   Sulfur       |     10      |        0      |     10      |     90
+                |             |               |             | 
+             
+
+            
+
+
+                                Table B-2b
+                         Detection Equipment Speed
+                          
+                  
+   Exploration          |    Average time to     |  Fuel Usage  | Number of 
+   Equipment type       |    Explore one block   |   per Time   | Operators
+                        |                        |    Update    |  Needed
+________________________|________________________|______________|__________
+                        |                        |              |
+   Magnetic             |    4 weeks  1 day      |      0       |    5
+   Gravitational        |    8 weeks  2 days     |      0       |    5
+   Chemical             |    6 weeks  2 days     |      0       |   10
+   Seismic              |   10 weeks  4 days     |      0       |    2
+                        |                        |              |
+
+
+.paä                                Table B-3a                                                                   
+                           Extraction Parameters
+
+
+       Resource       | Amount Extracted | Likelihood of | Typical deposit
+       Name           |  per time unit   |   occurence   |     size
+      ________________|__________________|_______________|_________________
+               
+       Copper ore     |       20         |      60       |    10,000
+       Gold ore       |       20         |      10       |       500  
+       Iron ore       |       20         |      80       |    25,000
+       Uncut gems     |       20         |       5       |         2
+       Lead ore       |       20         |      60       |    10,000 
+       Mercury ore    |       20         |      50       |    10,000
+       Poor coal      |       20         |      80       |    25,000  
+       Rich coal      |       20         |      40       |    25,000   
+       Crude oil      |       30         |      40       |   100,000 barrels   
+       Natural gas    |   10,000         |      40       |       250 m
+       Aluminum ore   |       20         |      70       |    10,000
+       Tin ore        |       20         |      50       |    10,000
+       Magnesium ore  |       20         |      60       |    10,000 
+       Salt           |       20         |      90       |    10,000
+       Clay           |       20         |      90       |   100,000  
+       Sulfur         |       20         |      80       |     5,000
+
+
+                                Table B-3b           
+                             Equipment Speeds
+
+
+      Equipment           | % of Base Amount Extracted | Fuel Usage | Number of
+                          |       per time unit        |  per Time  | Operators
+                          |                            |   Update   |  Needed
+__________________________|____________________________|____________|___________
+                          |                            |            |
+ Shovel/Pick              |          0.01              |      0     |     1
+ Basic Power Mining Tools |          1.00              |     10     |     3  
+ Heavy Mining Equipmemt   |         65.00              |     70     |    18 
+ Complete Mining Outfit   |        100.00              |    188     |   200
+ Automatic Miner          |         70.00              |    120     |     0
+                          |                            |            |
+.PAä                                Table B-4a
+                      Resource Development Parameters
+
+
+
+Developable       |  Acceptable       |  Base Amount    |   Development
+Resource          |  Tools*           |  Developed per  |      Result
+                  |                   |  Time Update    |
+ _________________|___________________|_________________|_______________
+                  |                   |                 |
+ Heath            |  Basic Hand Tools |  1 Hectare      | Poor Farmland
+ Prairie          |  Slow Tiller      |  1 Hectare      | Good Farmland
+ Savannah         |  Fast Tiller      |  1 Hectare      | Good Farmland
+ Steppe           |                   |  1 Hectare      | Good Farmland
+                  |                   |                 |
+ Conifer Forest   |  Saws             |  1 Hectare      | Timber 
+ Decidious Forest |  Lumber Mill      |  1 Hectare      | Timber
+ Jungle           |                   |  1 Hectare      | Timber
+                  |                   |                 |
+
+™† An˘ oÊ thÂ toolÛ liste‰ iÓ · verticaÏ blocÎ ma˘ bÂ use‰ tÔ ç
+   develo an˘ oÊ thÂ resourceÛ iÓ thaÙ block.
+
+
+
+
+                                Table B-4b        
+                          Tool Development Speeds
+
+  
+
+   DevelopmenÙ†Tool  ¸ • oÊ BasÂ AmounÙ Develope‰ ¸ FueÏ† UsagÂ†¸  Number of
+                     |       per Time Update      | per time    |  Operators
+                     |                            |   Update    |  Needed
+ ____________________|____________________________|_____________|____________
+                     |                            |             |
+    Basic Farm Tools |             10             |      0      |     1
+    Slow Tiller      |             50             |      3      |     2
+    Fast Tiller      |            100             |      5      |     2
+    Saws             |             10             |      0      |     2
+    Lumber Mill      |            100             |     125     |    100          
+                     |                            |             |
+
+.paä                                Table B-5a
+                      Resource Refinement Parameters
+
+
+      
+ RefineablÂ††      ¸† Acceptable†      ¸† BasÂ† AmounÙ†  ¸  Refinement
+ Resource          |  Refinery         |  Refined per    |  Result
+                   |  Type             |  Time Update    |
+___________________|___________________|_________________|________________
+                   |                   |                 |
+ Copper Ore        |  Oxide            |  10 metric tons |  Copper
+ Gold Ore          |  Oxide            |  1  metric ton  |  Gold Bullion
+ Iron Ore          |  Oxide            |  10 metric tons |  Iron
+ Uncut Gems        |  Oxide            |  .1 metric ton  |  Gems
+ Lead Ore          |  Sulfide          |  10 metirc tons |  Lead
+ Mercur˘† OrÂ†     ¸† Sulfide†         ¸† 1∞†metri„†tonÛ†¸  Mercury
+ Poor Coal         |  Fuel             |  10 metric tons |  Fuel
+ Rich Coal         |  Fuel             |  10 metric tons |  Fuel
+ Crude Oil         |  Fuel             |  10000 barrels  |  Fuel
+ AluminuÌ OrÂ      ¸  OxidÂ            ¸  1∞ metri„ tonÛ ¸  Aluminum
+ Tin Ore           |  Oxide            |  10 metric tons |  Tin
+ Magnesium Ore     |  Oxide            |  10 metric tons |  Magnesium
+ Zinc              |  Oxide            |  10 metric tons |  Zinc
+                   |                   |                 | 
+
+
+                                                        
+
+                                Table B-5b
+                              Refinery Speeds
+
+
+
+  Refinery Type           | % of Base Amount Refined | Fuel usage | Number of
+                          |       per Time Update    |  per Time  | Operators
+                          |                          |   Update   | Needed
+__________________________|__________________________|____________|____________
+                          |                          |            |
+  Slow Oxide Refinery     |           10             |     200    |    100
+  Medium Oxide Refinery   |           50             |     500    |    700
+  Fast Oxide Refinery     |          100             |    1000    |   2000  
+                          |                          |            |
+  Slow Sulfide Refinery   |           10             |     200    |   100
+  Medium Sulfide Refinery |           50             |     500    |   700 
+  Fast Sulfide Refinery   |          100             |    1000    |  2000
+                          |                          |            |
+  Slow Fuel Refinery      |           10             |     200    |   100 
+  Medium Fuel Refinery    |           50             |     500    |   700 
+  Fast Fuel Refinery      |          100             |    1000    |  2000
+                          |                          |            |
+.paä                                 Table B-6
+                          Production Requirements
+
+     
+              Resource to      |      Resources     |  Amount 
+              be Produced      |       Needed       |  needed
+        _______________________|____________________|_______________
+                               |                    |
+        Gravitational          |    Aluminum        |  500 kg
+          Detection Equipment  |    Magnesium       |  500 kg       
+                               |    Fuel            |  10 liters
+                               |    People          |  15
+                               |    Time            |  90 days                            
+                               |                    |
+        Magnetic               |    Iron            |  500 kg 
+          Detection Equipment  |    Copper          |  500 kg
+                               |    Fuel            |  10 liters
+                               |    People          |  15
+                               |    Time            |  90 days
+                               |                    |
+        Seismic                |    Iron            |  1000 kg
+          Detection Equipment  |    Tin             |  500 kg
+                               |    Zinc            |  500 kg
+                               |    Fuel            |  25 liters
+                               |    People          |  25
+                               |    Time            |  60 days
+                               |                    |
+        Chemical               |    Sulphur         |  50 kg
+          Detection Equipment  |    Lead            |  50 kg
+                               |    Fuel            |  1 liter
+                               |    People          |  10
+                               |    Time            |  30 days
+                               |                    |
+        Shovel & Pick          |    Iron            |  7 kg
+                               |    Timber          |  16 kg
+                               |    People          |  1
+                               |    Time            |  8 hours
+                               |                    |
+        Basic Power            |    Iron            |  500 kg
+          Mining Tools         |    Aluminum        |  250 kg
+                               |    Timber          |  250 kg
+                               |    People          |  5
+                               |    Time            |  7 days
+                               |                    |
+        Heavy Mining Equipment |    Iron            |  20000 kg
+                               |    Aluminum        |  5000 kg
+                               |    Fuel            |  1000 liters
+                               |    Copper          |  5000 kg
+                               |    Timber          |  5000 kg
+                               |    People          |  50
+                               |    Time            |  90 days
+                               |                    | 
+.PAä                             Table B-6(cont.)
+                          Production Requirements
+
+     
+              Resource to      |      Resources     |  Amount 
+              be Produced      |       Needed       |  needed
+        _______________________|____________________|_______________
+                               |                    |
+        Complete Mining Outfit |    Iron            |  70000 kg   
+                               |    Aluminum        |  10000 kg     
+                               |    Tin             |  10000 kg
+                               |    Copper          |  10000 kg
+                               |    Fuel            |  500 liters
+                               |    People          |  75
+                               |    Time            |  300 days
+                               |                    |
+        Automatic Miner        |    Iron            |  40000 kg
+                               |    Copper          |  5000 kg
+                               |    Fuel            |  500 liters
+                               |    Aluminum        |  5000 kg
+                               |    People          |  100
+                               |    Time            |  600 days
+                               |                    |
+        Basic Plow Team        |    Horse           |  2
+                               |    Iron            |  25 kg
+                               |    Timber          |  25 kg
+                               |    People          |  1     
+                               |    Time            |  8 hours
+                               |                    |
+        Small Combine          |    Iron            |  10000 kg
+                               |    Aluminum        |  2000 kg
+                               |    Fuel            |  250 liters
+                               |    People          |  10     
+                               |    Time            |  30 days
+                               |                    |
+        Medium Combine         |    Iron            |  12000 kg      
+                               |    Aluminum        |  4000 kg
+                               |    Tin             |  1000 kg
+                               |    Fuel            |  250 liters
+                               |    People          |  25 
+                               |    Time            |  90 days
+                               |                    |
+        Large Combine          |    Iron            |  15000 kg
+                               |    Aluminum        |  5000 kg
+                               |    Tin             |  2000 kg
+                               |    Fuel            |  500 liters
+                               |    People          |  50      
+                               |    Time            |  300 days
+                               |                    |
+.PAä                             Table B-6(cont.)
+                          Production Requirements
+
+     
+              Resource to      |      Resources     |  Amount 
+              be Produced      |       Needed       |  needed
+        _______________________|____________________|_______________
+                               |                    |
+        Automatic Combine      |    Iron            |  20000 kg      
+                               |    Aluminum        |  15000 kg
+                               |    Tin             |  5000 kg
+                               |    Zinc            |  5000 kg
+                               |    Fuel            |  500 liters
+                               |    People          |  100
+                               |    Time            |  600 days
+                               |                    |       
+        Basic Farm Tools       |    Iron            |  25 kg      
+                               |    Timber          |  20 kg
+                               |    People          |  1
+                               |    Time            |  1 day
+                               |                    |
+        Slow Tiller            |    Iron            |  70 kg
+                               |    Aluminum        |  10 kg
+                               |    Zinc            |  2 kg
+                               |    Fuel            |  25 liters
+                               |    People          |  3       
+                               |    Time            |  5 days
+                               |                    |
+        Fast Tiller            |    Iron            |  104 kg      
+                               |    Aluminum        |  22 kg
+                               |    Zinc            |  9 kg
+                               |    Fuel            |  45 liters
+                               |    People          |  8
+                               |    Time            |  12 days
+                               |                    |     
+        Saws                   |    Timber          |  5 kg
+                               |    Iron            |  5 kg
+                               |    People          |  1
+                               |    Time            |  8 hours
+                               |                    |  
+        Lumber Mill            |    Timber          |  3000 kg
+                               |    Iron            |  1500 kg
+                               |    Zinc            |  100 kg
+                               |    Fuel            |  1500 liters
+                               |    People          |  200
+                               |    Time            |  150 days
+                               |                    |
+.PAä                             Table B-6(cont.)
+                          Production Requirements
+
+     
+              Resource to      |      Resources     |  Amount 
+              be Produced      |       Needed       |  needed
+        _______________________|____________________|_______________
+                               |                    |
+        Jeep                   |    Iron            |  1000 kg
+                               |    Aluminum        |  100 kg
+                               |    Lead            |  100 kg
+                               |    Sulphur         |  10 kg
+                               |    Fuel            |  10 liters
+                               |    People          |  10
+                               |    Time            |  30 days
+                               |                    |
+        Land Crawler           |    Iron            |  2000 kg
+                               |    Aluminum        |  1700 kg
+                               |    Sulphur         |  100 kg
+                               |    Tin             |  200 kg
+                               |    Fuel            |  20 liters
+                               |    People          |  25
+                               |    Time            |  60 days
+                               |                    | 
+        Amphibious Crawler     |    Iron            |  1000 kg
+                               |    Aluminum        |  3500 kg
+                               |    Tin             |  500 kg
+                               |    Sulphur         |  300 kg
+                               |    Fuel            |  20 liters
+                               |    People          |  35
+                               |    Time            |  90 days
+                               |                    |
+        Cargo Platform         |    Iron            |  90000 kg
+                               |    Aluminum        |  8000 kg
+                               |    Copper          |  1500 kg
+                               |    Sulphur         |  500 kg
+                               |    Fuel            |  50 liters
+                               |    People          |  100 
+                               |    Time            |  300 days
+                               |                    |
+        Hydrofoil              |    Iron            |  1000 kg
+                               |    Aluminum        |  2000 kg
+                               |    Zinc            |  1000 kg
+                               |    Tin             |  1000 kg
+                               |    Fuel            |  50 liters
+                               |    People          |  50
+                               |    Time            |  90 days
+                               |                    |
+.PAä                             Table B-6(cont.)
+                          Production Requirements
+
+     
+              Resource to      |      Resources     |  Amount 
+              be Produced      |       Needed       |  needed
+        _______________________|____________________|_______________
+                               |                    |
+        Small Trawler          |    Aluminum        |  25000 kg
+                               |    Iron            |  10000 kg
+                               |    Tin             |  5000 kg
+                               |    Fuel            |  50 liters
+                               |    People          |  50 
+                               |    Time            |  30 days
+                               |                    |
+        Hovercraft             |    Aluminum        |  5000 kg
+                               |    Magnesium       |  2000 kg
+                               |    Zinc            |  2000 kg
+                               |    Tin             |  1000 kg
+                               |    Fuel            |  100 liters
+                               |    People          |  100
+                               |    Time            |  120 days
+                               |                    |
+        Cargo Ship             |    Iron            |  200000 kg
+                               |    Aluminum        |  150000 kg
+                               |    Tin             |  20000 kg
+                               |    Zinc            |  20000 kg
+                               |    Copper          |  10000 kg
+                               |    Fuel            |  1550 liters 
+                               |    People          |  300
+                               |    Time            |  300 days
+                               |                    |
+        Ocean Liner            |    Iron            |  500000 kg
+                               |    Aluminum        |  400000 kg
+                               |    Tin             |  50000 kg
+                               |    Zinc            |  50000 kg
+                               |    Fuel            |  10000 liters
+                               |    People          |  500
+                               |    Time            |  600 days
+                               |                    |
+        Tanker                 |    Iron            |  10 million kg
+                               |    Aluminum        |  4 million kg
+                               |    Tin             |  500000 kg
+                               |    Zinc            |  500000 kg
+                               |    Fuel            |  50000 liters
+                               |    People          |  750
+                               |    Time            |  1200 days
+                               |                    |
+.PAä                             Table B-6(cont.)
+                          Production Requirements
+
+     
+              Resource to      |      Resources     |  Amount 
+              be Produced      |       Needed       |  needed
+        _______________________|____________________|_______________
+                               |                    |
+        Transport Rocket       |    Iron            |  500 kg
+                               |    Aluminum        |  1000 kg
+                               |    Fuel            |  100 liters
+                               |    People          |  50
+                               |    Time            |  30 days
+                               |                    |
+        Cargo Plane            |    Iron            |  5000 kg
+                               |    Aluminum        |  17000 kg
+                               |    Magnesium       |  2000 kg
+                               |    Tin             |  500 kg
+                               |    Sulphur         |  500 kg
+                               |    Fuel            |  100 liters
+                               |    People          |  100 
+                               |    Time            |  300 days
+                               |                    | 
+        Big Jet Transport      |    Iron            |  40000 kg
+                               |    Aluminum        |  40000 kg
+                               |    Magnesium       |  10000 kg
+                               |    Tin             |  8000 kg
+                               |    Sulphur         |  200 kg
+                               |    Fuel            |  500 liters
+                               |    People          |  150 
+                               |    Time            |  600 days
+                               |                    |
+        High Speed Jet         |    Iron            |  3000 kg
+                               |    Aluminum        |  6000 kg
+                               |    Magnesium       |  1000 kg
+                               |    Fuel            |  50000 liters
+                               |    People          |  150
+                               |    Time            |  600 days
+                               |                    | 
+        Space Shuttle          |    Iron            |  40000 kg
+                               |    Aluminum        |  40000 kg
+                               |    Magnesium       |  5000 kg
+                               |    Tin             |  5000 kg
+                               |    Clay            |  10000 kg
+                               |    Sulphur         |  200 kg
+                               |    Fuel            |  500 liters
+                               |    People          |  300 
+                               |    Time            |  1200 days
+                               |                    |
+.PAä                             Table B-6(cont.)
+                          Production Requirements
+
+     
+              Resource to      |      Resources     |  Amount 
+              be Produced      |       Needed       |  needed
+        _______________________|____________________|_______________
+                               |                    |
+        Huffer                 |    Iron            |  100000 kg
+                               |    Aluminum        |  60000 kg
+                               |    Magnesium       |  20000 kg
+                               |    Tin             |  20000 kg
+                               |    Fuel            |  500 liters
+                               |    People          |  1000 
+                               |    Time            |  600 days
+                               |                    |
+        Slow Oxide Refinery    |    Iron            |  70000 kg
+                               |    Clay            |  70000 kg
+                               |    Mercury         |  1000 kg
+                               |    Lead            |  9000 kg
+                               |    People          |  500 
+                               |    Time            |  90 days
+                               |                    |
+        Medium Oxide Refinery  |    Iron            |  100000 kg
+                               |    Clay            |  100000 kg
+                               |    Mercury         |  10000 kg
+                               |    Lead            |  10000 kg
+                               |    Salt            |  10000 kg
+                               |    People          |  750
+                               |    Time            |  180 days
+                               |                    |               
+        Fast Oxide Refinery    |    Iron            |  200000 kg
+                               |    Clay            |  300000 kg
+                               |    Mercury         |  10000 kg
+                               |    Lead            |  20000 kg
+                               |    Salt            |  10000 kg
+                               |    People          |  1000
+                               |    Time            |  360 days
+                               |                    |               
+        Slow Sulfide Refinery  |    Iron            |  70000 kg
+                               |    Clay            |  70000 kg
+                               |    Sulphur         |  5000 kg
+                               |    Magnesium       |  5000 kg
+                               |    People          |  500
+                               |    Time            |  90 days
+                               |                    |
+        Medium Sulfide Refinery|    Iron            |  100000 kg
+                               |    Clay            |  100000 kg
+                               |    Mercury         |  10000 kg
+                               |    Sulphur         |  10000 kg
+                               |    Lead            |  10000 kg
+                               |    People          |  750
+                               |    Time            |  180 days
+                               |                    |
+.PAä                                 Table B-6
+                          Production Requirements
+
+     
+              Resource to      |      Resources     |  Amount 
+              be Produced      |       Needed       |  needed
+        _______________________|____________________|_______________
+                               |                    |
+        Fast Sulfide Refinery  |    Iron            |  200000 kg
+                               |    Clay            |  300000 kg
+                               |    Mercury         |  10000 kg
+                               |    Sulphur         |  10000 kg
+                               |    Lead            |  20000 kg
+                               |    People          |  1000 
+                               |    Time            |  360 days
+                               |                    |
+        Slow Fuel Refinery     |    Iron            |  50000 kg
+                               |    Aluminum        |  50000 kg
+                               |    Tin             |  50000 kg
+                               |    People          |  500 
+                               |    Time            |  90 days
+                               |                    |
+        Medium Fuel Refinery   |    Iron            |  100000 kg
+                               |    Aluminum        |  100000 kg
+                               |    Tin             |  100000 kg
+                               |    Zinc            |  100000 kg
+                               |    People          |  750
+                               |    Time            |  180 days
+                               |                    |
+        Fast Fuel Refinery     |    Iron            |  200000 kg
+                               |    Aluminum        |  200000 kg
+                               |    Tin             |  200000 kg
+                               |    Zinc            |  100000 kg
+                               |    Copper          |  100000 kg
+                               |    People          |  1000
+                               |    Time            |  360 days
+                               |                    |
+
