@@ -21,8 +21,8 @@ copy_missing() {
         fi
     done
 }
-copy_missing "$game" "$repo"/product-build/* "$repo"/{HELPFILE.DAT,HELPINDX.DAT,INSTALL.COM}
-copy_missing "$overlays" "$repo"/product-build/PLAYGAME.0*
+copy_missing "$game" "$repo"/orig1986/product-build/* "$repo"/orig1986/{HELPFILE.DAT,HELPINDX.DAT,INSTALL.COM}
+copy_missing "$overlays" "$repo"/orig1986/product-build/PLAYGAME.0*
 game="$(cd "$game" && pwd)"
 overlays="$(cd "$overlays" && pwd)"
 flags=(-machine cga)

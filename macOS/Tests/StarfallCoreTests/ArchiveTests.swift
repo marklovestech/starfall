@@ -2,11 +2,12 @@ import Foundation
 import StarfallCore
 import Testing
 
-private let root = URL(fileURLWithPath: #filePath)
+private let orig1986 = URL(fileURLWithPath: #filePath)
     .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    .appendingPathComponent("orig1986")
 
 func fixture(_ path: String) throws -> Data {
-    try Data(contentsOf: root.appendingPathComponent(path))
+    try Data(contentsOf: orig1986.appendingPathComponent(path))
 }
 
 func voltar() throws -> World {
