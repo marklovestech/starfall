@@ -23,6 +23,15 @@ development, refinement, production, supply links, and transport. To transport
 a vehicle, choose **Transport** in the block inspector, select a mode and
 vehicle, then **Plot Route**. Use the arrow keys or click adjacent map blocks
 to add waypoints, retrace a step to undo it, and **Dispatch** from a land block.
+
+In **Inspect**, split a stack to set aside equipment or cargo, or combine
+matching stacks without moving their linked supplies. **World Inventory** shows
+resources by block and can take you directly to that block's inspector.
+**Pending Actions** and **World Log** can show the entire world or just the
+selected block. Cancel a pending job there to release its equipment and keep
+any work already completed. The **Clock** menu also adjusts the simulation rate
+in one-minute or one-hour steps.
+
 The DOS world generator and title music
 are not yet ported. Worlds generated in the DOS version can be opened in the
 native app.

@@ -3,7 +3,7 @@ import Foundation
 public enum ColonyError: LocalizedError {
     case water, baseRequired, traderInOrbit, noTrader, traderAlreadyCalled
     case invalidTrade, insufficientStock, debtLimit, invalidEquipment, insufficientSupplies, invalidOperation, noRoute
-    case invalidWaypoint, transportRange
+    case invalidWaypoint, transportRange, cannotCancelAction
 
     public var errorDescription: String? {
         switch self {
@@ -21,6 +21,7 @@ public enum ColonyError: LocalizedError {
         case .noRoute: "Plot at least one waypoint before dispatching."
         case .invalidWaypoint: "Choose an adjacent block the selected transport can cross."
         case .transportRange: "That route exceeds the maximum travel time."
+        case .cannotCancelAction: "This pending action cannot be cancelled."
         }
     }
 }
@@ -139,6 +140,29 @@ public extension World {
         tile.stock.append(supply)
         land[block] = tile
         updateOccupation(at: block, catalog: catalog)
+    }
+
+    mutating func splitStock(at block: Block, index: Int, quantity: Double) throws {
+        guard var tile = land[block] else { throw ColonyError.water }
+        guard tile.stock.indices.contains(index), tile.stock[index].found || tile.stock[index].extracted,
+              quantity.isFinite, quantity > 0, quantity < tile.stock[index].quantity else {
+            throw ColonyError.invalidOperation
+        }
+        let item = tile.stock[index]
+        tile.stock[index].quantity -= quantity
+        tile.stock.insert(Stock(number: item.number, quantity: quantity, flags: item.flags, contents: []), at: index + 1)
+        land[block] = tile
+    }
+
+    mutating func combineStock(at block: Block, index: Int) throws {
+        guard var tile = land[block] else { throw ColonyError.water }
+        guard tile.stock.indices.contains(index) else { throw ColonyError.invalidOperation }
+        let item = tile.stock[index]
+        let matches = tile.stock.indices.filter { $0 != index && item.canCombine(with: tile.stock[$0]) }
+        guard !matches.isEmpty else { throw ColonyError.invalidOperation }
+        tile.stock[index].quantity += matches.reduce(0) { $0 + tile.stock[$1].quantity }
+        for match in matches.reversed() { tile.stock.remove(at: match) }
+        land[block] = tile
     }
 
     mutating func process(_ action: Action, at block: Block, objectIndex: Int, equipmentIndex: Int,
@@ -265,6 +289,20 @@ public extension World {
         advancePending(catalog: catalog, using: &random)
     }
 
+    mutating func cancelPending(at index: Int, catalog: ResourceCatalog, using random: inout some RandomNumberGenerator) throws {
+        guard pending.indices.contains(index), pending[index].canCancel else {
+            throw ColonyError.cannotCancelAction
+        }
+        var item = pending.remove(at: index)
+        let fraction = item.completedFraction
+        if item.action == .transportation, fraction == 0 { item.route = [] }
+        complete(item, fraction: fraction, catalog: catalog, using: &random)
+        updateOccupation(at: item.block, catalog: catalog)
+        if let stop = item.route.first?.block, land[stop] != nil {
+            updateOccupation(at: stop, catalog: catalog)
+        }
+    }
+
     private mutating func advancePending(catalog: ResourceCatalog, using random: inout some RandomNumberGenerator) {
         let queue = pending
         pending = []
@@ -281,9 +319,7 @@ public extension World {
                 updatedLocations.insert(item.block)
                 if let stop = item.route.first?.block { updatedLocations.insert(stop) }
             } else if !catalog.upkeep(&item.equipment, active: true) || !catalog.upkeep(&item.equipment, active: false) {
-                let total = max(1, Double(item.estimated.totalSeconds - item.started.totalSeconds) / (8 * 3_600))
-                let fraction = min(1, max(0, 1 - Double(item.updatesLeft) / total))
-                complete(item, fraction: fraction, catalog: catalog, using: &random)
+                complete(item, fraction: item.completedFraction, catalog: catalog, using: &random)
                 updatedLocations.insert(item.block)
                 if let stop = item.route.first?.block { updatedLocations.insert(stop) }
             } else if action == .transportation && item.advanceRoute() {
@@ -324,6 +360,7 @@ public extension World {
         var output: [Stock] = []
         switch action {
         case .exploration:
+            guard fraction > 0 else { break }
             for tool in equipment {
                 guard let detector = catalog[tool.number] else { continue }
                 for index in tile.stock.indices where !tile.stock[index].found && !tile.stock[index].extracted {
@@ -336,6 +373,7 @@ public extension World {
             }
         case .extraction, .development, .refinement:
             for var input in item.objects {
+                if fraction == 0 { output.append(input); continue }
                 guard let resource = catalog[input.number] else { continue }
                 let result = action == .development ? resource.developmentResult
                     : action == .refinement ? resource.refinementResult : input.number
@@ -432,7 +470,20 @@ private extension Action {
     }
 }
 
+public extension Pending {
+    var canCancel: Bool {
+        guard let action else { return false }
+        return action != .traderArrival
+    }
+}
+
 private extension Pending {
+    var completedFraction: Double {
+        let total = Double(estimated.totalSeconds - started.totalSeconds) / (8 * 3_600)
+        guard total > 0 else { return 0 }
+        return min(1, max(0, 1 - Double(updatesLeft) / total))
+    }
+
     mutating func advanceRoute() -> Bool {
         distance += speed
         while let next = route.first, distance >= next.distance {
@@ -567,6 +618,13 @@ private extension Array where Element == Stock {
             }
             index += 1
         }
+    }
+}
+
+public extension Stock {
+    func canCombine(with other: Stock) -> Bool {
+        (found || extracted) && number == other.number && found == other.found
+            && extracted == other.extracted && other.contents.isEmpty
     }
 }
 

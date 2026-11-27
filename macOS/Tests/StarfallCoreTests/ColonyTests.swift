@@ -119,6 +119,92 @@ import Testing
     #expect(linkedFood.quantity + remainingFood.quantity == 8)
 }
 
+@Test func splittingAndCombiningStockKeepsLinkedSuppliesAndDiscoveryState() throws {
+    var world = try voltar()
+    let block = try #require(world.base)
+    let supply = Stock(number: 2, quantity: 3, flags: 3, contents: [])
+    let stock = Stock(number: 1, quantity: 5, flags: 3, contents: [supply])
+    let deposit = Stock(number: 1, quantity: 9, flags: 1, contents: [])
+    let provisionedPeer = Stock(number: 1, quantity: 2, flags: 3, contents: [supply])
+    world.land[block]?.stock = [stock, deposit, provisionedPeer]
+
+    #expect(throws: ColonyError.invalidOperation) { try world.combineStock(at: block, index: 0) }
+    #expect(throws: ColonyError.invalidOperation) { try world.splitStock(at: block, index: 0, quantity: 5) }
+    try world.splitStock(at: block, index: 0, quantity: 2)
+    let split = try #require(world.land[block]?.stock)
+    #expect(split.map(\.quantity) == [3, 2, 9, 2])
+    #expect(split[0].contents == [supply])
+    #expect(split[1].contents.isEmpty)
+    #expect(split[1].flags == stock.flags)
+
+    try world.combineStock(at: block, index: 0)
+    #expect(world.land[block]?.stock == [stock, deposit, provisionedPeer])
+    #expect(try LegacyWorld.decode(LegacyWorld.encode(world)) == world)
+}
+
+@Test func cancellingExtractionReturnsEquipmentAndCreditsOnlyElapsedWork() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let block = try #require(world.base)
+    let material = try #require(resources.resources.first { $0.extractable })
+    let tool = try #require(resources.resources.first { $0.extracts })
+    let input = Stock(number: material.id, quantity: 12, flags: 1, contents: [])
+    let equipment = Stock(number: tool.id, quantity: 1, flags: 3, contents: [])
+    let duration = 4 * 8 * 3_600
+    let estimated = GameTime(seconds: world.time.totalSeconds + duration)
+    let pending = Pending(block: block, code: Action.extraction.rawValue, started: world.time, estimated: estimated,
+                          updatesLeft: 3, speed: 0, distance: 0, equipment: [equipment], objects: [input], route: [])
+    world.pending = [pending]
+    world.land[block]?.stock = []
+    var random = SeededRandom()
+    var untouched = world
+    untouched.pending[0].updatesLeft = 4
+    try untouched.cancelPending(at: 0, catalog: resources, using: &random)
+    #expect(untouched.land[block]?.stock == [input, equipment])
+
+    try world.cancelPending(at: 0, catalog: resources, using: &random)
+    #expect(world.pending.isEmpty)
+    var remainder = input
+    remainder.quantity = 9
+    let extracted = Stock(number: material.id, quantity: 3, flags: 3, contents: [])
+    #expect(world.land[block]?.stock == [remainder, extracted, equipment])
+    #expect(world.log.last?.description == "MINERAL EXTRACTION")
+    #expect(world.occupied.contains(block))
+    #expect(try LegacyWorld.decode(LegacyWorld.encode(world)) == world)
+}
+
+@Test func cancellingQueuedTransportReturnsCargoAndCannotCancelTraderArrival() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let origin = try #require(world.base)
+    let destination = origin.moved(dx: 1, dy: 0)
+    let vehicle = try #require(resources.resources.first { $0.transports && $0.airSpeed > 0 })
+    let cargo = Stock(number: 2, quantity: 3, flags: 3, contents: [])
+    let transport = Stock(number: vehicle.id, quantity: 1, flags: 3, contents: [cargo])
+    let estimated = GameTime(seconds: world.time.totalSeconds + 8 * 3_600)
+    var random = SeededRandom()
+    world.pending = []
+    world.traderInOrbit = false
+    world.traderCalled = false
+    world.land[origin]?.stock = []
+    world.land[destination] = Land(climate: 0, altitude: 1, stock: [])
+    try world.callTrader(using: &random)
+    let arrival = try #require(world.pending.first)
+    #expect(!arrival.canCancel)
+    #expect(throws: ColonyError.cannotCancelAction) {
+        try world.cancelPending(at: 0, catalog: resources, using: &random)
+    }
+
+    world.pending.append(Pending(block: origin, code: Action.transportation.rawValue, started: world.time,
+                                 estimated: estimated, updatesLeft: 1, speed: vehicle.airSpeed, distance: 0,
+                                 equipment: [transport], objects: [], route: [Waypoint(block: destination, distance: 1)]))
+    try world.cancelPending(at: 1, catalog: resources, using: &random)
+    #expect(world.pending == [arrival])
+    #expect(world.traderCalled)
+    #expect(world.land[origin]?.stock == [transport])
+    #expect(world.land[destination]?.stock.isEmpty == true)
+}
+
 @Test func shipTransportsEquipmentAndLinkedSupplies() throws {
     var world = try voltar()
     let resources = try catalog()

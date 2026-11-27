@@ -217,6 +217,9 @@ struct WorldConsole: View {
                 ConsoleLabel(game.running ? "Simulation running" : "Simulation paused")
                 Text(world.time.description).font(.system(.title3, design: .monospaced))
                     .monospacedDigit()
+                Text("Next update in \(Duration.seconds(world.timeUntilUpdate.totalSeconds).formatted(.time(pattern: .hourMinuteSecond)))")
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(.secondary)
             }
             Button(game.running ? "Pause" : "Run", systemImage: game.running ? "pause.fill" : "play.fill") {
                 game.running.toggle()
@@ -238,6 +241,15 @@ struct WorldConsole: View {
                         } else {
                             Text(label)
                         }
+                    }
+                }
+                Menu("Adjust Clock Rate") {
+                    ForEach([-60, -1, 1, 60], id: \.self) { change in
+                        let current = world.timeIncrement.totalSeconds / 60
+                        let next = current + change
+                        let label = "\(change > 0 ? "+" : "−")\(abs(change)) game minutes / second"
+                        Button(label) { game.setClockRate(minutes: next) }
+                            .disabled(change < 0 ? current <= 1 : world.timeIncrement == world.updateIncrement)
                     }
                 }
             } label: {
@@ -264,9 +276,13 @@ struct WorldConsole: View {
                     Text("Ocean").foregroundStyle(.secondary)
                 }
                 HStack {
-                    Button("Inspect") { game.sheet = .block }
+                    Button("Inspect") { game.inspect(world.cursor) }
+                        .disabled(world.land[world.cursor] == nil)
                     Button(world.cursor == world.base ? "Base Here" : "Set Base", action: game.setBase)
                         .disabled(world.land[world.cursor] == nil || world.cursor == world.base)
+                }
+                if let base = world.base, world.cursor != base {
+                    Button("Go to Base", systemImage: "location") { game.select(base) }
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

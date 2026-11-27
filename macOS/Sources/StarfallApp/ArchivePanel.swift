@@ -4,6 +4,17 @@ import SwiftUI
 struct ArchivePanel: View {
     let game: GameSession
     let panel: GameSession.Sheet
+    @State private var blockOnly: Bool
+    @State private var inventoryByBlock = true
+    @State private var actionToCancel: Int?
+    @State private var stockToSplit: Int?
+    @State private var splitQuantity = 1.0
+
+    init(game: GameSession, panel: GameSession.Sheet) {
+        self.game = game
+        self.panel = panel
+        _blockOnly = State(initialValue: game.zoomed)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -67,54 +78,154 @@ struct ArchivePanel: View {
     }
 
     private func inventory(_ world: World, catalog: ResourceCatalog) -> some View {
-        let amounts = world.inventory
-        return List(amounts.keys.sorted(), id: \.self) { number in
-            itemRow(name: catalog[number]?.name ?? "Resource \(number)", value: amounts[number, default: 0],
-                    units: catalog[number]?.units ?? "")
+        VStack(alignment: .leading) {
+            Picker("Group by", selection: $inventoryByBlock) {
+                Text("Block").tag(true)
+                Text("Resource Totals").tag(false)
+            }
+            .pickerStyle(.segmented)
+            if inventoryByBlock {
+                inventoryLocations(world, catalog: catalog)
+            } else {
+                let amounts = world.inventory
+                List(amounts.keys.sorted(), id: \.self) { number in
+                    itemRow(name: catalog[number]?.name ?? "Resource \(number)", value: amounts[number, default: 0],
+                            units: catalog[number]?.units ?? "")
+                }
+                .overlay { if amounts.isEmpty { ContentUnavailableView("No stock", systemImage: "shippingbox") } }
+            }
         }
-        .overlay { if amounts.isEmpty { ContentUnavailableView("No stock", systemImage: "shippingbox") } }
+    }
+
+    private func inventoryLocations(_ world: World, catalog: ResourceCatalog) -> some View {
+        let blocks = world.occupied.filter { block in
+            world.land[block]?.stock.contains { $0.found || $0.extracted } == true
+        }.sorted { ($0.x, $0.y) < ($1.x, $1.y) }
+        return List(blocks, id: \.self) { block in
+            let items = (world.land[block]?.stock ?? []).filter { $0.found || $0.extracted }
+            DisclosureGroup {
+                ForEach(Array(items.enumerated()), id: \.offset) { _, item in
+                    StockRow(item: item, catalog: catalog)
+                }
+            } label: {
+                HStack {
+                    Text("Block \(block.description)")
+                    if block == world.base { Text("Base").foregroundStyle(.secondary) }
+                    Spacer()
+                    Button("Inspect") { game.inspect(block) }.buttonStyle(.bordered)
+                }
+            }
+        }
+        .overlay { if blocks.isEmpty { ContentUnavailableView("No stock", systemImage: "shippingbox") } }
     }
 
     private func log(_ world: World) -> some View {
-        List(Array(world.log.enumerated().reversed()), id: \.offset) { _, entry in
-            HStack {
-                Text(entry.description)
-                Spacer()
-                Text(entry.block.description).foregroundStyle(.secondary)
-                Text(entry.completed.description).foregroundStyle(.secondary).monospacedDigit()
+        let entries = world.log.enumerated().reversed().filter { !blockOnly || $0.element.block == world.cursor }
+        return VStack(alignment: .leading) {
+            reportScope(world.cursor)
+            List(entries, id: \.offset) { _, entry in
+                HStack {
+                    Text(entry.description)
+                    Spacer()
+                    Text(entry.block.description).foregroundStyle(.secondary)
+                    Text(entry.completed.description).foregroundStyle(.secondary).monospacedDigit()
+                }
             }
+            .overlay { if entries.isEmpty { ContentUnavailableView("No log entries", systemImage: "list.bullet") } }
         }
-        .overlay { if world.log.isEmpty { ContentUnavailableView("No log entries", systemImage: "list.bullet") } }
     }
 
     private func pending(_ world: World) -> some View {
-        List(Array(world.pending.enumerated()), id: \.offset) { _, action in
-            VStack(alignment: .leading, spacing: 4) {
+        let actions = world.pending.enumerated().filter { !blockOnly || $0.element.block == world.cursor }
+        return VStack(alignment: .leading) {
+            reportScope(world.cursor)
+            List(actions, id: \.offset) { index, item in
                 HStack {
-                    Text(action.title).fontWeight(.medium)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(item.title).fontWeight(.medium)
+                        Text("Block \(item.block.description) · \(max(0, item.updatesLeft)) updates remaining")
+                            .foregroundStyle(.secondary)
+                    }
                     Spacer()
-                    Text(action.estimated.description).monospacedDigit()
+                    Text(item.estimated.description).monospacedDigit()
+                    if item.canCancel, game.transportPlan == nil {
+                        Button(item.action == .traderDeparture ? "Dismiss Trader…" : "Cancel Action…") {
+                            actionToCancel = index
+                        }
+                        .buttonStyle(.bordered)
+                    }
                 }
-                Text("Block \(action.block.description) · \(max(0, action.updatesLeft)) updates remaining")
-                    .foregroundStyle(.secondary)
+                .padding(.vertical, 4)
             }
-            .padding(.vertical, 4)
+            .overlay { if actions.isEmpty { ContentUnavailableView("No pending actions", systemImage: "clock") } }
         }
-        .overlay { if world.pending.isEmpty { ContentUnavailableView("No pending actions", systemImage: "clock") } }
+        .alert("End this pending action?", isPresented: Binding(
+            get: { actionToCancel != nil },
+            set: { if !$0 { actionToCancel = nil } }
+        )) {
+            Button("Keep Action", role: .cancel) {}
+            Button("End Action", role: .destructive) {
+                if let actionToCancel { game.cancelPending(index: actionToCancel) }
+            }
+        } message: {
+            Text("This cannot be undone. Any work already completed is kept.")
+        }
+    }
+
+    private func reportScope(_ block: Block) -> some View {
+        Picker("Show", selection: $blockOnly) {
+            Text("Entire World").tag(false)
+            Text("Block \(block.description)").tag(true)
+        }
+        .pickerStyle(.segmented)
+    }
+
+    @ViewBuilder private func stockControls(index: Int, item: Stock, stock: [Stock]) -> some View {
+        if item.quantity > 1 {
+            Button("Split…") {
+                splitQuantity = 1
+                stockToSplit = index
+            }
+            .buttonStyle(.bordered)
+        }
+        if stock.indices.contains(where: { $0 != index && item.canCombine(with: stock[$0]) }) {
+            Button("Combine") { game.combineStock(index: index) }
+                .buttonStyle(.bordered)
+        }
+    }
+
+    private func resourceList(_ land: Land, world: World, catalog: ResourceCatalog) -> some View {
+        List {
+            ForEach(Array(land.stock.enumerated()).filter { $0.element.found || $0.element.extracted },
+                    id: \.offset) { index, item in
+                HStack {
+                    StockRow(item: item, catalog: catalog,
+                             unlink: { game.unlinkSupply(equipmentIndex: index, supplyIndex: $0) },
+                             explore: world.canExplore(with: item, catalog: catalog)
+                                ? { game.explore(equipmentIndex: index) } : nil)
+                    stockControls(index: index, item: item, stock: land.stock)
+                }
+            }
+        }
+        .alert("Split resource stack", isPresented: Binding(
+            get: { stockToSplit != nil },
+            set: { if !$0 { stockToSplit = nil } }
+        )) {
+            TextField("Quantity", value: $splitQuantity, format: .number)
+            Button("Cancel", role: .cancel) {}
+            Button("Split") {
+                if let stockToSplit { game.splitStock(index: stockToSplit, quantity: splitQuantity) }
+            }
+        } message: {
+            Text("Enter the amount to move into a new stack. Linked supplies stay with the original stack.")
+        }
     }
 
     @ViewBuilder private func block(_ world: World, catalog: ResourceCatalog) -> some View {
         if let land = world.land[world.cursor] {
             Text("Discovered resources and linked equipment at this block.")
                 .foregroundStyle(.secondary)
-            List {
-                ForEach(Array(land.stock.enumerated()).filter { $0.element.found || $0.element.extracted },
-                        id: \.offset) { index, item in
-                    StockRow(item: item, catalog: catalog,
-                             unlink: { game.unlinkSupply(equipmentIndex: index, supplyIndex: $0) },
-                             explore: world.canExplore(with: item, catalog: catalog) ? { game.explore(equipmentIndex: index) } : nil)
-                }
-            }
+            resourceList(land, world: world, catalog: catalog)
             BlockOperations(game: game, world: world, land: land, catalog: catalog)
             .overlay {
                 if !land.stock.contains(where: { $0.found || $0.extracted }) {
