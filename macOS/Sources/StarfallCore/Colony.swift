@@ -271,16 +271,19 @@ public extension World {
     }
 
     mutating func advanceTick(catalog: ResourceCatalog, using random: inout some RandomNumberGenerator) {
-        let seconds = timeIncrement.totalSeconds
+        var seconds = timeIncrement.totalSeconds
         guard seconds > 0 else { return }
-        time = GameTime(seconds: time.totalSeconds + seconds)
-        let remaining = timeUntilUpdate.totalSeconds - seconds
-        if remaining <= 0 {
+        let interval = updateIncrement.totalSeconds
+        var untilUpdate = max(0, timeUntilUpdate.totalSeconds)
+        while seconds >= untilUpdate {
+            time = GameTime(seconds: time.totalSeconds + untilUpdate)
+            seconds -= untilUpdate
             advancePending(catalog: catalog, using: &random)
-            timeUntilUpdate = updateIncrement
-        } else {
-            timeUntilUpdate = GameTime(seconds: remaining)
+            untilUpdate = interval
+            if interval <= 0 { break }
         }
+        time = GameTime(seconds: time.totalSeconds + seconds)
+        timeUntilUpdate = GameTime(seconds: max(0, untilUpdate - seconds))
     }
 
     mutating func advanceToNextUpdate(catalog: ResourceCatalog, using random: inout some RandomNumberGenerator) {

@@ -72,6 +72,31 @@ import Testing
     #expect(try LegacyWorld.decode(LegacyWorld.encode(world)) == world)
 }
 
+@Test func fineClockRateCarriesTimePastTheUpdateBoundary() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let block = try #require(world.base)
+    let start = world.time.totalSeconds
+    let interval = world.updateIncrement.totalSeconds
+    let tick = interval - 60
+    world.pending = [Pending(block: block, code: Action.traderDeparture.rawValue,
+                             started: world.time, estimated: GameTime(seconds: start + 2 * interval),
+                             updatesLeft: 2, speed: 0, distance: 0, equipment: [], objects: [], route: [])]
+    world.timeUntilUpdate = world.updateIncrement
+    world.timeIncrement = GameTime(seconds: tick)
+    var random = SeededRandom()
+    world.advanceTick(catalog: resources, using: &random)
+    #expect(world.timeUntilUpdate.totalSeconds == 60)
+    #expect(world.pending.first?.updatesLeft == 2)
+    world.advanceTick(catalog: resources, using: &random)
+    #expect(world.timeUntilUpdate.totalSeconds == 120)
+    #expect(world.pending.first?.updatesLeft == 1)
+    world.advanceTick(catalog: resources, using: &random)
+    #expect(world.pending.isEmpty)
+    #expect(world.time.totalSeconds == start + 3 * tick)
+    #expect(world.log.last?.completed.totalSeconds == start + 2 * interval)
+}
+
 @Test func extractionReservesEquipmentAndReturnsMaterial() throws {
     let resources = try catalog()
     var world = try voltar()
