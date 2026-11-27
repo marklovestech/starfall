@@ -129,6 +129,7 @@ public struct Pending: Equatable, Sendable {
     public var objects: [Stock]
     public var route: [Waypoint]
     var lastLandfall: Block?
+    var transportLandfall: Block { lastLandfall ?? block }
     public var action: Action? { Action(rawValue: code) }
     public var title: String { action?.title ?? "Action \(code)" }
 }
@@ -190,7 +191,7 @@ public struct World: Equatable, Sendable {
         var pendingScore = 0
         for item in pending {
             if item.action == .transportation {
-                transportEquipment[item.block, default: []].append(contentsOf: item.equipment)
+                transportEquipment[item.transportLandfall, default: []].append(contentsOf: item.equipment)
             } else {
                 pendingScore += score(item.equipment)
             }

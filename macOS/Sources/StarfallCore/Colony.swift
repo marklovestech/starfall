@@ -489,7 +489,7 @@ private extension Pending {
 
     mutating func stopTransportAtLastLandfall() {
         guard action == .transportation else { return }
-        route = lastLandfall.map { [Waypoint(block: $0, distance: 0)] } ?? []
+        route = [Waypoint(block: transportLandfall, distance: 0)]
     }
 
     mutating func advanceRoute(onLand: (Block) -> Bool) -> Bool {
