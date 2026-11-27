@@ -5,11 +5,13 @@ import SwiftUI
 
 @main
 struct StarfallApp: App {
+    @NSApplicationDelegateAdaptor(StarfallAppDelegate.self) private var delegate
     @State private var game = GameSession()
 
     var body: some Scene {
         Window("Starfall", id: "starfall") {
             GameRoot(game: game)
+                .onAppear { delegate.game = game }
                 .frame(minWidth: 880, minHeight: 620)
                 .preferredColorScheme(.dark)
         }
@@ -50,6 +52,15 @@ struct StarfallApp: App {
                     .keyboardShortcut("?", modifiers: .command)
             }
         }
+    }
+}
+
+@MainActor
+final class StarfallAppDelegate: NSObject, NSApplicationDelegate {
+    weak var game: GameSession?
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        game?.confirmDiscard("Quit Starfall?", button: "Quit Without Saving") == false ? .terminateCancel : .terminateNow
     }
 }
 
@@ -234,18 +245,20 @@ final class GameSession {
     }
 
     private func replaceWorld(_ load: () throws -> Void) {
-        // Replacing a modified world must not silently discard colony progress.
-        if modified {
-            running = false
-            let alert = NSAlert()
-            alert.messageText = "Replace the current world?"
-            alert.informativeText = "Unsaved colony progress will be lost."
-            alert.addButton(withTitle: "Cancel")
-            alert.addButton(withTitle: "Replace World")
-            guard alert.runModal() == .alertSecondButtonReturn else { return }
-        }
+        guard confirmDiscard("Replace the current world?", button: "Replace World") else { return }
         do { try load() }
         catch { self.error = error.localizedDescription }
+    }
+
+    func confirmDiscard(_ message: String, button: String) -> Bool {
+        guard modified else { return true }
+        running = false
+        let alert = NSAlert()
+        alert.messageText = message
+        alert.informativeText = "Unsaved colony progress will be lost."
+        alert.addButton(withTitle: "Cancel")
+        alert.addButton(withTitle: button)
+        return alert.runModal() == .alertSecondButtonReturn
     }
 
     private func load(_ data: Data) throws {
