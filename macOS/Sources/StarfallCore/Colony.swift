@@ -334,10 +334,12 @@ public extension World {
             if var product = item.objects.first {
                 product.quantity = (product.quantity * fraction).rounded(.towardZero)
                 let used = product.quantity / max(1, item.objects[0].quantity)
-                if used == 1 {
-                    equipment = equipment.flatMap(\.contents)
-                } else {
-                    for index in equipment.indices { equipment[index].quantity *= 1 - used }
+                equipment = equipment.flatMap { input -> [Stock] in
+                    guard catalog[input.number]?.expendable == true else { return [input] }
+                    if used == 1 { return input.contents }
+                    var remaining = input
+                    remaining.quantity *= 1 - used
+                    return [remaining]
                 }
                 if product.quantity > 0 { output.append(product) }
             }

@@ -128,22 +128,15 @@ import Testing
     #expect(world.land[destination]?.stock == [vehicle, supply])
 }
 
-@Test func productionReservesAndConsumesTheFullRecipe() throws {
+@Test func productionConsumesExpendableInputsAndReturnsReusableInputs() throws {
     var world = try voltar()
     let resources = try catalog()
     let block = try #require(world.base)
-    let product = try #require(resources.resources.first {
-        $0.producible && !$0.recipe.isEmpty && $0.recipe.allSatisfy { ingredient in
-            ingredient.quantity > 0 && resources[ingredient.number] != nil
-        }
-    })
-    world.land[block]?.stock = try product.recipe.map {
-        let ingredient = try #require(resources[$0.number])
-        return Stock(number: $0.number, quantity: $0.quantity * 2, flags: 3,
-                     contents: (ingredient.basic + ingredient.active).map {
-                         Stock(number: $0.number, quantity: 1e15, flags: 3, contents: [])
-                     })
-    }
+    let product = try #require(resources.resources.first { $0.name == "FOOD" })
+    let inputs = preparedProductionStock(product.recipe, quantity: 2, catalog: resources)
+    #expect(inputs.contains { resources[$0.number]?.expendable == true })
+    #expect(inputs.contains { resources[$0.number]?.expendable == false })
+    world.land[block]?.stock = inputs
     world.pending = []
     try world.produce(product.id, at: block, quantity: 2, catalog: resources)
     #expect(world.land[block]?.stock.isEmpty == true)
@@ -153,8 +146,22 @@ import Testing
         world.advanceToNextUpdate(catalog: resources, using: &random)
     }
     #expect(world.land[block]?.stock.first == Stock(number: product.id, quantity: 2, flags: 3, contents: []))
-    let required = Set(product.recipe.map(\.number))
-    #expect(world.land[block]?.stock.dropFirst().contains { required.contains($0.number) } == false)
+    let stock = try #require(world.land[block]?.stock)
+    for input in inputs {
+        let leftover = stock.filter { $0.number == input.number }.reduce(0) { $0 + $1.quantity }
+        #expect(leftover == (resources[input.number]?.expendable == true ? 0 : input.quantity))
+    }
+}
+
+private func preparedProductionStock(_ recipe: [Resource.Ingredient], quantity: Double,
+                                     catalog: ResourceCatalog) -> [Stock] {
+    recipe.map { choice in
+        let resource = catalog[choice.number]
+        return Stock(number: choice.number, quantity: choice.quantity * quantity, flags: 3,
+                     contents: ((resource?.basic ?? []) + (resource?.active ?? [])).map {
+                         Stock(number: $0.number, quantity: 1e15, flags: 3, contents: [])
+                     })
+    }
 }
 
 private struct SeededRandom: RandomNumberGenerator {
