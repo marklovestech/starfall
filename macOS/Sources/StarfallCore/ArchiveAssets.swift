@@ -18,9 +18,17 @@ public struct PackedPicture: Equatable, Sendable {
         self.width = width
         self.height = height
         // Each row is padded to a byte; the first stored row is the bottom one.
-        pixels = (0..<height).reversed().flatMap { row in
-            (0..<width).map { x in (data[6 + row * stride + x / 4] >> (6 - 2 * (x % 4))) & 3 }
+        var pixels = [UInt8]()
+        pixels.reserveCapacity(width * height)
+        for row in (0..<height).reversed() {
+            let start = 6 + row * stride
+            for x in 0..<width {
+                let packed = data[start + x / 4]
+                let shift = 6 - 2 * (x % 4)
+                pixels.append((packed >> shift) & 3)
+            }
         }
+        self.pixels = pixels
     }
 
     public subscript(x: Int, y: Int) -> UInt8 { pixels[y * width + x] }
