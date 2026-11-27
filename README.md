@@ -34,8 +34,9 @@ selected block. Cancel a pending job there to release its equipment and keep
 any work already completed. The **Clock** menu also adjusts the simulation rate
 in one-minute or one-hour steps.
 
-Title music is not yet ported. Worlds generated in either the native app or the
-DOS version can be opened in both.
+The original title music plays on the main menu (use **Skip Title Music** to
+stop it early). Worlds generated in either the native app or the DOS version can
+be opened in both.
 
 Choose **End Game…** to finish the colony and enter your name if the score
 qualifies for the Hall of Fame. The app starts with the original leaderboard
@@ -50,19 +51,23 @@ them. Run the Swift tests with `swift test --package-path macOS`.
 
 ## Repository layout
 
+- `macOS/` — Native Swift 6 macOS app (`StarfallCore` simulation/codecs, `StarfallApp` SwiftUI/AppKit UI, and `StarfallCoreTests`).
+- `scripts/` — Helper scripts to build the macOS app (`build-macos.sh`) and run the original DOS game (`run-dos.sh`).
+- `.github/workflows/macos.yml` — macOS CI workflow (tests, app build, and codesign verification).
 - `product-build/` — Shipped binaries, overlay files, data files, and the original `READ.ME`.
 - `source/` — Pascal source code (`.PAS`).
 - `utils/` — Utility programs and tools (graphics editor, world shaker, list utility, etc.).
 - `docs/` — Manual, charts, and specification documents.
-- Root-level `.COM` and `.DAT` files — Original disk contents, including the installer (`INSTALL.COM`), help files (`HELPFILE.DAT`, `HELPINDX.DAT`), and graphics editor (`GRAFEDIT`).
+- Root-level `.COM`, `.000`, and `.DAT` files — Original disk contents, including the installer (`INSTALL.COM`), form-feed printer utility (`FORMFEED.COM`), help files (`HELPFILE.DAT`, `HELPINDX.DAT`), and graphics editor (`GRAFEDIT.COM`, `GRAFEDIT.000`).
 
 ## Running the original DOS game
 
-Install DOSBox-X and run `./scripts/run-dos.sh`. This stages a writable copy
-under `build/dos/`, mounts the overlay directory as drive D, and starts the
-original binary. At the title screen press **S**, wait for initialization, then
-enter `VOLTAR.DAT` at the filename prompt. Set `STARFALL_DOS_DIR` to keep the
-DOS copy and its saves in a different directory.
+Install DOSBox-X (or set `DOSBOX` to a compatible DOSBox executable) and run
+`./scripts/run-dos.sh`. This stages a writable copy under `build/dos/`, mounts
+the overlay directory as drive D, and starts the original binary. At the title
+screen press **S**, wait for initialization, then enter `VOLTAR.DAT` at the
+filename prompt. Set `STARFALL_DOS_DIR` to keep the DOS copy and its saves in a
+different directory.
 
 From the original `product-build/READ.ME`:
 
