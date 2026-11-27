@@ -422,6 +422,7 @@ private struct TradePanel: View {
     }
 }
 
+@MainActor
 private func itemRow(name: String, value: Double, units: String) -> some View {
     HStack {
         Text(name)
