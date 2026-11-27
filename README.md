@@ -19,9 +19,11 @@ to fast-forward, and **Save World…** to write a Pascal-format world file.
 
 The port bundles the original artwork, resource catalog, Voltar save, help,
 and Hall of Fame. The native game supports colony trade, exploration, extraction,
-development, refinement, production, supply links, and transport. It uses native
-controls and automatically routes vehicles to the chosen destination rather than
-requiring DOS-style waypoint entry. The DOS world generator and title music
+development, refinement, production, supply links, and transport. To transport
+a vehicle, choose **Transport** in the block inspector, select a mode and
+vehicle, then **Plot Route**. Use the arrow keys or click adjacent map blocks
+to add waypoints, retrace a step to undo it, and **Dispatch** from a land block.
+The DOS world generator and title music
 are not yet ported. Worlds generated in the DOS version can be opened in the
 native app.
 

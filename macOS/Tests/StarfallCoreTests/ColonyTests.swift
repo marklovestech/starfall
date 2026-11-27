@@ -136,7 +136,9 @@ import Testing
     world.land[destination] = Land(climate: 0, altitude: 1, stock: [])
     world.pending = []
     try world.linkSupply(at: origin, equipmentIndex: 0, supplyIndex: 1, quantity: 1, catalog: resources)
-    try world.transport(from: origin, to: destination, vehicleIndex: 0, mode: .air, catalog: resources)
+    var plan = try world.planTransport(from: origin, vehicleIndex: 0, mode: .air, catalog: resources)
+    try world.plotWaypoint(destination, in: &plan, catalog: resources)
+    try world.transport(plan, catalog: resources)
     #expect(world.land[origin]?.stock.isEmpty == true)
     #expect(world.pending.first?.route.last?.block == destination)
     #expect(try LegacyWorld.decode(LegacyWorld.encode(world)) == world)
@@ -148,6 +150,87 @@ import Testing
     #expect(world.land[destination]?.stock.first?.contents == [supply])
     try world.unlinkSupply(at: destination, equipmentIndex: 0, supplyIndex: 0, catalog: resources)
     #expect(world.land[destination]?.stock == [vehicle, supply])
+}
+
+@Test func transportFollowsPlottedWaypointsAndArrivesOnTheScheduledUpdate() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let vehicle = try #require(resources.resources.first {
+        $0.transports && $0.movable && $0.airSpeed > 0 && $0.basic.isEmpty && $0.active.isEmpty
+    })
+    let stock = Stock(number: vehicle.id, quantity: 1, flags: 3, contents: [])
+    let origin = Block(x: 1, y: 36)
+    let west = Block(x: Block.width, y: 36)
+    let northwest = west.moved(dx: 0, dy: -1)
+    let destination = origin.moved(dx: 0, dy: -1)
+    world.land[origin] = Land(climate: 0, altitude: 1, stock: [stock])
+    world.land[west] = nil
+    world.land[northwest] = nil
+    world.land[destination] = Land(climate: 0, altitude: 1, stock: [])
+    world.pending = []
+    let before = world
+
+    var plan = try world.planTransport(from: origin, vehicleIndex: 0, mode: .air, catalog: resources)
+    #expect(throws: ColonyError.invalidWaypoint) {
+        try world.plotWaypoint(northwest, in: &plan, catalog: resources)
+    }
+    try world.plotWaypoint(west, in: &plan, catalog: resources)
+    #expect(plan.distance == 38_500.0 / 288 / 2)
+    try world.plotWaypoint(origin, in: &plan, catalog: resources)
+    #expect(plan.route.isEmpty && plan.distance == 0)
+    try world.plotWaypoint(west, in: &plan, catalog: resources)
+    #expect(throws: ColonyError.water) { try world.transport(plan, catalog: resources) }
+    try world.plotWaypoint(northwest, in: &plan, catalog: resources)
+    try world.plotWaypoint(destination, in: &plan, catalog: resources)
+    #expect(world == before)
+    #expect(plan.updates == max(1, Int((38_500.0 / 288 * (0.5 + 1 + 35.0 / 72)) / vehicle.airSpeed)))
+    try world.transport(plan, catalog: resources)
+    #expect(world.pending.first?.route.map(\.block) == [west, northwest, destination])
+    #expect(world.pending.first?.estimated.totalSeconds == world.time.totalSeconds + plan.updates * 8 * 3_600)
+    var random = SeededRandom()
+    for _ in 1..<plan.updates {
+        world.advanceToNextUpdate(catalog: resources, using: &random)
+        #expect(world.land[destination]?.stock.isEmpty == true)
+    }
+    world.advanceToNextUpdate(catalog: resources, using: &random)
+    #expect(world.land[destination]?.stock == [stock])
+    #expect(world.pending.isEmpty)
+    #expect(world.log.last?.description == "TRANSPORTATION")
+}
+
+@Test func landTransportRejectsWaterAndChecksSuppliesBeforeAddingAnotherLeg() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let vehicle = try #require(resources.resources.first {
+        $0.transports && $0.movable && $0.landSpeed > 0 && $0.landSpeed < 38_500.0 / 576
+            && $0.basic.isEmpty && $0.active.count == 1
+            && resources[$0.active[0].number]?.expendable == true
+            && ($0.active[0].quantity * (resources[$0.active[0].number]?.weight ?? .infinity)) <= $0.cargoCapacity
+    })
+    let need = vehicle.active[0]
+    let fuel = Stock(number: need.number, quantity: need.quantity, flags: 3, contents: [])
+    let stock = Stock(number: vehicle.id, quantity: 1, flags: 3, contents: [])
+    let origin = Block(x: 1, y: 72)
+    let first = origin.moved(dx: 0, dy: 1)
+    let second = first.moved(dx: 0, dy: 1)
+    world.land[origin] = Land(climate: 0, altitude: 1, stock: [stock])
+    world.land[first] = nil
+    world.land[second] = Land(climate: 0, altitude: 1, stock: [])
+    #expect(throws: ColonyError.insufficientSupplies) {
+        try world.planTransport(from: origin, vehicleIndex: 0, mode: .land, catalog: resources)
+    }
+    world.land[origin]?.stock[0].contents = [fuel]
+    var plan = try world.planTransport(from: origin, vehicleIndex: 0, mode: .land, catalog: resources)
+    #expect(throws: ColonyError.invalidWaypoint) {
+        try world.plotWaypoint(first, in: &plan, catalog: resources)
+    }
+    world.land[first] = Land(climate: 0, altitude: 1, stock: [])
+    try world.plotWaypoint(first, in: &plan, catalog: resources)
+    #expect(throws: ColonyError.insufficientSupplies) {
+        try world.plotWaypoint(second, in: &plan, catalog: resources)
+    }
+    try world.plotWaypoint(origin, in: &plan, catalog: resources)
+    #expect(plan.route.isEmpty)
 }
 
 @Test func dosSavesPutTheDeliveryBlockFirstOnTheFinalUpdate() throws {

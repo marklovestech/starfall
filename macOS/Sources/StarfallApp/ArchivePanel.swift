@@ -151,8 +151,6 @@ private struct BlockOperations: View {
     @State private var equipment: Int?
     @State private var quantity = 1.0
     @State private var mode = TransportMode.land
-    @State private var x = 1
-    @State private var y = 1
 
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
@@ -197,32 +195,21 @@ private struct BlockOperations: View {
     }
 
     private var transportFields: some View {
-        let destination = Block(x: x, y: y)
-        return VStack(alignment: .leading, spacing: 9) {
-            HStack {
-                Picker("Mode", selection: $mode) {
-                    ForEach(TransportMode.allCases, id: \.self) { Text($0.rawValue.capitalized).tag($0) }
-                }
-                .onChange(of: mode) { _, _ in object = nil }
-                Picker("Vehicle", selection: $object) {
-                    Text("Select").tag(Int?.none)
-                    ForEach(land.stock.indices.filter { catalog.transportSpeed(mode, vehicle: land.stock[$0]) != nil },
-                            id: \.self) { Text(stockLabel($0)).tag(Optional($0)) }
-                }
+        HStack {
+            Picker("Mode", selection: $mode) {
+                ForEach(TransportMode.allCases, id: \.self) { Text($0.rawValue.capitalized).tag($0) }
             }
-            HStack {
-                Text("Destination").foregroundStyle(.secondary)
-                TextField("X", value: $x, format: .number).frame(width: 95)
-                TextField("Y", value: $y, format: .number).frame(width: 95)
-                if let base = world.base, base != world.cursor {
-                    Button("Use Base") { x = base.x; y = base.y }
-                }
-                Spacer()
-                Button("Dispatch") {
-                    if let object { game.transport(vehicleIndex: object, to: destination, mode: mode) }
-                }
-                .disabled(object == nil || destination == world.cursor || world.land[destination] == nil)
+            .onChange(of: mode) { _, _ in object = nil }
+            Picker("Vehicle", selection: $object) {
+                Text("Select").tag(Int?.none)
+                ForEach(land.stock.indices.filter { catalog.transportSpeed(mode, vehicle: land.stock[$0]) != nil },
+                        id: \.self) { Text(stockLabel($0)).tag(Optional($0)) }
             }
+            Spacer()
+            Button("Plot Route") {
+                if let object { game.planTransport(vehicleIndex: object, mode: mode) }
+            }
+            .disabled(object == nil)
         }
     }
 
@@ -273,8 +260,6 @@ private struct BlockOperations: View {
         object = nil
         equipment = nil
         quantity = 1
-        x = world.cursor.x
-        y = world.cursor.y
     }
 }
 

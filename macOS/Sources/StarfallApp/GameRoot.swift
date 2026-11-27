@@ -98,6 +98,9 @@ struct WorldConsole: View {
     @FocusState private var keyFocus: Bool
 
     var body: some View {
+        let plan = game.transportPlan
+        let cursor = plan?.endpoint ?? world.cursor
+        let waypoints = Set(plan?.route.map(\.block) ?? [])
         VStack(alignment: .leading, spacing: 18) {
             header
             HStack(alignment: .top, spacing: 18) {
@@ -110,16 +113,17 @@ struct WorldConsole: View {
                                action: game.toggleZoom)
                     }
                     if game.zoomed {
-                        SectorGrid(world: world, select: game.select)
+                        SectorGrid(world: world, cursor: cursor, waypoints: waypoints, select: game.select)
                     } else if let map = game.map {
-                        WorldMap(world: world, terrain: map, select: game.select)
+                        WorldMap(world: world, cursor: cursor, waypoints: waypoints, terrain: map, select: game.select)
                     }
                     HStack(spacing: 15) {
                         legend("Base", color: .signal)
                         legend("Occupied", color: .terminal)
                         legend("Transport", color: .cyan)
+                        if plan != nil { legend("Waypoint", color: .white) }
                         Spacer()
-                        Text("Arrows to move · Space to zoom")
+                        Text(plan == nil ? "Arrows to move · Space to zoom" : "Arrows to plot · Space to zoom")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -127,8 +131,10 @@ struct WorldConsole: View {
                 .padding(16)
                 .frame(maxWidth: .infinity)
                 .consoleCard()
-                sidebar
-                    .frame(width: 244)
+                Group {
+                    if let plan { routeControls(plan) } else { sidebar }
+                }
+                .frame(width: 244)
             }
             Spacer(minLength: 0)
             HStack {
@@ -149,11 +155,53 @@ struct WorldConsole: View {
         .onKeyPress(.upArrow, phases: [.down, .repeat]) { move(0, -1, $0) }
         .onKeyPress(.downArrow, phases: [.down, .repeat]) { move(0, 1, $0) }
         .onKeyPress(.space) { game.toggleZoom(); return .handled }
+        .onKeyPress(KeyEquivalent("\u{F704}")) {
+            guard game.transportPlan != nil else { return .ignored }
+            game.toggleZoom()
+            return .handled
+        }
         .onKeyPress(.return) {
+            if game.transportPlan != nil {
+                if game.zoomed { game.toggleZoom() }
+                return .handled
+            }
             guard game.zoomed else { return .ignored }
             game.sheet = .block
             return .handled
         }
+    }
+
+    private func routeControls(_ plan: TransportPlan) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ConsoleLabel("\(plan.mode.rawValue) transport")
+            Text("Plot Waypoints").font(.title3.bold())
+            Text("Start: \(plan.origin.description)\nEndpoint: \(plan.endpoint.description)")
+                .font(.callout.monospaced())
+            Text("\(plan.route.count) blocks · \(plan.distance.formatted(.number.precision(.fractionLength(0)))) km")
+                .font(.callout.monospaced())
+            if !plan.route.isEmpty {
+                Text("Travel time: \(Double(plan.updates) / 3, format: .number.precision(.fractionLength(2))) days")
+                    .font(.callout.monospaced())
+            }
+            Text("Use the arrows or click an adjacent block. Retrace the last step to undo it. Dispatch from land.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            if let message = game.routeMessage {
+                Text(message).font(.caption).foregroundStyle(Color.signal)
+            }
+            HStack {
+                Button("Undo Step", action: game.undoWaypoint)
+                    .disabled(plan.route.isEmpty)
+                Button("Cancel", action: game.cancelTransport)
+                    .keyboardShortcut(.cancelAction)
+            }
+            Button("Dispatch", action: game.dispatchTransport)
+                .keyboardShortcut(KeyEquivalent("\u{F70B}"), modifiers: [])
+                .buttonStyle(.borderedProminent)
+                .disabled(plan.route.isEmpty || world.land[plan.endpoint] == nil)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14).consoleCard()
     }
 
     private var header: some View {
@@ -174,6 +222,7 @@ struct WorldConsole: View {
                 game.running.toggle()
             }
             .buttonStyle(.borderedProminent)
+            .disabled(game.transportPlan != nil)
             Menu {
                 Button("Next Update", action: game.advanceUpdate)
                 Button("Next Scheduled Action", action: game.advanceToNextScheduledAction)
@@ -195,6 +244,7 @@ struct WorldConsole: View {
                 Label("Clock", systemImage: "clock.arrow.circlepath")
             }
             .fixedSize()
+            .disabled(game.transportPlan != nil)
         }
     }
 

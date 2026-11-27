@@ -29,17 +29,17 @@ struct StarfallApp: App {
             CommandMenu("Colony") {
                 Button(game.running ? "Pause Clock" : "Run Clock") { game.running.toggle() }
                     .keyboardShortcut("t")
-                    .disabled(game.world == nil || game.sheet != nil)
+                    .disabled(game.world == nil || game.sheet != nil || game.transportPlan != nil)
                 Button("Advance One Update", action: game.advanceUpdate)
                     .keyboardShortcut(".", modifiers: [.command, .shift])
-                    .disabled(game.world == nil || game.sheet != nil)
+                    .disabled(game.world == nil || game.sheet != nil || game.transportPlan != nil)
                 Divider()
                 Button("World Inventory") { game.sheet = .inventory }
                     .keyboardShortcut("i")
-                    .disabled(game.world == nil)
+                    .disabled(game.world == nil || game.transportPlan != nil)
                 Button("Trade") { game.sheet = .trade }
                     .keyboardShortcut("2")
-                    .disabled(game.world == nil)
+                    .disabled(game.world == nil || game.transportPlan != nil)
                 Button("Pending Actions") { game.sheet = .pending }
                     .keyboardShortcut("9")
                     .disabled(game.world == nil)
@@ -79,6 +79,8 @@ final class GameSession {
     var zoomed = false
     var running = false
     var modified = false
+    private(set) var transportPlan: TransportPlan?
+    private(set) var routeMessage: String?
     private(set) var scores: [HallOfFameEntry] = []
     private var random = SystemRandomNumberGenerator()
     private let scoreFile = URL.applicationSupportDirectory.appending(path: "Starfall/SCORFILE.DAT")
@@ -194,6 +196,7 @@ final class GameSession {
     }
 
     private func discardWorld() {
+        cancelTransport()
         world = nil
         map = nil
         sheet = nil
@@ -205,12 +208,22 @@ final class GameSession {
 
     func select(_ block: Block) {
         guard block.isOnMap else { return }
-        world?.cursor = block
+        if var plan = transportPlan, let world, let archive {
+            do {
+                try world.plotWaypoint(block, in: &plan, catalog: archive.catalog)
+                transportPlan = plan
+                routeMessage = nil
+            } catch {
+                routeMessage = error.localizedDescription
+            }
+        } else {
+            world?.cursor = block
+        }
     }
 
     func move(dx: Int, dy: Int, fast: Bool) {
-        guard let cursor = world?.cursor else { return }
-        let step = fast ? 8 : 1
+        guard let cursor = transportPlan?.endpoint ?? world?.cursor else { return }
+        let step = fast && transportPlan == nil ? 8 : 1
         select(cursor.moved(dx: dx * step, dy: dy * step))
     }
 
@@ -263,15 +276,44 @@ final class GameSession {
         }
     }
 
-    func transport(vehicleIndex: Int, to destination: Block, mode: TransportMode) {
-        edit { world, archive in
-            try world.transport(from: world.cursor, to: destination, vehicleIndex: vehicleIndex,
-                                mode: mode, catalog: archive.catalog)
+    func planTransport(vehicleIndex: Int, mode: TransportMode) {
+        guard let world, let archive else { return }
+        do {
+            transportPlan = try world.planTransport(from: world.cursor, vehicleIndex: vehicleIndex,
+                                                    mode: mode, catalog: archive.catalog)
+            zoomed = true
+            running = false
+            error = nil
+            sheet = nil
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+
+    func undoWaypoint() {
+        transportPlan?.undo()
+        routeMessage = nil
+    }
+
+    func cancelTransport() {
+        transportPlan = nil
+        routeMessage = nil
+    }
+
+    func dispatchTransport() {
+        guard let plan = transportPlan, var world, let archive else { return }
+        do {
+            try world.transport(plan, catalog: archive.catalog)
+            self.world = world
+            modified = true
+            cancelTransport()
+        } catch {
+            routeMessage = error.localizedDescription
         }
     }
 
     func tick() {
-        guard running, sheet == nil else { return }
+        guard running, sheet == nil, transportPlan == nil else { return }
         edit { world, archive in world.advanceTick(catalog: archive.catalog, using: &random) }
     }
 
@@ -332,6 +374,7 @@ final class GameSession {
             throw ArchiveError.binary("cannot crop world map")
         }
         world = next
+        cancelTransport()
         map = clipped
         sheet = nil
         error = nil
