@@ -60,7 +60,7 @@ final class StarfallAppDelegate: NSObject, NSApplicationDelegate {
     weak var game: GameSession?
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        game?.confirmDiscard("Quit Starfall?", button: "Quit Without Saving") == false ? .terminateCancel : .terminateNow
+        game?.endGame(quitting: true) == false ? .terminateCancel : .terminateNow
     }
 }
 
@@ -79,8 +79,9 @@ final class GameSession {
     var zoomed = false
     var running = false
     var modified = false
-    var confirmMainMenu = false
+    private(set) var scores: [HallOfFameEntry] = []
     private var random = SystemRandomNumberGenerator()
+    private let scoreFile = URL.applicationSupportDirectory.appending(path: "Starfall/SCORFILE.DAT")
 
     init() {
         do { archive = try Archive() }
@@ -123,18 +124,80 @@ final class GameSession {
         }
     }
 
-    func leave() {
-        if modified {
-            running = false
-            confirmMainMenu = true
-        } else {
-            discardWorld()
+    func showScores() {
+        guard let archive else { return }
+        do {
+            scores = try readScores(archive).entries
+            error = nil
+            sheet = .scores
+        } catch {
+            self.error = error.localizedDescription
         }
     }
 
-    func discardWorld() {
+    private func readScores(_ archive: Archive) throws -> HallOfFame {
+        do {
+            return try HallOfFame(data: Data(contentsOf: scoreFile))
+        } catch CocoaError.fileReadNoSuchFile {
+            return archive.seedScores
+        }
+    }
+
+    @discardableResult
+    func endGame(quitting: Bool = false) -> Bool {
+        guard let world, let archive else { return true }
+        running = false
+        let confirm = NSAlert()
+        confirm.messageText = quitting ? "Quit Starfall and end this game?" : "End this game?"
+        confirm.informativeText = modified ? "Unsaved colony progress will be lost." : "The colony’s final score will be calculated."
+        confirm.addButton(withTitle: "Cancel").keyEquivalent = "\u{1b}"
+        confirm.addButton(withTitle: quitting ? "Quit" : "End Game")
+        guard confirm.runModal() == .alertSecondButtonReturn else { return false }
+
+        let score = world.finalScore(catalog: archive.catalog)
+        do {
+            var hall = try readScores(archive)
+            if let rank = hall.rank(for: score) {
+                let prompt = NSAlert()
+                prompt.messageText = "You made the Hall of Fame!"
+                prompt.informativeText = "Your final score of \(score.formatted()) ranks #\(rank). Enter your name (up to 30 DOS characters)."
+                let name = NSTextField(frame: NSRect(x: 0, y: 0, width: 260, height: 24))
+                name.placeholderString = "Colonist name"
+                name.setAccessibilityLabel("Colonist name")
+                prompt.accessoryView = name
+                prompt.window.initialFirstResponder = name
+                prompt.addButton(withTitle: "Record Score")
+                prompt.addButton(withTitle: "Cancel").keyEquivalent = "\u{1b}"
+                guard prompt.runModal() == .alertFirstButtonReturn else { return false }
+
+                hall.record(name: name.stringValue, world: world.name, score: score)
+                try FileManager.default.createDirectory(at: scoreFile.deletingLastPathComponent(),
+                                                        withIntermediateDirectories: true)
+                try hall.data.write(to: scoreFile, options: .atomic)
+                scores = hall.entries
+                discardWorld()
+                if !quitting { sheet = .scores }
+            } else {
+                discardWorld()
+            }
+            return true
+        } catch {
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.messageText = "Could not save your Hall of Fame score."
+            alert.informativeText = error.localizedDescription
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+            discardWorld()
+            return true
+        }
+    }
+
+    private func discardWorld() {
         world = nil
         map = nil
+        sheet = nil
+        error = nil
         running = false
         zoomed = false
         modified = false
@@ -250,7 +313,7 @@ final class GameSession {
         catch { self.error = error.localizedDescription }
     }
 
-    func confirmDiscard(_ message: String, button: String) -> Bool {
+    private func confirmDiscard(_ message: String, button: String) -> Bool {
         guard modified else { return true }
         running = false
         let alert = NSAlert()
@@ -283,7 +346,7 @@ struct Archive {
     let sampleWorld: Data
     let title: CGImage
     let help: [HelpTopic]
-    let scores: [HallOfFameEntry]
+    let seedScores: HallOfFame
 
     init(bundle: Bundle = .main) throws {
         func data(_ name: String, ext: String = "DAT") throws -> Data {
@@ -297,7 +360,7 @@ struct Archive {
         title = try Self.image(PackedPicture(data: Array(data("STARFALL", ext: "PIC"))),
                                palette: [0x00AA00, 0x0099AA, 0xAA0000, 0xAAAAAA])
         help = try HelpTopic.decode(index: data("HELPINDX"), pages: data("HELPFILE"))
-        scores = try HallOfFameEntry.decode(data("SCORFILE"))
+        seedScores = try HallOfFame(data: data("SCORFILE"))
     }
 
     static func image(_ picture: PackedPicture, palette: [UInt32]) throws -> CGImage {

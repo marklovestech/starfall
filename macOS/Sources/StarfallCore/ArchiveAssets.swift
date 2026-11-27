@@ -65,33 +65,6 @@ public struct HelpTopic: Identifiable, Sendable {
     }
 }
 
-public struct HallOfFameEntry: Identifiable, Sendable {
-    public let rank: Int
-    public let name: String
-    public let world: String
-    public let score: Double
-    public var id: Int { rank }
-
-    public static func decode(_ data: Data) throws -> [Self] {
-        let bytes = Array(data)
-        guard bytes.count.isMultiple(of: 68) else { throw ArchiveError.binary("invalid score archive size") }
-        return try stride(from: 0, to: bytes.count, by: 68).compactMap { offset in
-            let name = try bytes.pascalString(at: offset, capacity: 30)
-            guard name != "NONE", !name.isEmpty else { return nil }
-            let world = try bytes.pascalString(at: offset + 31, capacity: 30)
-            // Real48: base-2 exponent biased by 129, 39 fractional bits, and sign.
-            let exponent = Int(bytes[offset + 62])
-            let mantissa = (0..<5).reduce(UInt64(0)) { value, index in
-                value | UInt64(bytes[offset + 63 + index]) << (index * 8)
-            }
-            let fraction = Double(mantissa & ((1 << 39) - 1)) / Double(1 << 39)
-            let sign = mantissa >> 39 == 0 ? 1.0 : -1.0
-            let score = exponent == 0 ? 0 : sign * (1 + fraction) * pow(2, Double(exponent - 129))
-            return Self(rank: offset / 68 + 1, name: name, world: world, score: score)
-        }
-    }
-}
-
 private extension Array where Element == UInt8 {
     func word(at index: Int) -> Int { Int(self[index]) | (Int(self[index + 1]) << 8) }
 
