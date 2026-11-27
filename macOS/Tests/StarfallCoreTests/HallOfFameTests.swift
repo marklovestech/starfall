@@ -131,3 +131,28 @@ import Testing
     try world.splitStock(at: block, index: 0, quantity: 2)
     #expect(world.finalScore(catalog: resources) == provisionedScore)
 }
+
+@Test func dispatchingMatchingLooseVehiclesDoesNotIncreaseFinalScore() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let vehicle = try #require(resources.resources.first {
+        $0.transports && $0.movable && $0.airSpeed > 0 && $0.basic.isEmpty && $0.active.isEmpty && $0.scoreValue > 0
+    })
+    let origin = try #require(world.base)
+    let destination = origin.moved(dx: 1, dy: 0)
+    let stock = Stock(number: vehicle.id, quantity: 1, flags: 3, contents: [])
+    world.land[origin]?.stock = [stock, stock]
+    world.land[destination] = Land(climate: 0, altitude: 1, stock: [])
+    world.pending = []
+    world.occupied = [origin]
+    #expect(world.finalScore(catalog: resources) == vehicle.scoreValue)
+
+    for _ in 0..<2 {
+        var plan = try world.planTransport(from: origin, vehicleIndex: 0, mode: .air, catalog: resources)
+        try world.plotWaypoint(destination, in: &plan, catalog: resources)
+        try world.transport(plan, catalog: resources)
+        #expect(world.finalScore(catalog: resources) == vehicle.scoreValue)
+    }
+    #expect(!world.occupied.contains(origin))
+    #expect(world.pending.count == 2)
+}

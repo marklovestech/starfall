@@ -186,7 +186,19 @@ public struct World: Equatable, Sendable {
                 return total + (catalog[stock.number]?.scoreValue ?? 0) + score(stock.contents)
             }
         }
-        let colonyScore = occupied.reduce(0) { $0 + score(land[$1]?.stock ?? []) }
-        return pending.reduce(colonyScore) { $0 + score($1.equipment) + score($1.objects) }
+        var transportEquipment = [Block: [Stock]]()
+        var pendingScore = 0
+        for item in pending {
+            if item.action == .transportation {
+                transportEquipment[item.block, default: []].append(contentsOf: item.equipment)
+            } else {
+                pendingScore += score(item.equipment)
+            }
+            pendingScore += score(item.objects)
+        }
+        return occupied.union(transportEquipment.keys).reduce(pendingScore) { total, block in
+            let stationary = occupied.contains(block) ? land[block]?.stock ?? [] : []
+            return total + score(stationary + (transportEquipment[block] ?? []))
+        }
     }
 }
