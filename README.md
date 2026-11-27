@@ -46,7 +46,7 @@ To view those scores in DOSBox-X, copy that file to `build/dos/game/SCORFILE.DAT
 
 `macOS/Sources/StarfallCore` holds the archive codecs and colony simulation;
 `macOS/Sources/StarfallApp` is the SwiftUI/AppKit interface. The build script
-packages the original assets directly from the checkout rather than duplicating
+packages the original assets directly from `orig1986/` rather than duplicating
 them. Run the Swift tests with `swift test --package-path macOS`.
 
 ## Repository layout
@@ -54,30 +54,11 @@ them. Run the Swift tests with `swift test --package-path macOS`.
 - `macOS/` — Native Swift 6 macOS app (`StarfallCore` simulation/codecs, `StarfallApp` SwiftUI/AppKit UI, and `StarfallCoreTests`).
 - `scripts/` — Helper scripts to build the macOS app (`build-macos.sh`) and run the original DOS game (`run-dos.sh`).
 - `.github/workflows/macos.yml` — macOS CI workflow (tests, app build, and codesign verification).
-- `product-build/` — Shipped binaries, overlay files, data files, and the original `READ.ME`.
-- `source/` — Pascal source code (`.PAS`).
-- `utils/` — Utility programs and tools (graphics editor, world shaker, list utility, etc.).
-- `docs/` — Manual, charts, and specification documents.
-- Root-level `.COM`, `.000`, and `.DAT` files — Original disk contents, including the installer (`INSTALL.COM`), form-feed printer utility (`FORMFEED.COM`), help files (`HELPFILE.DAT`, `HELPINDX.DAT`), and graphics editor (`GRAFEDIT.COM`, `GRAFEDIT.000`).
+- `orig1986/` — Archived 1986 MS-DOS original (Turbo Pascal source, shipped `.COM` binaries and overlays, utilities, data files, and WordStar docs). See [`orig1986/README.md`](orig1986/README.md) for full details.
 
-## Running the original DOS game
+## Running the original 1986 DOS game
 
-Install DOSBox-X (or set `DOSBOX` to a compatible DOSBox executable) and run
-`./scripts/run-dos.sh`. This stages a writable copy under `build/dos/`, mounts
-the overlay directory as drive D, and starts the original binary. At the title
-screen press **S**, wait for initialization, then enter `VOLTAR.DAT` at the
-filename prompt. Set `STARFALL_DOS_DIR` to keep the DOS copy and its saves in a
-different directory.
-
-From the original `product-build/READ.ME`:
-
-1. Run `INSTALL.COM` and configure a RAM disk (128K minimum).
-2. Run `STARFALL.COM`.
-
-Starfall loads the overlay files (`PLAYGAME.0xx`) and data files (`RESOURCE.DAT`, `VOLTAR.DAT`, etc.) automatically, so there is no need to copy the overlays to the RAM disk.
-
-## Original disk contents (from `product-build/READ.ME`)
-
-- **Disk 1** — Binary `.COM` images and overlay files. These are the programs that are actually run; the only one the user normally runs directly is `STARFALL.COM`.
-- **Disk 2** — Data files for the simulation, including help files, matrix files, and resource information.
-- **Disk 3** — `VOLTAR.DAT`, a sample world that has already been started.
+To run the original DOS binary in DOSBox-X (or another DOSBox via `DOSBOX=...`),
+run `./scripts/run-dos.sh` from the repository root. See
+[`orig1986/README.md`](orig1986/README.md) for DOSBox instructions, original
+RAM-disk setup notes, and the 1986 disk layout.

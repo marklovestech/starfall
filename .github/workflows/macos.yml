@@ -6,18 +6,22 @@ on:
       - .github/workflows/macos.yml
       - macOS/**
       - scripts/build-macos.sh
-      - product-build/**
-      - HELPFILE.DAT
-      - HELPINDX.DAT
+      - orig1986/product-build/**
+      - orig1986/HELPFILE.DAT
+      - orig1986/HELPINDX.DAT
+      - orig1986/source/TITLESNG.PAS
+      - orig1986/source/NOISE.PAS
   push:
     branches: [main]
     paths:
       - .github/workflows/macos.yml
       - macOS/**
       - scripts/build-macos.sh
-      - product-build/**
-      - HELPFILE.DAT
-      - HELPINDX.DAT
+      - orig1986/product-build/**
+      - orig1986/HELPFILE.DAT
+      - orig1986/HELPINDX.DAT
+      - orig1986/source/TITLESNG.PAS
+      - orig1986/source/NOISE.PAS
 
 permissions:
   contents: read

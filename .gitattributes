@@ -9,6 +9,6 @@
 *.[0-9][0-9][0-9] binary
 
 # Docs folder contains binary documents with no/unknown encoding.
-docs/CHARTS binary
-docs/MANUAL binary
-docs/SPECS.TXT binary
+orig1986/docs/CHARTS binary
+orig1986/docs/MANUAL binary
+orig1986/docs/SPECS.TXT binary
