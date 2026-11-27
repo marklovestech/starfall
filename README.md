@@ -23,9 +23,15 @@ development, refinement, production, supply links, and transport. To transport
 a vehicle, choose **Transport** in the block inspector, select a mode and
 vehicle, then **Plot Route**. Use the arrow keys or click adjacent map blocks
 to add waypoints, retrace a step to undo it, and **Dispatch** from a land block.
-The DOS world generator, title music, and
-recording new Hall of Fame scores are not yet ported. Worlds generated in the DOS
-version can be opened in the native app.
+The DOS world generator and title music
+are not yet ported. Worlds generated in the DOS version can be opened in the
+native app.
+
+Choose **End Game…** to finish the colony and enter your name if the score
+qualifies for the Hall of Fame. The app starts with the original leaderboard
+and writes new scores to `~/Library/Application Support/Starfall/SCORFILE.DAT`.
+To view those scores in DOSBox-X, copy that file to `build/dos/game/SCORFILE.DAT`
+(back up any existing DOS scores first), then open the original Hall of Fame.
 
 `macOS/Sources/StarfallCore` holds the archive codecs and colony simulation;
 `macOS/Sources/StarfallApp` is the SwiftUI/AppKit interface. The build script

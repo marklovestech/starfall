@@ -17,7 +17,7 @@ struct ArchivePanel: View {
             if let archive = game.archive {
                 switch panel {
                 case .instructions: InstructionsPanel(topics: archive.help)
-                case .scores: scores(archive.scores)
+                case .scores: scores(game.scores)
                 case .inventory, .pending, .log, .trade, .block:
                     if let world = game.world {
                         switch panel {

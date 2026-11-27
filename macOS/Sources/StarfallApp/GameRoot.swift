@@ -35,10 +35,6 @@ struct GameRoot: View {
         } message: {
             Text(game.error ?? "")
         }
-        .confirmationDialog("Discard unsaved colony progress?", isPresented: $game.confirmMainMenu, titleVisibility: .visible) {
-            Button("Return to Main Menu", role: .destructive, action: game.discardWorld)
-            Button("Cancel", role: .cancel) {}
-        }
     }
 }
 
@@ -82,7 +78,7 @@ struct MainMenu: View {
                     .disabled(game.archive == nil)
                 Button("Instructions", systemImage: "book") { game.sheet = .instructions }
                     .disabled(game.archive == nil)
-                Button("Hall of Fame", systemImage: "trophy") { game.sheet = .scores }
+                Button("Hall of Fame", systemImage: "trophy", action: game.showScores)
                     .disabled(game.archive == nil)
                 Spacer().frame(height: 8)
                 Text("Mark Porter · Originally written in Turbo Pascal")
@@ -142,7 +138,7 @@ struct WorldConsole: View {
             }
             Spacer(minLength: 0)
             HStack {
-                Button("Main Menu", systemImage: "chevron.left", action: game.leave)
+                Button("End Game…", systemImage: "chevron.left") { game.endGame() }
                 Spacer()
                 Button("Open World…", systemImage: "folder", action: game.open)
                 Button("Save World…", systemImage: "square.and.arrow.down", action: game.save)
