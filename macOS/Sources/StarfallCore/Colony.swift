@@ -100,7 +100,7 @@ public extension World {
               quantity.isFinite, quantity > 0, quantity <= tile.stock[supplyIndex].quantity else {
             throw ColonyError.invalidOperation
         }
-        let supply = tile.stock[supplyIndex].takeFraction(quantity / tile.stock[supplyIndex].quantity)
+        let supply = tile.stock[supplyIndex].take(quantity)
         tile.stock[equipmentIndex].contents.append(supply)
         if tile.stock[supplyIndex].quantity == 0 { tile.stock.remove(at: supplyIndex) }
         land[block] = tile
@@ -523,8 +523,7 @@ private extension Array where Element == Stock {
                     taken.append(remove(at: index))
                     continue
                 }
-                let share = remaining / self[index].quantity
-                taken.append(self[index].takeFraction(share))
+                taken.append(self[index].take(remaining))
                 remaining = 0
             }
             index += 1
@@ -551,11 +550,15 @@ private extension Array where Element == Stock {
 }
 
 private extension Stock {
-    mutating func takeFraction(_ fraction: Double) -> Stock {
+    mutating func take(_ amount: Double, fraction inheritedFraction: Double? = nil) -> Stock {
+        let fraction = inheritedFraction ?? amount / quantity
         var withdrawn = self
-        withdrawn.quantity *= fraction
-        quantity -= withdrawn.quantity
-        for index in contents.indices { withdrawn.contents[index] = contents[index].takeFraction(fraction) }
+        withdrawn.quantity = amount
+        quantity -= amount
+        for index in contents.indices {
+            let share = contents[index].quantity * fraction
+            withdrawn.contents[index] = contents[index].take(share, fraction: fraction)
+        }
         return withdrawn
     }
 }
