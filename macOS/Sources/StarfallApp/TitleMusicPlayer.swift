@@ -25,7 +25,7 @@ final class TitleMusicPlayer {
         playbackID = id
         self.engine = engine
         self.player = player
-        player.scheduleBuffer(buffer, completionCallbackType: .dataPlayedBack) { [weak self] _ in
+        player.scheduleBuffer(buffer, completionCallbackType: .dataPlayedBack) { @Sendable [weak self] _ in
             Task { @MainActor in
                 guard let self, self.playbackID == id else { return }
                 self.stop()
