@@ -2,6 +2,34 @@
 
 Starfall is an MS-DOS game written by Mark Porter in 1986, with documentation and artwork by Jeanne Barnett and Susan Gager, guidance and design overview from John Stevens, and support from Professor Charles Howerton.
 
+## Native macOS app
+
+On macOS 14 or later, with a Swift 6 toolchain:
+
+```sh
+./scripts/build-macos.sh
+open build/Starfall.app
+```
+
+Choose **Load Voltar** to continue the original sample colony, or **Open World…**
+to load a Starfall world archive. Click the map or use the arrow keys (Shift
+moves eight blocks); Space switches between the world and sector maps. Use
+**Inspect** to work with the selected block's resources, the **Clock** menu
+to fast-forward, and **Save World…** to write a Pascal-format world file.
+
+The port bundles the original artwork, resource catalog, Voltar save, help,
+and Hall of Fame. The native game supports colony trade, exploration, extraction,
+development, refinement, production, supply links, and transport. It uses native
+controls and automatically routes vehicles to the chosen destination rather than
+requiring DOS-style waypoint entry. The DOS world generator, title music, and
+recording new Hall of Fame scores are not yet ported. Worlds generated in the DOS
+version can be opened in the native app.
+
+`macOS/Sources/StarfallCore` holds the archive codecs and colony simulation;
+`macOS/Sources/StarfallApp` is the SwiftUI/AppKit interface. The build script
+packages the original assets directly from the checkout rather than duplicating
+them. Run the Swift tests with `swift test --package-path macOS`.
+
 ## Repository layout
 
 - `product-build/` — Shipped binaries, overlay files, data files, and the original `READ.ME`.
@@ -10,7 +38,13 @@ Starfall is an MS-DOS game written by Mark Porter in 1986, with documentation an
 - `docs/` — Manual, charts, and specification documents.
 - Root-level `.COM` and `.DAT` files — Original disk contents, including the installer (`INSTALL.COM`), help files (`HELPFILE.DAT`, `HELPINDX.DAT`), and graphics editor (`GRAFEDIT`).
 
-## Running the game
+## Running the original DOS game
+
+Install DOSBox-X and run `./scripts/run-dos.sh`. This stages a writable copy
+under `build/dos/`, mounts the overlay directory as drive D, and starts the
+original binary. At the title screen press **S**, wait for initialization, then
+enter `VOLTAR.DAT` at the filename prompt. Set `STARFALL_DOS_DIR` to keep the
+DOS copy and its saves in a different directory.
 
 From the original `product-build/READ.ME`:
 

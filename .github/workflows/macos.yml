@@ -1,0 +1,32 @@
+name: macOS
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/macos.yml
+      - macOS/**
+      - scripts/build-macos.sh
+      - product-build/**
+      - HELPFILE.DAT
+      - HELPINDX.DAT
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/macos.yml
+      - macOS/**
+      - scripts/build-macos.sh
+      - product-build/**
+      - HELPFILE.DAT
+      - HELPINDX.DAT
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift test --package-path macOS
+      - run: ./scripts/build-macos.sh
+      - run: codesign --verify --strict build/Starfall.app
