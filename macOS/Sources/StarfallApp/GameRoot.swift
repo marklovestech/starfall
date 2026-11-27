@@ -40,6 +40,7 @@ struct GameRoot: View {
 
 struct MainMenu: View {
     let game: GameSession
+    @State private var titleMusic = TitleMusicPlayer()
 
     var body: some View {
         HStack(spacing: 42) {
@@ -80,6 +81,8 @@ struct MainMenu: View {
                     .disabled(game.archive == nil)
                 Button("Hall of Fame", systemImage: "trophy", action: game.showScores)
                     .disabled(game.archive == nil)
+                Button("Skip Title Music", systemImage: "speaker.slash", action: titleMusic.stop)
+                    .disabled(!titleMusic.isPlaying)
                 Spacer().frame(height: 8)
                 Text("Mark Porter · Originally written in Turbo Pascal")
                     .font(.caption)
@@ -89,6 +92,14 @@ struct MainMenu: View {
         }
         .padding(38)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear {
+            if game.sheet == nil { titleMusic.play() }
+        }
+        .onChange(of: game.sheet == nil) { _, titleVisible in
+            if titleVisible { titleMusic.play() }
+            else { titleMusic.stop() }
+        }
+        .onDisappear { titleMusic.stop() }
     }
 }
 
