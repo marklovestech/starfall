@@ -119,7 +119,7 @@ public enum LegacyWorld {
 
 private struct WorldWriter {
     var lines = [String]()
-    var data: Data { Data((lines.joined(separator: "\r\n") + "\r\n").utf8) }
+    var data: Data { DOSCodePage437.encode(lines.joined(separator: "\r\n") + "\r\n") }
 
     mutating func line(_ value: some CustomStringConvertible) { lines.append(value.description) }
     mutating func boolean(_ value: Bool) { line(value ? "T" : "F") }

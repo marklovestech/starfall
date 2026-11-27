@@ -40,6 +40,17 @@ func catalog() throws -> ResourceCatalog {
     #expect(throws: ArchiveError.self) { try LegacyWorld.decode(Data(encoded.dropLast(20))) }
 }
 
+@Test func accentedDOSWorldNamesRoundTripAsCodePage437() throws {
+    let title = Data([0x43, 0x41, 0x46, 0x90, 0x0D, 0x0A])
+    let original = try fixture("product-build/VOLTAR.DAT")
+    let dosSave = title + original.dropFirst("VOLTAR\r\n".utf8.count)
+    let world = try LegacyWorld.decode(dosSave)
+    #expect(world.name == "CAFÉ")
+    let encoded = LegacyWorld.encode(world)
+    #expect(encoded.prefix(title.count) == title)
+    #expect(try LegacyWorld.decode(encoded) == world)
+}
+
 @Test func pictureMatchesOriginalLandMatrix() throws {
     let world = try voltar()
     let picture = try world.picture

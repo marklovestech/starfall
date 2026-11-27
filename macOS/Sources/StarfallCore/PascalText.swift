@@ -20,7 +20,7 @@ struct PascalText {
     init(_ data: Data) throws {
         guard data.count <= 16 * 1_024 * 1_024 else { throw ArchiveError.binary("file is too large") }
         let body = data.prefix { $0 != 26 }
-        let text = String(decoding: body, as: UTF8.self)
+        let text = DOSCodePage437.decode(body)
         var split = text.split(omittingEmptySubsequences: false, whereSeparator: \.isNewline)
         if split.last?.isEmpty == true { split.removeLast() }
         lines = split
@@ -99,5 +99,37 @@ struct PascalText {
         var items = [Element]()
         while try hasRecord() { items.append(try read(&self)) }
         return items
+    }
+}
+
+enum DOSCodePage437 {
+    private static let extended = Array([
+        "ÇüéâäàåçêëèïîìÄÅ",
+        "ÉæÆôöòûùÿÖÜ¢£¥₧ƒ",
+        "áíóúñÑªº¿⌐¬½¼¡«»",
+        "░▒▓│┤╡╢╖╕╣║╗╝╜╛┐",
+        "└┴┬├─┼╞╟╚╔╩╦╠═╬╧",
+        "╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀",
+        "αßΓπΣσµτΦΘΩδ∞φε∩",
+        "≡±≥≤⌠⌡÷≈°∙·√ⁿ²■\u{00A0}",
+    ].joined().unicodeScalars)
+    private static let encoded = Dictionary(uniqueKeysWithValues: extended.enumerated().map {
+        ($0.element, UInt8($0.offset + 128))
+    })
+
+    static func decode(_ bytes: some Collection<UInt8>) -> String {
+        if bytes.allSatisfy({ $0 < 128 }) { return String(decoding: bytes, as: UTF8.self) }
+        var text = String.UnicodeScalarView()
+        for byte in bytes {
+            text.append(byte < 128 ? UnicodeScalar(byte) : extended[Int(byte) - 128])
+        }
+        return String(text)
+    }
+
+    static func encode(_ text: String) -> Data {
+        if text.utf8.allSatisfy({ $0 < 128 }) { return Data(text.utf8) }
+        return Data(text.unicodeScalars.map {
+            $0.value < 128 ? UInt8($0.value) : encoded[$0] ?? 63
+        })
     }
 }
