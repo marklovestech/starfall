@@ -63,12 +63,21 @@ public struct GameTime: Equatable, Sendable, CustomStringConvertible {
 }
 
 public struct Stock: Equatable, Sendable {
+    struct StackKind: Hashable {
+        let number: Int
+        let found: Bool
+        let extracted: Bool
+    }
+
     public let number: Int
     public var quantity: Double
     public var flags: UInt8
     public var contents: [Stock]
     public var found: Bool { flags & 1 != 0 }
     public var extracted: Bool { flags & 2 != 0 }
+    var stackKind: StackKind? {
+        found || extracted ? StackKind(number: number, found: found, extracted: extracted) : nil
+    }
 }
 
 public struct Land: Equatable, Sendable {
@@ -168,8 +177,13 @@ public struct World: Equatable, Sendable {
 
     public func finalScore(catalog: ResourceCatalog) -> Int {
         func score(_ tree: [Stock]) -> Int {
-            tree.reduce(0) { total, stock in
-                total + (catalog[stock.number]?.scoreValue ?? 0) + score(stock.contents)
+            // Score the sibling list as if all compatible loose stock had been combined.
+            var counted = Set(tree.lazy.filter { !$0.contents.isEmpty }.compactMap(\.stackKind))
+            return tree.reduce(0) { total, stock in
+                if stock.contents.isEmpty, let kind = stock.stackKind, !counted.insert(kind).inserted {
+                    return total
+                }
+                return total + (catalog[stock.number]?.scoreValue ?? 0) + score(stock.contents)
             }
         }
         let colonyScore = occupied.reduce(0) { $0 + score(land[$1]?.stock ?? []) }

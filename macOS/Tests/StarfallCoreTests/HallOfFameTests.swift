@@ -84,7 +84,7 @@ import Testing
 @Test func finalScoreCountsNodesInOccupiedBlocksAndBothPendingTrees() throws {
     var world = try voltar()
     let resources = try catalog()
-    #expect(world.finalScore(catalog: resources) == 17_514)
+    #expect(world.finalScore(catalog: resources) == 17_412)
     let resource = try #require(resources.resources.first { $0.scoreValue > 0 })
     let stock = Stock(number: resource.id, quantity: 100, flags: 0, contents: [])
     var container = stock
@@ -102,4 +102,32 @@ import Testing
     world.traderStock = [stock]
 
     #expect(world.finalScore(catalog: resources) == resource.scoreValue * 6)
+}
+
+@Test func finalScoreDoesNotChangeWhenStacksAreSplitOrCombined() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let resource = try #require(resources.resources.first { $0.scoreValue > 0 })
+    let block = try #require(world.base)
+    let plain = Stock(number: resource.id, quantity: 6, flags: 3, contents: [])
+    let cargo = Stock(number: resource.id, quantity: 1, flags: 3, contents: [])
+    let provisioned = Stock(number: resource.id, quantity: 3, flags: 3, contents: [cargo])
+    let deposit = Stock(number: resource.id, quantity: 7, flags: 1, contents: [])
+    world.occupied = [block]
+    world.pending = []
+    world.land[block]?.stock = [plain, deposit]
+    let looseScore = world.finalScore(catalog: resources)
+    #expect(looseScore == resource.scoreValue * 2)
+    try world.splitStock(at: block, index: 0, quantity: 2)
+    #expect(world.finalScore(catalog: resources) == looseScore)
+    try world.combineStock(at: block, index: 0)
+    #expect(world.finalScore(catalog: resources) == looseScore)
+
+    world.land[block]?.stock = [provisioned, plain, deposit]
+    let provisionedScore = world.finalScore(catalog: resources)
+    #expect(provisionedScore == resource.scoreValue * 3)
+    try world.combineStock(at: block, index: 0)
+    #expect(world.finalScore(catalog: resources) == provisionedScore)
+    try world.splitStock(at: block, index: 0, quantity: 2)
+    #expect(world.finalScore(catalog: resources) == provisionedScore)
 }

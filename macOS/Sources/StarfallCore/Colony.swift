@@ -632,8 +632,8 @@ private extension Array where Element == Stock {
 
 public extension Stock {
     func canCombine(with other: Stock) -> Bool {
-        (found || extracted) && number == other.number && found == other.found
-            && extracted == other.extracted && other.contents.isEmpty
+        guard let stackKind else { return false }
+        return stackKind == other.stackKind && other.contents.isEmpty
     }
 }
 
