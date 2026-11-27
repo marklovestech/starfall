@@ -180,31 +180,17 @@ struct ArchivePanel: View {
         .pickerStyle(.segmented)
     }
 
-    @ViewBuilder private func stockControls(index: Int, item: Stock, stock: [Stock]) -> some View {
-        if item.quantity > 1 {
-            Button("Split…") {
-                splitQuantity = 1
-                stockToSplit = index
-            }
-            .buttonStyle(.bordered)
-        }
-        if stock.indices.contains(where: { $0 != index && item.canCombine(with: stock[$0]) }) {
-            Button("Combine") { game.combineStock(index: index) }
-                .buttonStyle(.bordered)
-        }
-    }
-
     private func resourceList(_ land: Land, world: World, catalog: ResourceCatalog) -> some View {
         List {
             ForEach(Array(land.stock.enumerated()).filter { $0.element.found || $0.element.extracted },
                     id: \.offset) { index, item in
-                HStack {
-                    StockRow(item: item, catalog: catalog,
-                             unlink: { game.unlinkSupply(equipmentIndex: index, supplyIndex: $0) },
-                             explore: world.canExplore(with: item, catalog: catalog)
-                                ? { game.explore(equipmentIndex: index) } : nil)
-                    stockControls(index: index, item: item, stock: land.stock)
-                }
+                let canCombine = land.stock.indices.contains { $0 != index && item.canCombine(with: land.stock[$0]) }
+                StockRow(item: item, catalog: catalog,
+                         unlink: { game.unlinkSupply(equipmentIndex: index, supplyIndex: $0) },
+                         explore: world.canExplore(with: item, catalog: catalog)
+                            ? { game.explore(equipmentIndex: index) } : nil,
+                         split: item.quantity > 1 ? { splitQuantity = 1; stockToSplit = index } : nil,
+                         combine: canCombine ? { game.combineStock(index: index) } : nil)
             }
         }
         .alert("Split resource stack", isPresented: Binding(
@@ -411,6 +397,9 @@ private struct StockRow: View {
     let catalog: ResourceCatalog
     var unlink: ((Int) -> Void)?
     var explore: (() -> Void)?
+    var split: (() -> Void)?
+    var combine: (() -> Void)?
+    var unlinkFromParent: (() -> Void)?
 
     var body: some View {
         if item.contents.isEmpty {
@@ -418,10 +407,8 @@ private struct StockRow: View {
         } else {
             DisclosureGroup {
                 ForEach(Array(item.contents.enumerated()), id: \.offset) { index, child in
-                    HStack {
-                        StockRow(item: child, catalog: catalog)
-                        if let unlink { Button("Unlink") { unlink(index) }.buttonStyle(.bordered) }
-                    }
+                    StockRow(item: child, catalog: catalog,
+                             unlinkFromParent: unlink.map { action in { action(index) } })
                 }
             } label: {
                 row
@@ -435,6 +422,9 @@ private struct StockRow: View {
             itemRow(name: info?.name ?? "Resource \(item.number)", value: item.quantity, units: info?.units ?? "")
             if !item.extracted { Text("Unextracted").font(.caption).foregroundStyle(.secondary) }
             if let explore { Button("Explore", action: explore).buttonStyle(.bordered) }
+            if let split { Button("Split…", action: split).buttonStyle(.bordered) }
+            if let combine { Button("Combine", action: combine).buttonStyle(.bordered) }
+            if let unlinkFromParent { Button("Unlink", action: unlinkFromParent).buttonStyle(.bordered) }
         }
     }
 }
