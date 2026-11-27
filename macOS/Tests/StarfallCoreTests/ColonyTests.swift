@@ -171,15 +171,37 @@ import Testing
     }
 }
 
+@Test func foodAndSeedCanUseTheSmallCombineAlternative() throws {
+    let resources = try catalog()
+    let combine = try #require(resources.resources.first { $0.name == "SMALL COMBINE" })
+    for name in ["FOOD", "SEED"] {
+        var world = try voltar()
+        let block = try #require(world.base)
+        let product = try #require(resources.resources.first { $0.name == name })
+        let primary = try #require(product.recipe.last)
+        let alternative = try #require(sequence(first: primary) { $0.alternatives.first }.first { $0.number == combine.id })
+        world.land[block]?.stock = preparedProductionStock(Array(product.recipe.dropLast()) + [alternative],
+                                                          quantity: 2, catalog: resources)
+        world.pending = []
+        try world.produce(product.id, at: block, quantity: 2, catalog: resources)
+        let pending = try #require(world.pending.first)
+        #expect(pending.equipment.last?.number == combine.id)
+        #expect(pending.updatesLeft == Int(product.productionTime * alternative.timeFactor))
+    }
+}
+
 private func preparedProductionStock(_ recipe: [Resource.Ingredient], quantity: Double,
                                      catalog: ResourceCatalog) -> [Stock] {
-    recipe.map { choice in
-        let resource = catalog[choice.number]
-        return Stock(number: choice.number, quantity: choice.quantity * quantity, flags: 3,
-                     contents: ((resource?.basic ?? []) + (resource?.active ?? [])).map {
-                         Stock(number: $0.number, quantity: 1e15, flags: 3, contents: [])
-                     })
+    func provision(_ number: Int, quantity: Double, active: Bool, depth: Int) -> Stock {
+        let resource = catalog[number]
+        let needs = (resource?.basic ?? []) + (active ? resource?.active ?? [] : [])
+        let contents = depth > 0 ? needs.map {
+            provision($0.number, quantity: $0.quantity * quantity * 10_000 + 1,
+                      active: false, depth: depth - 1)
+        } : []
+        return Stock(number: number, quantity: quantity, flags: 3, contents: contents)
     }
+    return recipe.map { provision($0.number, quantity: $0.quantity * quantity, active: true, depth: 4) }
 }
 
 private struct SeededRandom: RandomNumberGenerator {

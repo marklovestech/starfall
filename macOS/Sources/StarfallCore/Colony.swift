@@ -155,7 +155,8 @@ public extension World {
         var ingredients = [Stock]()
         var duration = product.productionTime
         for requirement in product.recipe {
-            guard let choice = ([requirement] + requirement.alternatives).first(where: {
+            let choices = sequence(first: requirement) { $0.alternatives.first }
+            guard let choice = choices.first(where: {
                 $0.quantity >= 0 && $0.quantity * quantity <= tile.stock.quantity(of: $0.number)
             }) else { throw ColonyError.insufficientStock }
             let amount = choice.quantity * quantity
