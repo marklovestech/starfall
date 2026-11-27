@@ -54,12 +54,12 @@ public extension World {
     }
 
     static func sanitizeName(_ rawName: String) -> String {
-        let cleaned = rawName
+        let cleaned = rawName.precomposedStringWithCanonicalMapping
             .unicodeScalars
-            .filter { $0.value >= 32 && $0.value != 127 }
+            .filter { $0.value >= 32 && $0.value != 127 && DOSCodePage437.canEncode($0) }
         let trimmed = String(String.UnicodeScalarView(cleaned)).trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return defaultName }
-        return String(trimmed.prefix(maxNameLength))
+        return String(String.UnicodeScalarView(trimmed.unicodeScalars.prefix(maxNameLength)))
     }
 
     static func renderPictureWords(land: Set<Block>) -> [Int16] {

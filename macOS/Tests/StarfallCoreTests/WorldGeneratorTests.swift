@@ -74,6 +74,13 @@ import Testing
     #expect(World.sanitizeName("   \t\n ") == "NEW EDEN")
     #expect(World.sanitizeName("ALPHA\r\nCENTAURI") == "ALPHACENTAURI")
     #expect(World.sanitizeName(String(repeating: "A", count: 40)).count == 30)
+    #expect(World.sanitizeName("🚀🌍") == "NEW EDEN")
+    #expect(World.sanitizeName("Kepler 🚀") == "Kepler")
+    let decomposed = String(repeating: "e\u{0301}", count: 35)
+    let sanitized = World.sanitizeName(decomposed)
+    #expect(sanitized == String(repeating: "é", count: 30))
+    #expect(DOSCodePage437.encode(sanitized).count == 30)
+    #expect(DOSCodePage437.decode(DOSCodePage437.encode(sanitized)) == sanitized)
 }
 
 @Test func generatedWorldPlaysThroughBaseTradeAndClock() throws {
