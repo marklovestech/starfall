@@ -1,0 +1,354 @@
+{
+  "repo_notes": [
+    {
+      "content": "This repository contains two implementations of STARFALL: (1) the 1986 MS-DOS original in Turbo Pascal 3.0 under `orig1986/` (`orig1986/source/*.PAS`, binaries and overlays in `orig1986/product-build/`, run with `scripts/run-dos.sh` under DOSBox-X), and (2) the 2026 native macOS port in Swift 6 under `macOS/` (Swift package `macOS/Package.swift` with `StarfallCore` and `StarfallApp`, built with `scripts/build-macos.sh` into `build/Starfall.app`). Document both. Whenever a page covers 1986 logic that the Swift port reimplements, cross-reference the Swift file, and vice versa. Use current paths (`orig1986/...`), not pre-move root paths."
+    }
+  ],
+  "pages": [
+    {
+      "title": "STARFALL Overview",
+      "purpose": "Introduce STARFALL and explain that this repository contains two implementations of the same game: the 1986 MS-DOS original and the 2026 native macOS port.",
+      "page_notes": [
+        {
+          "content": "Describe the repository as containing TWO implementations of STARFALL, not just the 1986 original:\n1. The 1986 MS-DOS game written in Turbo Pascal 3.0 by Mark Porter. Source is `orig1986/source/*.PAS`; the shipped binaries, overlays (`PLAYGAME.000`-`PLAYGAME.010`, `MAKEWRLD.000`-`.003`, `STARFALL.000`, `WRLDSHAK.000`/`.001`) and data files live in `orig1986/product-build/`. It is run under DOSBox-X via `scripts/run-dos.sh`.\n2. The 2026 native macOS port written in Swift 6: the Swift package in `macOS/` (`macOS/Package.swift`, targets `StarfallCore`, `Starfall` executable from `Sources/StarfallApp`, and `StarfallCoreTests`), built into `build/Starfall.app` via `scripts/build-macos.sh`.\nNote that the 1986 files were moved under `orig1986/` (see `orig1986/README.md`); the user-facing names `source/`, `product-build/`, `utils/` and `docs/` refer to `orig1986/source/`, `orig1986/product-build/`, `orig1986/utils/` and `orig1986/docs/`."
+        },
+        {
+          "content": "Include an architecture diagram (Mermaid) with BOTH build/run pipelines side by side:\n- Pascal pipeline (1986): `orig1986/source/*.PAS` include files -> Turbo Pascal 3.0 compiler (`{$I ...}` includes and `OVERLAY PROCEDURE`s) -> `STARFALL.COM` + `STARFALL.000`, `PLAYGAME.COM` + `PLAYGAME.000`-`.010`, `MAKEWRLD.COM` + `.000`-`.003`, `SHOSCORE.COM` in `orig1986/product-build/` -> `scripts/run-dos.sh` stages `build/dos/game` (C:) and `build/dos/overlays` (D:) -> DOSBox-X `-machine cga` runs `STARFALL.COM`.\n- Swift pipeline (2026): `macOS/Package.swift` -> `StarfallCore` library + `StarfallApp` sources (executable product `Starfall`) -> `swift build` in `scripts/build-macos.sh` -> `build/Starfall.app` whose `Contents/Resources` bundles the ORIGINAL assets copied straight from the checkout (`orig1986/product-build/RESOURCE.DAT`, `SCORFILE.DAT`, `STARFALL.PIC`, `VOLTAR.DAT`, and `orig1986/HELPFILE.DAT`, `HELPINDX.DAT`) -> ad-hoc `codesign`.\nShow the shared data (world `.DAT` archives, `RESOURCE.DAT`, `SCORFILE.DAT`, help files) as the bridge between the two pipelines. Mention CI: `.github/workflows/macos.yml` runs `swift test --package-path macOS`, `scripts/build-macos.sh` and `codesign --verify` on macos-15."
+        },
+        {
+          "content": "Summarise the root `README.md` (credits: Mark Porter 1986, documentation and artwork by Jeanne Barnett and Susan Gager, design overview by John Stevens, support from Professor Charles Howerton; macOS app usage; repository layout listing `macOS/`, `scripts/`, `.github/workflows/macos.yml`, `orig1986/`) and `orig1986/README.md` (DOS contents and DOSBox instructions). Link to the 'macOS Port (2026)' section for the Swift implementation."
+        }
+      ]
+    },
+    {
+      "title": "Installation and Running the Game",
+      "purpose": "Explain how to run each version: the 1986 DOS game under DOSBox-X (and its original 1986 RAM-disk install) and the 2026 macOS app.",
+      "parent": "STARFALL Overview",
+      "page_notes": [
+        {
+          "content": "Cover both versions. DOS: `scripts/run-dos.sh` (requires DOSBox-X or `DOSBOX=` override; stages a writable copy in `build/dos/game` mounted as C: and `PLAYGAME.0*` overlays in `build/dos/overlays` mounted as D:; `-machine cga` is required so the CGA palette renders terrain; `STARFALL_DOS_DIR` relocates the staging dir; press S at the title then load `VOLTAR.DAT`). Then the original 1986 procedure: `orig1986/INSTALL.COM`/`INSTALL.PAS`, RAM disk (128K minimum), `PARMS.DAT`, three-disk layout from `orig1986/product-build/READ.ME`.\nmacOS: `./scripts/build-macos.sh` then `open build/Starfall.app` (macOS 14+, Swift 6 toolchain); link to the 'Building, Running and Testing the macOS App' page for details."
+        }
+      ]
+    },
+    {
+      "title": "Repository Layout and Build Artifacts",
+      "purpose": "Describe the full repository layout for both implementations and map sources to build artifacts.",
+      "parent": "STARFALL Overview",
+      "page_notes": [
+        {
+          "content": "Repository layout must list, as in the root `README.md`: `macOS/` (Swift 6 package: `Package.swift`, `Info.plist`, `Sources/StarfallCore`, `Sources/StarfallApp`, `Tests/StarfallCoreTests`), `scripts/` (`build-macos.sh`, `run-dos.sh`), `.github/workflows/macos.yml`, and `orig1986/` containing `source/` (Turbo Pascal 3.0 `.PAS`), `product-build/` (shipped `.COM` binaries, overlays and data), `utils/` (`GRAFEDIT`, `MAKEHELP`, `MYLIST`, `WRLDSHAK` binaries), `docs/` (WordStar `MANUAL`, `CHARTS`, `SPECS.TXT`) and the top-level disk files (`INSTALL.COM`, `FORMFEED.COM`, `GRAFEDIT.COM`/`.000`, `HELPFILE.DAT`, `HELPINDX.DAT`). Also mention generated, git-ignored `build/` (`build/Starfall.app`, `build/dos/`)."
+        },
+        {
+          "content": "Provide two source-to-artifact mappings with a diagram for each: (a) Pascal programs `STARFALL.PAS`, `PLAYGAME.PAS`, `MAKEWRLD.PAS`, `SHOSCORE.PAS`, `WRLDSHAK.PAS`, `GRAFEDIT.PAS`, `MAKEHELP.PAS`, `INSTALL.PAS` -> their `.COM`/overlay files; (b) `macOS/Package.swift` targets -> `Starfall` executable -> `build/Starfall.app/Contents/MacOS/Starfall`, `macOS/Info.plist` -> `Contents/Info.plist`, and the original `orig1986` data files copied into `Contents/Resources` (no duplicated assets in `macOS/`). Mention `.gitattributes` binary handling."
+        }
+      ]
+    },
+    {
+      "title": "Program Architecture",
+      "purpose": "Explain the 1986 Turbo Pascal program architecture: chained .COM programs, overlays and shared include files.",
+      "page_notes": [
+        {
+          "content": "This section documents the 1986 DOS implementation in `orig1986/source/`. Include the Pascal compile/overlay pipeline diagram (include files -> program -> .COM + overlay files -> D: overlay drive). Add a short comparison with the 2026 Swift architecture (single SwiftUI app; `StarfallCore` replaces the overlay-partitioned engine, `StarfallApp` replaces the text/CGA UI) and link to 'macOS Port (2026)'."
+        }
+      ]
+    },
+    {
+      "title": "Main Menu Program (STARFALL.PAS)",
+      "purpose": "Document STARFALL.PAS: startup, logo, main menu, program chaining, help and title song.",
+      "parent": "Program Architecture",
+      "page_notes": [
+        {
+          "content": "Cross-reference the Swift equivalents: the main menu is `MainMenu` in `macOS/Sources/StarfallApp/GameRoot.swift` (New World, Load Voltar, Open World, Instructions, Hall of Fame, Skip Title Music); the `STARFALL.PIC` logo is decoded by `PackedPicture` in `macOS/Sources/StarfallCore/ArchiveAssets.swift`; the title song (`TITLESNG.PAS` with `NOISE.PAS` frequencies) is `macOS/Sources/StarfallCore/TitleMusic.swift` played by `macOS/Sources/StarfallApp/TitleMusicPlayer.swift`."
+        }
+      ]
+    },
+    {
+      "title": "Overlay System and Include Structure",
+      "purpose": "Explain the {$I} include structure and OVERLAY partitioning of PLAYGAME.PAS into PLAYGAME.000-.010.",
+      "parent": "Program Architecture",
+      "page_notes": [
+        {
+          "content": "List which include files go into which overlay of `orig1986/source/PLAYGAME.PAS` (e.g. .000 GETVALUS/COLWINDO/TRNSPRIM; .001 HRLLPRCS/TRADPRIM/WRLONLAT/PENDPRCS/DSPTMVRT; .003 COMPPEND; .004 WINDOWS/TRADPRCS/GETWRLDN/TEMPZONE/INITSRMT/RDRSRCFL/INITWMAT/INITSGTI; .005 UPDABLPL/UPDAWINV/DSPFKHLP; .006 CHNGBASE/HELPPRCS; .007 TRANSPRT/TRADE/EXPLORE/EXTRACT/DEVELOP/REFINE/PRODUCE/VERIQUIT/INITALL/LOADWRLD/SAVEWRLD; .008 KEYPRCS). Note that the macOS port has no overlay system: the same logic lives in ordinary Swift files (mainly `macOS/Sources/StarfallCore/Colony.swift`)."
+        }
+      ]
+    },
+    {
+      "title": "Global Types, Constants and Variables (CTVSEC/PLAYCTVS)",
+      "purpose": "Document CTVSEC.PAS, PLAYCTVS.PAS, RESOURCE.PAS and WMATRDEF.PAS global definitions.",
+      "parent": "Program Architecture",
+      "page_notes": [
+        {
+          "content": "Cross-reference the Swift data model in `macOS/Sources/StarfallCore/World.swift` (`Block` 288x144 grid, `GameTime`, `Stock`, `Land`, `Action`, `Pending`, `LogEntry`, `World`) and `macOS/Sources/StarfallCore/ResourceCatalog.swift` (`Resource`, `ResourceCatalog`) as the 2026 equivalents of these Pascal types."
+        }
+      ]
+    },
+    {
+      "title": "Simulation Engine (PLAYGAME)",
+      "purpose": "Explain the 1986 PLAYGAME simulation engine and compare it with the Swift colony engine.",
+      "page_notes": [
+        {
+          "content": "Throughout this section, cross-reference the 2026 reimplementation in `macOS/Sources/StarfallCore/Colony.swift` (an extension on `World`) so readers can compare: PLAYGAME overlays in `orig1986/source/PLAYGAME.PAS` vs `World.advanceTick`, `advanceToNextUpdate`, `advancePending`, `complete`, and the action methods (`trade`, `explore`, `process`, `produce`, `transport`, `linkSupply`, `setBase`)."
+        }
+      ]
+    },
+    {
+      "title": "World Data Model: Matrix, Land Blocks and Resource Trees",
+      "purpose": "Document the world matrix, land blocks and resource trees (WMATRDEF, WRLDMATR, LANDPRIM, TREEPRCS, RSRCFLAG).",
+      "parent": "Simulation Engine (PLAYGAME)",
+      "page_notes": [
+        {
+          "content": "Compare with `macOS/Sources/StarfallCore/World.swift`: `Land` (climate byte with temperature/moisture nibbles, altitude in 100 m units, `stock`), `Stock` (resource number, quantity, flags with found/extracted bits as in `RSRCFLAG.PAS`, nested `contents` replacing Pascal resource-tree pointers from `TREEPRCS.PAS`), and `Block` longitude/latitude (as in `WRLONLAT.PAS`)."
+        }
+      ]
+    },
+    {
+      "title": "Time System and Update Loop",
+      "purpose": "Document game time, time increments, world updates and compressed time (TIMEMATH, UPDATIME, COMPTIME, DISPTIME, INITSGTI).",
+      "parent": "Simulation Engine (PLAYGAME)",
+      "page_notes": [
+        {
+          "content": "Compare with `GameTime` in `macOS/Sources/StarfallCore/World.swift` and `World.advanceTick` / `advanceToNextUpdate` in `Colony.swift`; the macOS Clock menu (`GameRoot.swift`: Next Update, Next Scheduled Action, Adjust Clock Rate in one-minute or one-hour steps) replaces `COMPTIME.PAS` time compression."
+        }
+      ]
+    },
+    {
+      "title": "Pending List and Log List",
+      "purpose": "Document the pending and log linked lists (PENDPRCS, PENDPRIM, COMPPEND, CHNGPILI, SHOWBPND, SHOWBLOG, UPDABLPL).",
+      "parent": "Simulation Engine (PLAYGAME)",
+      "page_notes": [
+        {
+          "content": "Compare with `Pending`/`LogEntry` in `World.swift`, `advancePending`/`complete`/`cancelPending` in `Colony.swift` (cancelling releases equipment and keeps completed work), and the Pending Actions / World Log sheets in `macOS/Sources/StarfallApp/ArchivePanel.swift` (whole world or selected block)."
+        }
+      ]
+    },
+    {
+      "title": "Player Actions: Explore, Extract, Develop, Refine, Produce, Transport",
+      "purpose": "Document the player action modules EXPLORE, EXTRACT, DEVELOP, REFINE, PRODUCE and the human resource upkeep (HRLLPRCS, HRLLUPDA, HRPRESNT).",
+      "parent": "Simulation Engine (PLAYGAME)",
+      "page_notes": [
+        {
+          "content": "Cross-reference each Pascal module with its Swift counterpart in `macOS/Sources/StarfallCore/Colony.swift`: `EXPLORE.PAS` -> `canExplore`/`explore`; `EXTRACT.PAS`, `DEVELOP.PAS`, `REFINE.PAS` -> `process(_:at:objectIndex:equipmentIndex:quantity:)` with `Action.extraction/.development/.refinement` and `ResourceCatalog.processingDuration`; `PRODUCE.PAS` -> `produce`; supply linking -> `linkSupply`/`unlinkSupply`, `splitStock`/`combineStock`; human resource upkeep (`HRLLPRCS.PAS`, `HRLLUPDA.PAS`, `HRPRESNT.PAS`) -> `ResourceCatalog.upkeep`/`checkSupplies`; `CHNGBASE.PAS` -> `setBase`."
+        }
+      ]
+    },
+    {
+      "title": "Transportation Subsystem",
+      "purpose": "Document TRANSPRT.PAS and TRNSPRIM.PAS route plotting and vehicle movement.",
+      "parent": "Player Actions: Explore, Extract, Develop, Refine, Produce, Transport",
+      "page_notes": [
+        {
+          "content": "Compare with `TransportPlan`, `planTransport`, `plotWaypoint`, `transport`, `advanceRoute` and `stopTransportAtLastLandfall` in `macOS/Sources/StarfallCore/Colony.swift`, and `ResourceCatalog.transportSpeed`/`cargoWeight`. The macOS UI plots routes from the block inspector (Transport -> mode and vehicle -> Plot Route; arrow keys or clicks add waypoints, retracing undoes, Dispatch from a land block)."
+        }
+      ]
+    },
+    {
+      "title": "Trading with Merchant Traders",
+      "purpose": "Document TRADE, TRADPRCS, TRADPRIM and TRADCSTS trading logic.",
+      "parent": "Player Actions: Explore, Extract, Develop, Refine, Produce, Transport",
+      "page_notes": [
+        {
+          "content": "Compare with `callTrader` (50,000 credit call cost, `traderCallCost`), `trade(resource:quantity:buying:catalog:)`, `traderArrives` and the debt limit in `macOS/Sources/StarfallCore/Colony.swift`, and the trade sheet in `macOS/Sources/StarfallApp/ArchivePanel.swift`."
+        }
+      ]
+    },
+    {
+      "title": "Save, Load and World Inventory",
+      "purpose": "Document LOADWRLD, SAVEWRLD, the world file format and the world inventory window (WINVPRIM, WINVPRM2, UPDAWINV).",
+      "parent": "Simulation Engine (PLAYGAME)",
+      "page_notes": [
+        {
+          "content": "Compare with `macOS/Sources/StarfallCore/LegacyWorld.swift` (`LegacyWorld.decode`/`encode`, which read and write the same Pascal text format as `LOADWRLD.PAS`/`SAVEWRLD.PAS`, using `PascalText.swift`) and the World Inventory sheet in `ArchivePanel.swift`. Link to 'Data Interoperability Between DOS and macOS'."
+        }
+      ]
+    },
+    {
+      "title": "User Interface and Display Layer",
+      "purpose": "Explain the 1986 CGA/text UI layer and how the macOS port replaces it with SwiftUI/AppKit.",
+      "page_notes": [
+        {
+          "content": "Add a short comparison table: 1986 Pascal UI modules vs 2026 `macOS/Sources/StarfallApp` files (`GameRoot.swift`, `Maps.swift`, `ArchivePanel.swift`, `StarfallApp.swift`)."
+        }
+      ]
+    },
+    {
+      "title": "Maps and Graphics Primitives",
+      "purpose": "Document MAPPRIMS, WRLDPICS, SETWRLDM, WRLDPRCS, ZOOMPRCS and the world/sector maps.",
+      "parent": "User Interface and Display Layer",
+      "page_notes": [
+        {
+          "content": "Compare with `WorldMap` and `SectorGrid` in `macOS/Sources/StarfallApp/Maps.swift` (Space toggles world/sector map, Shift+arrow moves eight blocks) and `World.renderPictureWords` in `WorldGenerator.swift`."
+        }
+      ]
+    },
+    {
+      "title": "Windows, Boxes and Resource Window",
+      "purpose": "Document WINDOWS, DRAWBOX, COLWINDO, DISPBTMS, CLRBTPLI and the resource window.",
+      "parent": "User Interface and Display Layer",
+      "page_notes": [
+        {
+          "content": "Compare with the block inspector, inventory, pending, log and trade sheets in `macOS/Sources/StarfallApp/ArchivePanel.swift`."
+        }
+      ]
+    },
+    {
+      "title": "Keyboard Input and Command Dispatch",
+      "purpose": "Document KEYPRCS, MOVEPRCS, INKEY, KEYWCLK, GETKEY, GETVALUS and command dispatch.",
+      "parent": "User Interface and Display Layer",
+      "page_notes": [
+        {
+          "content": "Compare with `GameSession` command methods in `macOS/Sources/StarfallApp/StarfallApp.swift` (`move`, `select`, `inspect`, `toggleZoom`, menu `CommandMenu(\"Colony\")`) and `WorldConsole` in `GameRoot.swift`."
+        }
+      ]
+    },
+    {
+      "title": "Help System",
+      "purpose": "Document HELPPRCS, HELPUTIL, MAKEHELP and HELPFILE.DAT/HELPINDX.DAT.",
+      "parent": "User Interface and Display Layer",
+      "page_notes": [
+        {
+          "content": "Compare with `HelpTopic.decode(index:pages:)` in `macOS/Sources/StarfallCore/ArchiveAssets.swift` and the Instructions sheet in `ArchivePanel.swift`, which read the same `HELPINDX.DAT`/`HELPFILE.DAT`."
+        }
+      ]
+    },
+    {
+      "title": "World Generation and Tools",
+      "purpose": "Explain the 1986 world generator and utilities.",
+      "page_notes": [
+        {
+          "content": "Note that only MAKEWRLD has a 2026 Swift counterpart (`macOS/Sources/StarfallCore/WorldGenerator.swift`); WRLDSHAK, GRAFEDIT, MAKEHELP, MYLIST, FORMFEED and INSTALL are DOS-only."
+        }
+      ]
+    },
+    {
+      "title": "MAKEWRLD World Generator",
+      "purpose": "Document MAKEWRLD.PAS and its includes (MAKETZON, TEMPZONE, ALLCRSRC, WRLDPICS).",
+      "parent": "World Generation and Tools",
+      "page_notes": [
+        {
+          "content": "Cross-reference phase by phase with `macOS/Sources/StarfallCore/WorldGenerator.swift`: `do_land_masses`/`make_continent` -> `WorldBuilder.buildLandMasses`/`growContinent` (Swift reverses the land list to match MAKEWRLD prepending to `land_list_root`); `make_base_hydro_and_temp`/`make_hydrograph`/`make_temperature` -> `buildBaseHydroAndTemp`; `make_altitudes` -> `buildAltitudes`/`refineClimate`; `do_resource_allocation` (`ALLCRSRC.PAS`) -> `allocateSubsurfaceResources`; `WRLDPICS.PAS` world picture -> `World.renderPictureWords`; `initialize_game_time` -> random start date in `World.generate`; `GETWRLDN.PAS` name entry -> `World.sanitizeName` (default `NEW EDEN`, 30 chars). Tests: `macOS/Tests/StarfallCoreTests/WorldGeneratorTests.swift`."
+        }
+      ]
+    },
+    {
+      "title": "WRLDSHAK World Editor",
+      "purpose": "Document WRLDSHAK.PAS.",
+      "parent": "World Generation and Tools"
+    },
+    {
+      "title": "GRAFEDIT Clumsy Graphics Editor",
+      "purpose": "Document GRAFEDIT.PAS.",
+      "parent": "World Generation and Tools"
+    },
+    {
+      "title": "Minor Utilities: SHOSCORE, FORMFEED, MYLIST, TRASH",
+      "purpose": "Document SHOSCORE, FORMFEED, MYLIST and TRASH, and SCORFILE.DAT.",
+      "parent": "World Generation and Tools",
+      "page_notes": [
+        {
+          "content": "Compare `SHOSCORE.PAS` and the score-recording code in `VERIQUIT.PAS` (`WORLD_RANK_SPOT`) with `macOS/Sources/StarfallCore/HallOfFame.swift`, which reads/writes the same `SCORFILE.DAT` records including Turbo Pascal Real48 scores."
+        }
+      ]
+    },
+    {
+      "title": "Shared Library Modules",
+      "purpose": "Document shared Pascal library modules."
+    },
+    {
+      "title": "Math and Value Helpers",
+      "purpose": "Document MATHPRCS, MAXMIN, VALUE, GETVALUA.",
+      "parent": "Shared Library Modules"
+    },
+    {
+      "title": "Initialization Modules",
+      "purpose": "Document INITALL, RPARMS, INITWMAT, INITSRMT, INITSGTI, RDRSRCFL, ALLCRSRC.",
+      "parent": "Shared Library Modules",
+      "page_notes": [
+        {
+          "content": "Compare `RDRSRCFL.PAS` with `ResourceCatalog(data:)` in `macOS/Sources/StarfallCore/ResourceCatalog.swift` (parses the same `RESOURCE.DAT`), and `ALLCRSRC.PAS` with `allocateSubsurfaceResources` in `WorldGenerator.swift`."
+        }
+      ]
+    },
+    {
+      "title": "Documentation and Design Specs",
+      "purpose": "Document orig1986/docs (MANUAL, CHARTS, SPECS.TXT) and historical artifacts."
+    },
+    {
+      "title": "Game Balance Charts (Tables B-1..B-6)",
+      "purpose": "Document the balance tables in orig1986/docs/CHARTS.",
+      "parent": "Documentation and Design Specs"
+    },
+    {
+      "title": "Specifications and Historical Artifacts",
+      "purpose": "Document SPECS.TXT, READ.ME, MADISON.LTR and install docs.",
+      "parent": "Documentation and Design Specs"
+    },
+    {
+      "title": "macOS Port (2026)",
+      "purpose": "Introduce the 2026 native macOS port of STARFALL in Swift 6 and its architecture.",
+      "page_notes": [
+        {
+          "content": "Top-level section for the Swift 6 port in `macOS/`. Show a Mermaid diagram: `macOS/Package.swift` (swift-tools-version 6.0, platform macOS 14) -> target `StarfallCore` (simulation, generator, archive codecs) and executable target `Starfall` (path `Sources/StarfallApp`, depends on StarfallCore) and test target `StarfallCoreTests` -> `scripts/build-macos.sh` -> `build/Starfall.app` with original assets bundled from `orig1986/`. Explain that the port reimplements 1986 logic rather than emulating it, and that every page in this section cross-references the corresponding `orig1986/source/*.PAS` files."
+        }
+      ]
+    },
+    {
+      "title": "Building, Running and Testing the macOS App",
+      "purpose": "Explain requirements, build, run and test commands for the macOS app.",
+      "parent": "macOS Port (2026)",
+      "page_notes": [
+        {
+          "content": "Requirements: macOS 14 or later and a Swift 6 toolchain (the script exits on non-Darwin). `./scripts/build-macos.sh` runs `swift build --package-path macOS --configuration ${CONFIGURATION:-release}`, creates `build/Starfall.app/Contents/{MacOS,Resources}`, copies the `Starfall` binary and `macOS/Info.plist`, copies `RESOURCE.DAT`, `SCORFILE.DAT`, `STARFALL.PIC`, `VOLTAR.DAT` from `orig1986/product-build/` and `HELPFILE.DAT`, `HELPINDX.DAT` from `orig1986/`, ad-hoc codesigns, and prints the app path. Run with `open build/Starfall.app`. Tests: `swift test --package-path macOS` (`macOS/Tests/StarfallCoreTests`: `ArchiveTests`, `ColonyTests`, `HallOfFameTests`, `TitleMusicTests`, `WorldGeneratorTests`; fixtures are read from `orig1986/`). CI: `.github/workflows/macos.yml`."
+        }
+      ]
+    },
+    {
+      "title": "StarfallCore Module",
+      "purpose": "Document every file in macOS/Sources/StarfallCore with its Pascal counterpart.",
+      "parent": "macOS Port (2026)",
+      "page_notes": [
+        {
+          "content": "Document each file in `macOS/Sources/StarfallCore` with its key types/functions and the `orig1986/source` files it reimplements:\n- `Colony.swift`: colony simulation engine (extension on `World`): `setBase`, `callTrader`, `trade`, `explore`, `linkSupply`/`unlinkSupply`, `splitStock`/`combineStock`, `process` (extract/develop/refine), `produce`, `planTransport`/`plotWaypoint`/`transport`, `advanceTick`/`advanceToNextUpdate`, `cancelPending`, `ColonyError`, `TransportPlan`, `ResourceCatalog.upkeep`. Counterparts: the PLAYGAME overlays in `PLAYGAME.PAS` - `TRADE.PAS`, `TRADPRCS.PAS`, `TRADPRIM.PAS`, `TRADCSTS.PAS`, `EXPLORE.PAS`, `EXTRACT.PAS`, `DEVELOP.PAS`, `REFINE.PAS`, `PRODUCE.PAS`, `TRANSPRT.PAS`, `TRNSPRIM.PAS`, `PENDPRCS.PAS`, `PENDPRIM.PAS`, `COMPPEND.PAS`, `CHNGPILI.PAS`, `CHNGBASE.PAS`, `HRLLPRCS.PAS`, `HRLLUPDA.PAS`, `HRPRESNT.PAS`, `TIMEMATH.PAS`, `COMPTIME.PAS`.\n- `World.swift`: world data model (`Block`, `GameTime`, `Stock`, `Land`, `Action`, `Pending`, `LogEntry`, `World`). Counterparts: `WMATRDEF.PAS`, `WRLDMATR.PAS`, `PLAYCTVS.PAS`, `CTVSEC.PAS`, `RSRCFLAG.PAS`, `TREEPRCS.PAS`, `WRLONLAT.PAS`.\n- `WorldGenerator.swift`: port of the 1986 MAKEWRLD generator (`World.generate`, `WorldBuilder`). Counterparts: `MAKEWRLD.PAS`, `MAKETZON.PAS`, `TEMPZONE.PAS`, `ALLCRSRC.PAS`, `WRLDPICS.PAS`, `GETWRLDN.PAS`.\n- `LegacyWorld.swift` + `ArchiveAssets.swift`: Pascal-format world archive read/write (`LegacyWorld.decode`/`encode`, cross-compatible with DOS `.DAT` worlds such as `VOLTAR.DAT`; an optional `STARFALL-MAC-LANDFALL` trailer stores transport last-landfall metadata) and archived assets (`PackedPicture` two-bit Turbo Pascal pictures like `STARFALL.PIC` and world pictures, `HelpTopic` help decoding). Counterparts: `LOADWRLD.PAS`, `SAVEWRLD.PAS`, `WRLDPICS.PAS`, `HELPPRCS.PAS`, `MAKEHELP.PAS`.\n- `ResourceCatalog.swift`: `Resource`/`ResourceCatalog` parsed from `RESOURCE.DAT`. Counterparts: `RDRSRCFL.PAS`, `RESOURCE.PAS`.\n- `HallOfFame.swift`: `SCORFILE.DAT` handling (`HallOfFame`, `HallOfFameEntry`, `rank(for:)`, `record`, Real48 scores). Counterparts: `SHOSCORE.PAS`, `VERIQUIT.PAS`.\n- `PascalText.swift`: `PascalText` reader for Turbo Pascal text files, `ArchiveError`, and `DOSCodePage437` encoding.\n- `TitleMusic.swift`: title song note table transcribed from `TITLESNG.PAS` with frequencies/durations from `NOISE.PAS`."
+        }
+      ]
+    },
+    {
+      "title": "StarfallApp Module",
+      "purpose": "Document every file in macOS/Sources/StarfallApp (SwiftUI/AppKit UI).",
+      "parent": "macOS Port (2026)",
+      "page_notes": [
+        {
+          "content": "Document each file in `macOS/Sources/StarfallApp` and its 1986 counterparts:\n- `StarfallApp.swift`: `@main StarfallApp` app entry with menu commands (File: New/Open/Load Voltar/Save; `CommandMenu(\"Colony\")`: Advance One Update, World Inventory, Trade, Pending Actions, World Log; Help), `StarfallAppDelegate` (End Game check on quit), `GameSession` observable state and commands, and `Archive` which loads bundled `RESOURCE`, `VOLTAR`, `STARFALL.PIC`, help and `SCORFILE` resources. Hall of Fame scores are written to `~/Library/Application Support/Starfall/SCORFILE.DAT`. Counterparts: `STARFALL.PAS`, `PLAYGAME.PAS` main loop, `VERIQUIT.PAS`.\n- `GameRoot.swift`: main UI (`GameRoot`, `MainMenu`, `WorldConsole` with Clock controls, Inspect, Trade, Go to Base, transport plotting bar, End Game). Counterparts: `STARFALL.PAS` menu, `KEYPRCS.PAS`, `MOVEPRCS.PAS`, `DISPTIME.PAS`.\n- `Maps.swift`: `WorldMap` (288x144 world map) and `SectorGrid` (zoomed sector map) with cursor and waypoints. Counterparts: `MAPPRIMS.PAS`, `ZOOMPRCS.PAS`, `SETWRLDM.PAS`, `WRLDPRCS.PAS`.\n- `ArchivePanel.swift`: sheets for new world, instructions/help, Hall of Fame, world inventory, pending actions, world log, trade and the block inspector (explore, split, combine, link/unlink, transport, Plot Route). Counterparts: `WINDOWS.PAS`, `UPDAWINV.PAS`, `WINVPRIM.PAS`, `SHOWBPND.PAS`, `SHOWBLOG.PAS`, `TRADPRCS.PAS`, `HELPPRCS.PAS`.\n- `TitleMusicPlayer.swift`: renders `TitleMusic.notes` to an AVAudioEngine buffer and plays it on the main menu (Skip Title Music stops it). Counterparts: `TITLESNG.PAS`, `NOISE.PAS`."
+        }
+      ]
+    },
+    {
+      "title": "Feature Parity and Differences vs the DOS Version",
+      "purpose": "Compare macOS port features with the 1986 DOS game.",
+      "parent": "macOS Port (2026)",
+      "page_notes": [
+        {
+          "content": "Provide a parity table. Supported in the macOS port: new world generation, trade (call trader, buy/sell), explore, extract, develop, refine, produce, supply links (link/unlink, split/combine stacks), transport route plotting (waypoints, undo, dispatch from land), world inventory (jump to block inspector), pending actions (cancel to release equipment and keep completed work), world log (world or selected block), clock speed (Next Update, Next Scheduled Action, presets of 6/60/240/480 game minutes per second, Adjust Clock Rate in one-minute or one-hour steps), End Game / Hall of Fame (name entry when the score qualifies), load the Voltar sample, open/save world files, in-game instructions from the original help files, and the original title music on the main menu (ported from `TITLESNG.PAS`/`NOISE.PAS` into `TitleMusic.swift` and `TitleMusicPlayer.swift`; Skip Title Music stops it). Known gaps / differences: DOS-only utilities (WRLDSHAK, GRAFEDIT, MAKEHELP, MYLIST, FORMFEED, INSTALL) are not ported; no overlay/RAM-disk requirement; SwiftUI mouse-and-menu interface instead of CGA function keys."
+        }
+      ]
+    },
+    {
+      "title": "Data Interoperability Between DOS and macOS",
+      "purpose": "Explain how world files and Hall of Fame scores move between the DOS and macOS versions.",
+      "parent": "macOS Port (2026)",
+      "page_notes": [
+        {
+          "content": "Pascal-format world files open in both versions: `LegacyWorld.encode` writes the same CP437 text layout as `SAVEWRLD.PAS` (name, 7,000 picture words, land blocks until `DATAEND`, log, pending, occupied list, base, temperate latitude, times, cursor, trader state, balance, debt limit), so worlds generated by either `MAKEWRLD.COM` or the macOS generator load in both; `VOLTAR.DAT` is the shared sample. Hall of Fame: the app seeds from the bundled original `SCORFILE.DAT` and writes new scores to `~/Library/Application Support/Starfall/SCORFILE.DAT`; to view them in DOSBox-X copy that file to `build/dos/game/SCORFILE.DAT` (back up existing DOS scores first) and open the original Hall of Fame. Include a data-flow diagram."
+        }
+      ]
+    },
+    {
+      "title": "Glossary",
+      "purpose": "Define STARFALL terms with code pointers to both the Pascal and Swift implementations.",
+      "page_notes": [
+        {
+          "content": "For each term give the 1986 Pascal location (`orig1986/source/...`) and, where one exists, the 2026 Swift location (`macOS/Sources/...`), e.g. Block -> `Block` in `World.swift`; Pending List -> `Pending` in `World.swift`; Overlay -> DOS only."
+        }
+      ]
+    }
+  ]
+}
