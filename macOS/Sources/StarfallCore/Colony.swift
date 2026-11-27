@@ -259,6 +259,7 @@ public extension World {
                 updatedLocations.insert(item.block)
                 if let stop = item.route.first?.block { updatedLocations.insert(stop) }
             } else if item.updatesLeft <= 0 {
+                if action == .transportation, let destination = item.route.last { item.route = [destination] }
                 complete(item, fraction: 1, catalog: catalog, using: &random)
                 updatedLocations.insert(item.block)
                 if let stop = item.route.first?.block { updatedLocations.insert(stop) }

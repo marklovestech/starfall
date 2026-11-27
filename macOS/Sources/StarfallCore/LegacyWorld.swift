@@ -73,7 +73,7 @@ public enum LegacyWorld {
             writer.line(item.distance)
             writer.stock(item.equipment)
             writer.stock(item.objects)
-            for waypoint in item.route {
+            for waypoint in dosRoute(for: item) {
                 writer.line("DATA")
                 writer.block(waypoint.block)
                 writer.line(waypoint.distance)
@@ -100,6 +100,20 @@ public enum LegacyWorld {
         writer.line(world.balance)
         writer.line(world.debtLimit)
         return writer.data
+    }
+
+    private static func dosRoute(for item: Pending) -> [Waypoint] {
+        guard item.action == .transportation, item.route.count > 1, let destination = item.route.last else {
+            return item.route
+        }
+        // DOS delivers to the first remaining waypoint before moving on the final update.
+        var budget = item.updatesLeft > 1 ? item.distance + Double(item.updatesLeft - 1) * item.speed : 0
+        let split = item.route.dropLast().firstIndex { waypoint in
+            budget -= waypoint.distance
+            return budget <= 0
+        } ?? (item.route.count - 1)
+        let tail = Waypoint(block: destination.block, distance: item.route[split...].reduce(0) { $0 + $1.distance })
+        return Array(item.route[..<split]) + [tail]
     }
 }
 

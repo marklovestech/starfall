@@ -146,6 +146,27 @@ import Testing
     #expect(world.land[destination]?.stock == [vehicle, supply])
 }
 
+@Test func dosSavesPutTheDeliveryBlockFirstOnTheFinalUpdate() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let origin = try #require(world.base)
+    let intermediate = origin.moved(dx: 1, dy: 0)
+    let destination = origin.moved(dx: 2, dy: 0)
+    let cargo = Stock(number: 20, quantity: 1, flags: 3, contents: [])
+    world.land[destination] = Land(climate: 0, altitude: 1, stock: [])
+    world.pending = [Pending(block: origin, code: Action.transportation.rawValue, started: world.time,
+                             estimated: world.time, updatesLeft: 1, speed: 30, distance: 0,
+                             equipment: [cargo], objects: [], route: [
+                                Waypoint(block: intermediate, distance: 15),
+                                Waypoint(block: destination, distance: 15)
+                             ])]
+    let exported = try LegacyWorld.decode(LegacyWorld.encode(world))
+    #expect(exported.pending.first?.route == [Waypoint(block: destination, distance: 30)])
+    var random = SeededRandom()
+    world.advanceToNextUpdate(catalog: resources, using: &random)
+    #expect(world.land[destination]?.stock == [cargo])
+}
+
 @Test func productionConsumesExpendableInputsAndReturnsReusableInputs() throws {
     var world = try voltar()
     let resources = try catalog()
