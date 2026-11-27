@@ -68,6 +68,19 @@ import Testing
     #expect(hall.rank(for: 0) == nil)
 }
 
+@Test func reservedNameIsRecordedWithoutHidingTheScore() throws {
+    let original = try fixture("product-build/SCORFILE.DAT")
+    var hall = try HallOfFame(data: original)
+    let originalCount = hall.entries.count
+    let recorded = hall.record(name: "NONE", world: "VOLTAR", score: 6_000)
+    #expect(recorded)
+    #expect(hall.data.prefix(5) == Data([4] + "None".utf8))
+    let entries = try HallOfFameEntry.decode(hall.data)
+    #expect(entries.count == originalCount + 1)
+    #expect(entries.first?.name == "None")
+    #expect(entries.first?.score == 6_000)
+}
+
 @Test func finalScoreCountsNodesInOccupiedBlocksAndBothPendingTrees() throws {
     var world = try voltar()
     let resources = try catalog()

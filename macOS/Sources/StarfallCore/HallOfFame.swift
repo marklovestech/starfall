@@ -19,6 +19,7 @@ public struct HallOfFame {
     private static let worldOffset = nameCapacity + 1
     private static let scoreOffset = 2 * worldOffset
     private static let significandUnit = UInt64(1) << 39
+    private static let emptySlotName = "NONE"
     private var records: [[UInt8]]
 
     public init(data: Data) throws {
@@ -39,7 +40,7 @@ public struct HallOfFame {
     public var entries: [HallOfFameEntry] {
         records.enumerated().compactMap { index, record in
             let name = Self.readString(record, at: 0)
-            guard name != "NONE" else { return nil }
+            guard name != Self.emptySlotName else { return nil }
             return HallOfFameEntry(rank: index + 1, name: name,
                                    world: Self.readString(record, at: Self.worldOffset),
                                    score: Self.readScore(record))
@@ -56,7 +57,7 @@ public struct HallOfFame {
         // WORLD_RANK_SPOT leaves the last record in CURRENT_SCORE. Pascal short-string
         // assignment overwrites only the length and characters, not the remaining bytes.
         var record = records[Self.recordCount - 1]
-        Self.writeString(name, in: &record, at: 0)
+        Self.writeString(name == Self.emptySlotName ? "None" : name, in: &record, at: 0)
         Self.writeString(world, in: &record, at: Self.worldOffset)
         Self.writeScore(score, in: &record)
         records.insert(record, at: rank - 1)
