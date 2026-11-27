@@ -34,17 +34,17 @@ struct StarfallApp: App {
             CommandMenu("Colony") {
                 Button(game.running ? "Pause Clock" : "Run Clock") { game.running.toggle() }
                     .keyboardShortcut("t")
-                    .disabled(game.world == nil || game.sheet != nil)
+                    .disabled(game.world == nil || game.sheet != nil || game.transportPlan != nil)
                 Button("Advance One Update", action: game.advanceUpdate)
                     .keyboardShortcut(".", modifiers: [.command, .shift])
-                    .disabled(game.world == nil || game.sheet != nil)
+                    .disabled(game.world == nil || game.sheet != nil || game.transportPlan != nil)
                 Divider()
                 Button("World Inventory") { game.sheet = .inventory }
                     .keyboardShortcut("i")
-                    .disabled(game.world == nil)
+                    .disabled(game.world == nil || game.transportPlan != nil)
                 Button("Trade") { game.sheet = .trade }
                     .keyboardShortcut("2")
-                    .disabled(game.world == nil)
+                    .disabled(game.world == nil || game.transportPlan != nil)
                 Button("Pending Actions") { game.sheet = .pending }
                     .keyboardShortcut("9")
                     .disabled(game.world == nil)
@@ -65,7 +65,7 @@ final class StarfallAppDelegate: NSObject, NSApplicationDelegate {
     weak var game: GameSession?
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        game?.confirmDiscard("Quit Starfall?", button: "Quit Without Saving") == false ? .terminateCancel : .terminateNow
+        game?.endGame(quitting: true) == false ? .terminateCancel : .terminateNow
     }
 }
 
@@ -84,8 +84,11 @@ final class GameSession {
     var zoomed = false
     var running = false
     var modified = false
-    var confirmMainMenu = false
+    private(set) var transportPlan: TransportPlan?
+    private(set) var routeMessage: String?
+    private(set) var scores: [HallOfFameEntry] = []
     private var random = SystemRandomNumberGenerator()
+    private let scoreFile = URL.applicationSupportDirectory.appending(path: "Starfall/SCORFILE.DAT")
 
     init() {
         do { archive = try Archive() }
@@ -147,18 +150,81 @@ final class GameSession {
         }
     }
 
-    func leave() {
-        if modified {
-            running = false
-            confirmMainMenu = true
-        } else {
-            discardWorld()
+    func showScores() {
+        guard let archive else { return }
+        do {
+            scores = try readScores(archive).entries
+            error = nil
+            sheet = .scores
+        } catch {
+            self.error = error.localizedDescription
         }
     }
 
-    func discardWorld() {
+    private func readScores(_ archive: Archive) throws -> HallOfFame {
+        do {
+            return try HallOfFame(data: Data(contentsOf: scoreFile))
+        } catch CocoaError.fileReadNoSuchFile {
+            return archive.seedScores
+        }
+    }
+
+    @discardableResult
+    func endGame(quitting: Bool = false) -> Bool {
+        guard let world, let archive else { return true }
+        running = false
+        let confirm = NSAlert()
+        confirm.messageText = quitting ? "Quit Starfall and end this game?" : "End this game?"
+        confirm.informativeText = modified ? "Unsaved colony progress will be lost." : "The colony’s final score will be calculated."
+        confirm.addButton(withTitle: "Cancel").keyEquivalent = "\u{1b}"
+        confirm.addButton(withTitle: quitting ? "Quit" : "End Game")
+        guard confirm.runModal() == .alertSecondButtonReturn else { return false }
+
+        let score = world.finalScore(catalog: archive.catalog)
+        do {
+            var hall = try readScores(archive)
+            if let rank = hall.rank(for: score) {
+                let prompt = NSAlert()
+                prompt.messageText = "You made the Hall of Fame!"
+                prompt.informativeText = "Your final score of \(score.formatted()) ranks #\(rank). Enter your name (up to 30 DOS characters)."
+                let name = NSTextField(frame: NSRect(x: 0, y: 0, width: 260, height: 24))
+                name.placeholderString = "Colonist name"
+                name.setAccessibilityLabel("Colonist name")
+                prompt.accessoryView = name
+                prompt.window.initialFirstResponder = name
+                prompt.addButton(withTitle: "Record Score")
+                prompt.addButton(withTitle: "Cancel").keyEquivalent = "\u{1b}"
+                guard prompt.runModal() == .alertFirstButtonReturn else { return false }
+
+                hall.record(name: name.stringValue, world: world.name, score: score)
+                try FileManager.default.createDirectory(at: scoreFile.deletingLastPathComponent(),
+                                                        withIntermediateDirectories: true)
+                try hall.data.write(to: scoreFile, options: .atomic)
+                scores = hall.entries
+                discardWorld()
+                if !quitting { sheet = .scores }
+            } else {
+                discardWorld()
+            }
+            return true
+        } catch {
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.messageText = "Could not save your Hall of Fame score."
+            alert.informativeText = error.localizedDescription
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+            discardWorld()
+            return true
+        }
+    }
+
+    private func discardWorld() {
+        cancelTransport()
         world = nil
         map = nil
+        sheet = nil
+        error = nil
         running = false
         zoomed = false
         modified = false
@@ -166,12 +232,22 @@ final class GameSession {
 
     func select(_ block: Block) {
         guard block.isOnMap else { return }
-        world?.cursor = block
+        if var plan = transportPlan, let world, let archive {
+            do {
+                try world.plotWaypoint(block, in: &plan, catalog: archive.catalog)
+                transportPlan = plan
+                routeMessage = nil
+            } catch {
+                routeMessage = error.localizedDescription
+            }
+        } else {
+            world?.cursor = block
+        }
     }
 
     func move(dx: Int, dy: Int, fast: Bool) {
-        guard let cursor = world?.cursor else { return }
-        let step = fast ? 8 : 1
+        guard let cursor = transportPlan?.endpoint ?? world?.cursor else { return }
+        let step = fast && transportPlan == nil ? 8 : 1
         select(cursor.moved(dx: dx * step, dy: dy * step))
     }
 
@@ -224,15 +300,44 @@ final class GameSession {
         }
     }
 
-    func transport(vehicleIndex: Int, to destination: Block, mode: TransportMode) {
-        edit { world, archive in
-            try world.transport(from: world.cursor, to: destination, vehicleIndex: vehicleIndex,
-                                mode: mode, catalog: archive.catalog)
+    func planTransport(vehicleIndex: Int, mode: TransportMode) {
+        guard let world, let archive else { return }
+        do {
+            transportPlan = try world.planTransport(from: world.cursor, vehicleIndex: vehicleIndex,
+                                                    mode: mode, catalog: archive.catalog)
+            zoomed = true
+            running = false
+            error = nil
+            sheet = nil
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+
+    func undoWaypoint() {
+        transportPlan?.undo()
+        routeMessage = nil
+    }
+
+    func cancelTransport() {
+        transportPlan = nil
+        routeMessage = nil
+    }
+
+    func dispatchTransport() {
+        guard let plan = transportPlan, var world, let archive else { return }
+        do {
+            try world.transport(plan, catalog: archive.catalog)
+            self.world = world
+            modified = true
+            cancelTransport()
+        } catch {
+            routeMessage = error.localizedDescription
         }
     }
 
     func tick() {
-        guard running, sheet == nil else { return }
+        guard running, sheet == nil, transportPlan == nil else { return }
         edit { world, archive in world.advanceTick(catalog: archive.catalog, using: &random) }
     }
 
@@ -274,7 +379,7 @@ final class GameSession {
         catch { self.error = error.localizedDescription }
     }
 
-    func confirmDiscard(_ message: String, button: String) -> Bool {
+    private func confirmDiscard(_ message: String, button: String) -> Bool {
         guard modified else { return true }
         running = false
         let alert = NSAlert()
@@ -296,6 +401,7 @@ final class GameSession {
             throw ArchiveError.binary("cannot crop world map")
         }
         world = next
+        cancelTransport()
         map = clipped
         sheet = nil
         error = nil
@@ -310,7 +416,7 @@ struct Archive {
     let sampleWorld: Data
     let title: CGImage
     let help: [HelpTopic]
-    let scores: [HallOfFameEntry]
+    let seedScores: HallOfFame
 
     init(bundle: Bundle = .main) throws {
         func data(_ name: String, ext: String = "DAT") throws -> Data {
@@ -324,7 +430,7 @@ struct Archive {
         title = try Self.image(PackedPicture(data: Array(data("STARFALL", ext: "PIC"))),
                                palette: [0x00AA00, 0x0099AA, 0xAA0000, 0xAAAAAA])
         help = try HelpTopic.decode(index: data("HELPINDX"), pages: data("HELPFILE"))
-        scores = try HallOfFameEntry.decode(data("SCORFILE"))
+        seedScores = try HallOfFame(data: data("SCORFILE"))
     }
 
     static func image(_ picture: PackedPicture, palette: [UInt32]) throws -> CGImage {

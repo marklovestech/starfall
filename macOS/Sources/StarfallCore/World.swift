@@ -164,4 +164,14 @@ public struct World: Equatable, Sendable {
             }
         }
     }
+
+    public func finalScore(catalog: ResourceCatalog) -> Int {
+        func score(_ tree: [Stock]) -> Int {
+            tree.reduce(0) { total, stock in
+                total + (catalog[stock.number]?.scoreValue ?? 0) + score(stock.contents)
+            }
+        }
+        let colonyScore = occupied.reduce(0) { $0 + score(land[$1]?.stock ?? []) }
+        return pending.reduce(colonyScore) { $0 + score($1.equipment) + score($1.objects) }
+    }
 }

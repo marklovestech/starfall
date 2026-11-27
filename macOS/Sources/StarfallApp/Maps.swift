@@ -3,6 +3,8 @@ import SwiftUI
 
 struct WorldMap: View {
     let world: World
+    let cursor: Block
+    let waypoints: Set<Block>
     let terrain: CGImage
     let select: (Block) -> Void
 
@@ -21,15 +23,18 @@ struct WorldMap: View {
                     for item in world.pending where item.action == .transportation {
                         if let block = item.route.first?.block { dot(context, block, .cyan, cellW, cellH, 2) }
                     }
+                    for block in waypoints {
+                        dot(context, block, .white, cellW, cellH, 2)
+                    }
                     if let base = world.base {
                         dot(context, base, .signal, cellW, cellH, 3)
                     }
-                    let selected = point(world.cursor, cellW, cellH)
+                    let selected = point(cursor, cellW, cellH)
                     let rect = CGRect(x: selected.x - 4.5 * cellW, y: selected.y - 4.5 * cellH,
                                       width: 9 * cellW, height: 9 * cellH)
                     context.stroke(Path(rect), with: .color(.cockpit), lineWidth: 2.5)
                     context.stroke(Path(rect), with: .color(.signal), lineWidth: 1)
-                    dot(context, world.cursor, .white, cellW, cellH, 1.2)
+                    dot(context, cursor, .white, cellW, cellH, 1.2)
                 }
             }
             .contentShape(.rect)
@@ -43,7 +48,7 @@ struct WorldMap: View {
         .clipShape(.rect(cornerRadius: 6))
         .accessibilityElement()
         .accessibilityLabel("World map")
-        .accessibilityValue("Selected block \(world.cursor.description)")
+        .accessibilityValue("Selected block \(cursor.description)")
     }
 
     private func point(_ block: Block, _ cellW: CGFloat, _ cellH: CGFloat) -> CGPoint {
@@ -62,6 +67,8 @@ struct WorldMap: View {
 
 struct SectorGrid: View {
     let world: World
+    let cursor: Block
+    let waypoints: Set<Block>
     let select: (Block) -> Void
 
     var body: some View {
@@ -72,8 +79,8 @@ struct SectorGrid: View {
                 ForEach(-4...4, id: \.self) { dy in
                     HStack(spacing: 3) {
                         ForEach(-4...4, id: \.self) { dx in
-                            if (1...Block.height).contains(world.cursor.y + dy) {
-                                let block = world.cursor.moved(dx: dx, dy: dy)
+                            if (1...Block.height).contains(cursor.y + dy) {
+                                let block = cursor.moved(dx: dx, dy: dy)
                                 Button { select(block) } label: {
                                     tile(block).frame(width: cell, height: cell)
                                 }
@@ -102,12 +109,14 @@ struct SectorGrid: View {
             : Color(red: 0.12, green: 0.23, blue: 0.33)
         return RoundedRectangle(cornerRadius: 3).fill(color)
             .overlay {
-                if block == world.cursor { RoundedRectangle(cornerRadius: 3).strokeBorder(.white, lineWidth: 2) }
+                if waypoints.contains(block) { Circle().fill(.white).frame(width: 6, height: 6) }
+                if block == cursor { RoundedRectangle(cornerRadius: 3).strokeBorder(.white, lineWidth: 2) }
             }
     }
 
     private func status(_ block: Block) -> String {
         if block == world.base { return "base" }
+        if waypoints.contains(block) { return "waypoint" }
         if world.occupied.contains(block) { return "occupied" }
         return world.land[block] != nil ? "land" : "ocean"
     }
