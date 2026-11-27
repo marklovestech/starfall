@@ -16,6 +16,7 @@ struct ArchivePanel: View {
             Divider()
             if let archive = game.archive {
                 switch panel {
+                case .newWorld: NewWorldPanel(game: game)
                 case .instructions: InstructionsPanel(topics: archive.help)
                 case .scores: scores(game.scores)
                 case .inventory, .pending, .log, .trade, .block:
@@ -42,11 +43,12 @@ struct ArchivePanel: View {
             }
         }
         .padding(22)
-        .frame(width: 700, height: 470)
+        .frame(width: panel == .newWorld ? 480 : 700, height: panel == .newWorld ? 260 : 470)
     }
 
     private var title: String {
         switch panel {
+        case .newWorld: "Create New World"
         case .instructions: "Starfall Instructions"
         case .scores: "Hall of Fame"
         case .inventory: "World Inventory"
@@ -260,6 +262,50 @@ private struct BlockOperations: View {
         object = nil
         equipment = nil
         quantity = 1
+    }
+}
+
+private struct NewWorldPanel: View {
+    let game: GameSession
+    @State private var name = World.defaultName
+    @FocusState private var focused: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Generates a 288 × 144 planet with continents, temperate zones, altitudes, climate, and subsurface mineral deposits using the original 1986 world generator.")
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Text("World name").fontWeight(.medium)
+                    Spacer()
+                    Text("\(min(name.count, World.maxNameLength)) / \(World.maxNameLength)")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+                TextField("World name", text: $name)
+                    .textFieldStyle(.roundedBorder)
+                    .focused($focused)
+                    .onSubmit(generate)
+                    .onChange(of: name) { _, value in
+                        if value.count > World.maxNameLength {
+                            name = String(value.prefix(World.maxNameLength))
+                        }
+                    }
+            }
+            Spacer(minLength: 0)
+            HStack {
+                Spacer()
+                Button("Generate World", systemImage: "sparkles", action: generate)
+                    .buttonStyle(.borderedProminent)
+                    .keyboardShortcut(.defaultAction)
+            }
+        }
+        .onAppear { focused = true }
+    }
+
+    private func generate() {
+        game.createNewWorld(named: name)
     }
 }
 
