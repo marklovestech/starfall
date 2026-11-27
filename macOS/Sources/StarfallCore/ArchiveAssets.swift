@@ -31,6 +31,38 @@ public struct PackedPicture: Equatable, Sendable {
         self.pixels = pixels
     }
 
+    public init(width: Int, height: Int, pixels: [UInt8]) {
+        precondition(width > 0 && width <= 320 && height > 0 && height <= 200)
+        precondition(pixels.count == width * height)
+        self.width = width
+        self.height = height
+        self.pixels = pixels
+    }
+
+    public func encodeWords(count: Int) -> [Int16] {
+        let stride = (width + 3) / 4
+        let byteCount = max(6 + stride * height, count * 2)
+        var bytes = [UInt8](repeating: 0, count: byteCount)
+        bytes[0] = 2
+        bytes[2] = UInt8(truncatingIfNeeded: width - 1)
+        bytes[3] = UInt8(truncatingIfNeeded: (width - 1) >> 8)
+        bytes[4] = UInt8(truncatingIfNeeded: height - 1)
+        bytes[5] = UInt8(truncatingIfNeeded: (height - 1) >> 8)
+        for y in 0..<height {
+            let start = 6 + (height - 1 - y) * stride
+            let rowOffset = y * width
+            for x in 0..<width {
+                let shift = 6 - 2 * (x % 4)
+                bytes[start + x / 4] |= (pixels[rowOffset + x] & 3) << shift
+            }
+        }
+        return (0..<count).map { index in
+            let low = UInt16(bytes[index * 2])
+            let high = UInt16(bytes[index * 2 + 1]) << 8
+            return Int16(bitPattern: low | high)
+        }
+    }
+
     public subscript(x: Int, y: Int) -> UInt8 { pixels[y * width + x] }
 }
 

@@ -11,19 +11,20 @@ On macOS 14 or later, with a Swift 6 toolchain:
 open build/Starfall.app
 ```
 
-Choose **Load Voltar** to continue the original sample colony, or **Open World…**
-to load a Starfall world archive. Click the map or use the arrow keys (Shift
-moves eight blocks); Space switches between the world and sector maps. Use
-**Inspect** to work with the selected block's resources, the **Clock** menu
-to fast-forward, and **Save World…** to write a Pascal-format world file.
+Choose **New World…** to generate a new planet with the ported 1986 world
+generator, **Load Voltar** to continue the original sample colony, or
+**Open World…** to load a Starfall world archive. Click the map or use the arrow
+keys (Shift moves eight blocks); Space switches between the world and sector
+maps. Use **Inspect** to work with the selected block's resources, the **Clock**
+menu to fast-forward, and **Save World…** to write a Pascal-format world file.
 
 The port bundles the original artwork, resource catalog, Voltar save, help,
-and Hall of Fame. The native game supports colony trade, exploration, extraction,
-development, refinement, production, supply links, and transport. It uses native
-controls and automatically routes vehicles to the chosen destination rather than
-requiring DOS-style waypoint entry. The DOS world generator, title music, and
-recording new Hall of Fame scores are not yet ported. Worlds generated in the DOS
-version can be opened in the native app.
+and Hall of Fame. The native game supports new world generation, colony trade,
+exploration, extraction, development, refinement, production, supply links, and
+transport. It uses native controls and automatically routes vehicles to the
+chosen destination rather than requiring DOS-style waypoint entry. Title music
+and recording new Hall of Fame scores are not yet ported. Worlds generated in
+either the native app or the DOS version can be opened in both.
 
 `macOS/Sources/StarfallCore` holds the archive codecs and colony simulation;
 `macOS/Sources/StarfallApp` is the SwiftUI/AppKit interface. The build script
