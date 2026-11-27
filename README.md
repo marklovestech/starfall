@@ -1,6 +1,6 @@
 # Starfall
 
-Starfall is an MS-DOS game written by Mark Porter in 1986, with documentation and artwork by Jeanne Barnett and Susan Gager, guidance and design overview from John Stevens, and support from Professor Charles Howerton.
+Starfall is an MS-DOS game written by Mark Porter in 1986, with documentation and artwork by Jeanne Barnett and Susan Gager, guidance and design overview from John Stevens, and support from Professor Charles Howerton. This repository focuses on the native macOS port; the original 1986 DOS source, binaries, and run instructions live in [`orig1986/README.md`](orig1986/README.md).
 
 ## Native macOS app
 
@@ -48,6 +48,17 @@ To view those scores in DOSBox-X, copy that file to `build/dos/game/SCORFILE.DAT
 `macOS/Sources/StarfallApp` is the SwiftUI/AppKit interface. The build script
 packages the original assets directly from `orig1986/` rather than duplicating
 them. Run the Swift tests with `swift test --package-path macOS`.
+
+## 1986 Turbo Pascal vs. Swift
+
+The original 1986 game is **15,539 lines of Turbo Pascal across 100 files** (in `orig1986/source/`). The native macOS port is **3,480 lines of Swift across 14 files**, plus **902 lines of tests across 5 files** — roughly a quarter the size of the original app code.
+
+The difference comes mostly from what a 1986 MS-DOS program had to build by hand that modern macOS frameworks and Swift's standard library provide out of the box:
+
+- **Screen drawing, windows, and menus:** Turbo Pascal had no GUI toolkit, so the original drew CGA graphics, text boxes, pop-up windows, cursor movement, and keyboard-driven menus manually. SwiftUI and AppKit handle layout, controls, menus, and dialogs declaratively.
+- **File handling and memory limits:** The DOS version managed fixed-record binary files, 16-bit memory constraints, and `.0xx` code overlays explicitly across many small `.PAS` modules. Swift's `Data`, value types, and modern memory model eliminate the overlay plumbing and boilerplate.
+- **Data structures and standard library:** Manual linked lists, tree/inventory helpers, string/math utilities, and timing loops in Pascal collapse into Swift arrays, dictionaries, and standard library operations.
+- **Audio and system integration:** Low-level PC speaker tone loops and raw keyboard polling are replaced by `AVAudioEngine` and standard macOS event handling.
 
 ## Repository layout
 
