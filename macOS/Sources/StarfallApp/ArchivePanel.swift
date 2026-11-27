@@ -229,9 +229,9 @@ private struct BlockOperations: View {
     private var objectIndices: [Int] {
         land.stock.indices.filter { index in
             let item = land.stock[index]
-            guard item.quantity > 0, item.contents.isEmpty else { return false }
+            guard item.quantity > 0 else { return false }
             if order == .supply { return item.extracted }
-            return !tools(for: index).isEmpty
+            return item.contents.isEmpty && !tools(for: index).isEmpty
         }
     }
 

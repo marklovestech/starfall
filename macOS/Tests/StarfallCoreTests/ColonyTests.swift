@@ -97,6 +97,24 @@ import Testing
     #expect(world.land[block]?.stock.contains { $0.number == tool.id } == true)
 }
 
+@Test func linkingPartOfAProvisionedStackMovesItsShareOfSupplies() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let block = try #require(world.base)
+    let food = try #require(resources.resources.first { $0.name == "FOOD" })
+    let people = try #require(resources.resources.first { $0.name == "PEOPLE" })
+    let combine = try #require(resources.resources.first { $0.name == "LARGE COMBINE" })
+    let provisions = Stock(number: food.id, quantity: 8, flags: 3, contents: [])
+    let workers = Stock(number: people.id, quantity: 2, flags: 3, contents: [provisions])
+    let equipment = Stock(number: combine.id, quantity: 1, flags: 3, contents: [])
+    world.land[block]?.stock = [workers, equipment]
+    try world.linkSupply(at: block, equipmentIndex: 1, supplyIndex: 0, quantity: 1, catalog: resources)
+    let stocks = try #require(world.land[block]?.stock)
+    #expect(stocks[0].quantity == 1)
+    #expect(stocks[0].contents.first?.quantity == 4)
+    #expect(stocks[1].contents == [stocks[0]])
+}
+
 @Test func shipTransportsEquipmentAndLinkedSupplies() throws {
     var world = try voltar()
     let resources = try catalog()

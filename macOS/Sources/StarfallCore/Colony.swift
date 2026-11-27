@@ -96,13 +96,12 @@ public extension World {
               tile.stock.indices.contains(supplyIndex), tile.stock[equipmentIndex].extracted else {
             throw ColonyError.invalidEquipment
         }
-        guard tile.stock[supplyIndex].extracted, tile.stock[supplyIndex].contents.isEmpty,
+        guard tile.stock[supplyIndex].extracted,
               quantity.isFinite, quantity > 0, quantity <= tile.stock[supplyIndex].quantity else {
             throw ColonyError.invalidOperation
         }
-        let supply = Stock(number: tile.stock[supplyIndex].number, quantity: quantity, flags: 3, contents: [])
+        let supply = tile.stock[supplyIndex].takeFraction(quantity / tile.stock[supplyIndex].quantity)
         tile.stock[equipmentIndex].contents.append(supply)
-        tile.stock[supplyIndex].quantity -= quantity
         if tile.stock[supplyIndex].quantity == 0 { tile.stock.remove(at: supplyIndex) }
         land[block] = tile
         updateOccupation(at: block, catalog: catalog)
