@@ -119,6 +119,7 @@ public struct Pending: Equatable, Sendable {
     public var equipment: [Stock]
     public var objects: [Stock]
     public var route: [Waypoint]
+    var lastLandfall: Block?
     public var action: Action? { Action(rawValue: code) }
     public var title: String { action?.title ?? "Action \(code)" }
 }

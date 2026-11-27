@@ -230,6 +230,48 @@ import Testing
     #expect(world.land[destination]?.stock.isEmpty == true)
 }
 
+@Test func cancellingTransportStopsAtTheLastLandfallNotTheNextWaypoint() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let origin = try #require(world.base)
+    let landing = origin.moved(dx: 1, dy: 0)
+    let water = origin.moved(dx: 2, dy: 0)
+    let destination = origin.moved(dx: 3, dy: 0)
+    let vehicle = try #require(resources.resources.first {
+        $0.transports && $0.airSpeed > 0 && $0.basic.isEmpty && $0.active.isEmpty
+    })
+    let cargo = Stock(number: 2, quantity: 3, flags: 3, contents: [])
+    let transport = Stock(number: vehicle.id, quantity: 1, flags: 3, contents: [cargo])
+    let updates = 8
+    let estimated = GameTime(seconds: world.time.totalSeconds + updates * 8 * 3_600)
+    for block in [origin, landing, destination] { world.land[block] = Land(climate: 0, altitude: 1, stock: []) }
+    world.land[water] = nil
+    world.pending = [Pending(block: origin, code: Action.transportation.rawValue, started: world.time,
+                             estimated: estimated, updatesLeft: updates, speed: 10, distance: 0,
+                             equipment: [transport], objects: [], route: [
+                                Waypoint(block: landing, distance: 20),
+                                Waypoint(block: water, distance: 10),
+                                Waypoint(block: destination, distance: 50),
+                             ])]
+    var random = SeededRandom()
+    world.advanceToNextUpdate(catalog: resources, using: &random)
+    var beforeLandfall = world
+    try beforeLandfall.cancelPending(at: 0, catalog: resources, using: &random)
+    #expect(beforeLandfall.land[origin]?.stock == [transport])
+    #expect(beforeLandfall.land[landing]?.stock.isEmpty == true)
+
+    world.advanceToNextUpdate(catalog: resources, using: &random)
+    world.advanceToNextUpdate(catalog: resources, using: &random)
+    world.advanceToNextUpdate(catalog: resources, using: &random)
+    #expect(world.pending.first?.route.first?.block == destination)
+    world = try LegacyWorld.decode(LegacyWorld.encode(world))
+    try world.cancelPending(at: 0, catalog: resources, using: &random)
+    #expect(world.land[origin]?.stock.isEmpty == true)
+    #expect(world.land[landing]?.stock == [transport])
+    #expect(world.land[destination]?.stock.isEmpty == true)
+    #expect(world.occupied.contains(landing))
+}
+
 @Test func shipTransportsEquipmentAndLinkedSupplies() throws {
     var world = try voltar()
     let resources = try catalog()

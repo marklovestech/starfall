@@ -1,6 +1,8 @@
 import Foundation
 
 public enum LegacyWorld {
+    private static let landfallMarker = "STARFALL-MAC-LANDFALL"
+
     public static func decode(_ data: Data) throws -> World {
         var reader = try PascalText(data)
         let name = try reader.string()
@@ -28,13 +30,26 @@ public enum LegacyWorld {
         let y = try reader.integer()
         let base = Block(x: x, y: y)
         guard base.isOnMap || (x == -1 && y == -1) else { throw reader.error("base coordinates or -1, -1") }
-        let world = try World(
+        var world = try World(
             name: name, pictureWords: words, land: land, log: log, pending: pending, occupied: occupied,
             newPlanet: newPlanet, base: base.isOnMap ? base : nil, temperateLatitude: reader.integer(0...144),
             time: reader.time(), timeIncrement: reader.time(), updateIncrement: reader.time(),
             timeUntilUpdate: reader.time(), cursor: reader.block(), traderInOrbit: reader.boolean(),
             traderCalled: reader.boolean(), traderStock: reader.stock(), balance: reader.real(), debtLimit: reader.real()
         )
+        if !reader.atEnd {
+            guard try reader.string() == landfallMarker, !pending.isEmpty else {
+                throw reader.error("transport landfall metadata")
+            }
+            let landfalls = try reader.list { reader in
+                try (reader.integer(0...(pending.count - 1)), reader.block())
+            }
+            for (index, block) in landfalls {
+                guard world.pending[index].action == .transportation, world.pending[index].lastLandfall == nil,
+                      land[block] != nil else { throw reader.error("one landfall per transport") }
+                world.pending[index].lastLandfall = block
+            }
+        }
         guard reader.atEnd else { throw reader.error("end of world file") }
         let picture = try world.picture
         guard picture.width >= Block.width + 7, picture.height >= Block.height + 7 else {
@@ -99,6 +114,19 @@ public enum LegacyWorld {
         writer.stock(world.traderStock)
         writer.line(world.balance)
         writer.line(world.debtLimit)
+        // DOS closes the file after the debt limit; only native saves track the last landfall.
+        let landfalls = world.pending.enumerated().compactMap { index, item in
+            item.lastLandfall.map { (index, $0) }
+        }
+        if !landfalls.isEmpty {
+            writer.line(landfallMarker)
+            for (index, block) in landfalls {
+                writer.line("DATA")
+                writer.line(index)
+                writer.block(block)
+            }
+            writer.line("NIL")
+        }
         return writer.data
     }
 

@@ -297,9 +297,8 @@ public extension World {
             throw ColonyError.cannotCancelAction
         }
         var item = pending.remove(at: index)
-        let fraction = item.completedFraction
-        if item.action == .transportation, fraction == 0 { item.route = [] }
-        complete(item, fraction: fraction, catalog: catalog, using: &random)
+        item.stopTransportAtLastLandfall()
+        complete(item, fraction: item.completedFraction, catalog: catalog, using: &random)
         updateOccupation(at: item.block, catalog: catalog)
         if let stop = item.route.first?.block, land[stop] != nil {
             updateOccupation(at: stop, catalog: catalog)
@@ -322,10 +321,11 @@ public extension World {
                 updatedLocations.insert(item.block)
                 if let stop = item.route.first?.block { updatedLocations.insert(stop) }
             } else if !catalog.upkeep(&item.equipment, active: true) || !catalog.upkeep(&item.equipment, active: false) {
+                item.stopTransportAtLastLandfall()
                 complete(item, fraction: item.completedFraction, catalog: catalog, using: &random)
                 updatedLocations.insert(item.block)
                 if let stop = item.route.first?.block { updatedLocations.insert(stop) }
-            } else if action == .transportation && item.advanceRoute() {
+            } else if action == .transportation && item.advanceRoute(onLand: { land[$0] != nil }) {
                 complete(item, fraction: 1, catalog: catalog, using: &random)
                 updatedLocations.insert(item.block)
                 if let stop = item.route.first?.block { updatedLocations.insert(stop) }
@@ -487,9 +487,15 @@ private extension Pending {
         return min(1, max(0, 1 - Double(updatesLeft) / total))
     }
 
-    mutating func advanceRoute() -> Bool {
+    mutating func stopTransportAtLastLandfall() {
+        guard action == .transportation else { return }
+        route = lastLandfall.map { [Waypoint(block: $0, distance: 0)] } ?? []
+    }
+
+    mutating func advanceRoute(onLand: (Block) -> Bool) -> Bool {
         distance += speed
         while let next = route.first, distance >= next.distance {
+            if onLand(next.block) { lastLandfall = next.block }
             if route.count == 1 { return true }
             distance -= next.distance
             route.removeFirst()
