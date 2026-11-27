@@ -21,7 +21,10 @@ public struct Resource: Identifiable, Sendable {
     let weight: Double
     let movable: Bool
     public let naturallyOccurring: Bool
+    public let subsurface: Bool
     public let typicalTraderAmount: Double
+    public let typicalDepositSize: Double
+    public let likelihoodOfOccurrence: Double
     let expendable: Bool
     let purity: Double
     let basic: [Need]
@@ -71,7 +74,7 @@ public struct ResourceCatalog: Sendable {
             let cost = try reader.real()
             let weight = try reader.real()
             let natural = try reader.boolean()
-            _ = try reader.boolean() // Subsurface
+            let subsurface = try reader.boolean()
             let expendable = try reader.boolean()
             let movable = try reader.boolean()
             let amount = try reader.real()
@@ -84,7 +87,9 @@ public struct ResourceCatalog: Sendable {
             let extracts = try reader.boolean()
             let extractionSpeed = try reader.real()
             let extractable = try reader.boolean()
-            for _ in 0..<3 { _ = try reader.real() } // Deposit distribution
+            let typicalDepositSize = try reader.real()
+            let likelihoodOfOccurrence = try reader.real()
+            _ = try reader.real() // Deposit contagion ratio
             let develops = try reader.boolean()
             let developmentSpeed = try reader.real()
             let developable = try reader.boolean()
@@ -107,7 +112,9 @@ public struct ResourceCatalog: Sendable {
                                         timeFactor: reader.real(), alternatives: [])
             } attach: { $0.alternatives = $1 }
             return Resource(id: number, name: name, units: units, scoreValue: score,
-                            baseCost: cost, weight: weight, movable: movable, naturallyOccurring: natural, typicalTraderAmount: amount,
+                            baseCost: cost, weight: weight, movable: movable, naturallyOccurring: natural,
+                            subsurface: subsurface, typicalTraderAmount: amount,
+                            typicalDepositSize: typicalDepositSize, likelihoodOfOccurrence: likelihoodOfOccurrence,
                             expendable: expendable, purity: purity, basic: basic, active: active,
                             explores: explores, explorationSpeed: explorationSpeed, tests: tests,
                             extracts: extracts, extractable: extractable, extractionSpeed: extractionSpeed, develops: develops,

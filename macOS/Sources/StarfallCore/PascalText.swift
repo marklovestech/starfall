@@ -126,6 +126,10 @@ enum DOSCodePage437 {
         return String(text)
     }
 
+    static func canEncode(_ scalar: UnicodeScalar) -> Bool {
+        scalar.value < 128 || encoded[scalar] != nil
+    }
+
     static func encode(_ text: String) -> Data {
         if text.utf8.allSatisfy({ $0 < 128 }) { return Data(text.utf8) }
         return Data(text.unicodeScalars.map {

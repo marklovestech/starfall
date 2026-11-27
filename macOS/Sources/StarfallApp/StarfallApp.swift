@@ -18,10 +18,15 @@ struct StarfallApp: App {
         .defaultSize(width: 1_070, height: 740)
         .commands {
             CommandGroup(replacing: .newItem) {
+                Button("New World…", action: game.promptNewWorld)
+                    .keyboardShortcut("n")
+                    .disabled(game.archive == nil)
                 Button("Open World…", action: game.open)
                     .keyboardShortcut("o")
+                    .disabled(game.archive == nil)
                 Button("Load Voltar", action: game.loadVoltar)
-                    .keyboardShortcut("n")
+                    .keyboardShortcut("n", modifiers: [.command, .shift])
+                    .disabled(game.archive == nil)
                 Button("Save World…", action: game.save)
                     .keyboardShortcut("s")
                     .disabled(game.world == nil)
@@ -67,7 +72,7 @@ final class StarfallAppDelegate: NSObject, NSApplicationDelegate {
 @MainActor @Observable
 final class GameSession {
     enum Sheet: String, Identifiable {
-        case instructions, scores, inventory, pending, log, trade, block
+        case newWorld, instructions, scores, inventory, pending, log, trade, block
         var id: Self { self }
     }
 
@@ -88,6 +93,25 @@ final class GameSession {
     init() {
         do { archive = try Archive() }
         catch { self.error = error.localizedDescription }
+    }
+
+    func promptNewWorld() {
+        guard archive != nil else { return }
+        if world != nil {
+            guard confirmDiscard("Replace the current world?", button: "Create New World") else { return }
+        }
+        running = false
+        sheet = .newWorld
+    }
+
+    func createNewWorld(named name: String) {
+        guard let archive else { return }
+        do {
+            let next = World.generate(named: name, catalog: archive.catalog, using: &random)
+            try install(next, modified: true)
+        } catch {
+            self.error = error.localizedDescription
+        }
     }
 
     func loadVoltar() {
@@ -385,7 +409,10 @@ final class GameSession {
     }
 
     private func load(_ data: Data) throws {
-        let next = try LegacyWorld.decode(data)
+        try install(LegacyWorld.decode(data), modified: false)
+    }
+
+    private func install(_ next: World, modified: Bool) throws {
         let art = try next.picture
         let fullMap = try Archive.image(art, palette: [0x55FF55, 0x55FFFF, 0xFF5555, 0xFFFFFF])
         guard let clipped = fullMap.cropping(to: CGRect(x: 7, y: 8, width: Block.width, height: Block.height)) else {
@@ -398,7 +425,7 @@ final class GameSession {
         error = nil
         running = false
         zoomed = false
-        modified = false
+        self.modified = modified
     }
 }
 
