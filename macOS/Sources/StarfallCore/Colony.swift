@@ -3,6 +3,7 @@ import Foundation
 public enum ColonyError: LocalizedError {
     case water, baseRequired, traderInOrbit, noTrader, traderAlreadyCalled
     case invalidTrade, insufficientStock, debtLimit, invalidEquipment, insufficientSupplies, invalidOperation, noRoute
+    case invalidWaypoint, transportRange
 
     public var errorDescription: String? {
         switch self {
@@ -17,8 +18,28 @@ public enum ColonyError: LocalizedError {
         case .invalidEquipment: "Select compatible equipment in the block inventory."
         case .insufficientSupplies: "The selected equipment does not have enough linked basic and active supplies."
         case .invalidOperation: "Select a valid resource and quantity for this operation."
-        case .noRoute: "No route reaches that land block using the selected transport mode."
+        case .noRoute: "Plot at least one waypoint before dispatching."
+        case .invalidWaypoint: "Choose an adjacent block the selected transport can cross."
+        case .transportRange: "That route exceeds the maximum travel time."
         }
+    }
+}
+
+public struct TransportPlan: Sendable {
+    public let origin: Block
+    public let mode: TransportMode
+    public fileprivate(set) var route: [Waypoint] = []
+    public fileprivate(set) var distance = 0.0
+    fileprivate let vehicleIndex: Int
+    fileprivate let vehicle: Stock
+    fileprivate let speed: Double
+
+    public var endpoint: Block { route.last?.block ?? origin }
+    public var updates: Int { max(1, Int(distance / speed)) }
+
+    public mutating func undo() {
+        guard let last = route.popLast() else { return }
+        distance = route.isEmpty ? 0 : distance - last.distance
     }
 }
 
@@ -173,56 +194,56 @@ public extension World {
         updateOccupation(at: block, catalog: catalog)
     }
 
-    mutating func transport(from origin: Block, to destination: Block, vehicleIndex: Int,
-                            mode: TransportMode, catalog: ResourceCatalog) throws {
-        guard var tile = land[origin], land[destination] != nil else { throw ColonyError.water }
+    func planTransport(from origin: Block, vehicleIndex: Int, mode: TransportMode,
+                       catalog: ResourceCatalog) throws -> TransportPlan {
+        guard let tile = land[origin] else { throw ColonyError.water }
         guard tile.stock.indices.contains(vehicleIndex),
               let speed = catalog.transportSpeed(mode, vehicle: tile.stock[vehicleIndex]) else {
             throw ColonyError.invalidEquipment
         }
-        guard let route = transportRoute(from: origin, to: destination, mode: mode) else { throw ColonyError.noRoute }
-        let updates = Self.updateCount(ceil(route.reduce(0.0) { $0 + $1.distance } / speed))
         let vehicle = tile.stock[vehicleIndex]
-        try catalog.checkSupplies([vehicle], steps: updates)
-        tile.stock.remove(at: vehicleIndex)
-        land[origin] = tile
-        pending.append(Pending(block: origin, code: Action.transportation.rawValue, started: time,
-                               estimated: GameTime(seconds: time.totalSeconds + updates * 8 * 3_600),
-                               updatesLeft: updates, speed: speed, distance: 0, equipment: [vehicle], objects: [],
-                               route: route))
-        updateOccupation(at: origin, catalog: catalog)
+        try catalog.checkSupplies([vehicle], steps: 1)
+        return TransportPlan(origin: origin, mode: mode, vehicleIndex: vehicleIndex, vehicle: vehicle, speed: speed)
     }
 
-    private func transportRoute(from origin: Block, to destination: Block, mode: TransportMode) -> [Waypoint]? {
-        guard origin != destination else { return nil }
-        var previous = [origin: origin]
-        var queue = [origin]
-        var head = 0
-        while head < queue.count && previous[destination] == nil {
-            let block = queue[head]
-            head += 1
-            for (dx, dy) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
-                let next = block.moved(dx: dx, dy: dy)
-                guard previous[next] == nil else { continue }
-                switch mode {
-                case .land where land[next] == nil: continue
-                case .water where next == destination && land[block] != nil: continue
-                case .water where next != destination && land[next] != nil: continue
-                default: break
-                }
-                previous[next] = block
-                queue.append(next)
-            }
+    func plotWaypoint(_ block: Block, in plan: inout TransportPlan, catalog: ResourceCatalog) throws {
+        let previous = plan.endpoint
+        guard block != previous, [(1, 0), (-1, 0), (0, 1), (0, -1)].contains(where: {
+            previous.moved(dx: $0.0, dy: $0.1) == block
+        }) else { throw ColonyError.invalidWaypoint }
+
+        if !plan.route.isEmpty, block == plan.route.dropLast().last?.block ?? plan.origin {
+            plan.undo()
+            return
         }
-        guard previous[destination] != nil else { return nil }
-        var route = [Waypoint]()
-        var block = destination
-        while block != origin, let prior = previous[block] {
-            let distance = 38_500.0 / 288 * (block.y == prior.y ? Double(prior.y) / 72 : 1)
-            route.append(Waypoint(block: block, distance: distance))
-            block = prior
+        switch plan.mode {
+        case .land where land[block] == nil, .water where land[previous] != nil:
+            throw ColonyError.invalidWaypoint
+        default: break
         }
-        return route.reversed()
+
+        // DOS checks supplies against the route so far, before adding this leg.
+        try catalog.checkSupplies([plan.vehicle], steps: Int(plan.distance / plan.speed))
+        let distance = 38_500.0 / Double(Block.width)
+            * (block.y == previous.y ? Double(previous.y) / Double(Block.height / 2) : 1)
+        guard (plan.distance + distance) / plan.speed < 32_768 else { throw ColonyError.transportRange }
+        plan.route.append(Waypoint(block: block, distance: distance))
+        plan.distance += distance
+    }
+
+    mutating func transport(_ plan: TransportPlan, catalog: ResourceCatalog) throws {
+        guard !plan.route.isEmpty else { throw ColonyError.noRoute }
+        guard var tile = land[plan.origin], land[plan.endpoint] != nil else { throw ColonyError.water }
+        guard tile.stock.indices.contains(plan.vehicleIndex), tile.stock[plan.vehicleIndex] == plan.vehicle else {
+            throw ColonyError.invalidEquipment
+        }
+        tile.stock.remove(at: plan.vehicleIndex)
+        land[plan.origin] = tile
+        pending.append(Pending(block: plan.origin, code: Action.transportation.rawValue, started: time,
+                               estimated: GameTime(seconds: time.totalSeconds + plan.updates * 8 * 3_600),
+                               updatesLeft: plan.updates, speed: plan.speed, distance: 0,
+                               equipment: [plan.vehicle], objects: [], route: plan.route))
+        updateOccupation(at: plan.origin, catalog: catalog)
     }
 
     mutating func advanceTick(catalog: ResourceCatalog, using random: inout some RandomNumberGenerator) {
@@ -254,11 +275,7 @@ public extension World {
                 continue
             }
             item.updatesLeft -= 1
-            if action == .transportation && item.advanceRoute() {
-                complete(item, fraction: 1, catalog: catalog, using: &random)
-                updatedLocations.insert(item.block)
-                if let stop = item.route.first?.block { updatedLocations.insert(stop) }
-            } else if item.updatesLeft <= 0 {
+            if item.updatesLeft <= 0 {
                 if action == .transportation, let destination = item.route.last { item.route = [destination] }
                 complete(item, fraction: 1, catalog: catalog, using: &random)
                 updatedLocations.insert(item.block)
@@ -267,6 +284,10 @@ public extension World {
                 let total = max(1, Double(item.estimated.totalSeconds - item.started.totalSeconds) / (8 * 3_600))
                 let fraction = min(1, max(0, 1 - Double(item.updatesLeft) / total))
                 complete(item, fraction: fraction, catalog: catalog, using: &random)
+                updatedLocations.insert(item.block)
+                if let stop = item.route.first?.block { updatedLocations.insert(stop) }
+            } else if action == .transportation && item.advanceRoute() {
+                complete(item, fraction: 1, catalog: catalog, using: &random)
                 updatedLocations.insert(item.block)
                 if let stop = item.route.first?.block { updatedLocations.insert(stop) }
             } else {
