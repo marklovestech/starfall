@@ -300,6 +300,24 @@ final class GameSession {
         }
     }
 
+    func splitStock(index: Int, quantity: Double) {
+        edit { world, _ in try world.splitStock(at: world.cursor, index: index, quantity: quantity) }
+    }
+
+    func combineStock(index: Int) {
+        edit { world, _ in try world.combineStock(at: world.cursor, index: index) }
+    }
+
+    func cancelPending(index: Int) {
+        edit { world, archive in try world.cancelPending(at: index, catalog: archive.catalog, using: &random) }
+    }
+
+    func inspect(_ block: Block) {
+        guard transportPlan == nil, world?.land[block] != nil else { return }
+        select(block)
+        sheet = .block
+    }
+
     func planTransport(vehicleIndex: Int, mode: TransportMode) {
         guard let world, let archive else { return }
         do {
@@ -347,7 +365,7 @@ final class GameSession {
 
     func setClockRate(minutes: Int) {
         edit { world, _ in
-            world.timeIncrement = GameTime(seconds: min(minutes * 60, world.updateIncrement.totalSeconds))
+            world.timeIncrement = GameTime(seconds: min(max(1, minutes) * 60, world.updateIncrement.totalSeconds))
         }
     }
 

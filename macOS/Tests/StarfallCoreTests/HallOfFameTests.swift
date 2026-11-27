@@ -84,7 +84,7 @@ import Testing
 @Test func finalScoreCountsNodesInOccupiedBlocksAndBothPendingTrees() throws {
     var world = try voltar()
     let resources = try catalog()
-    #expect(world.finalScore(catalog: resources) == 17_514)
+    #expect(world.finalScore(catalog: resources) == 17_412)
     let resource = try #require(resources.resources.first { $0.scoreValue > 0 })
     let stock = Stock(number: resource.id, quantity: 100, flags: 0, contents: [])
     var container = stock
@@ -102,4 +102,89 @@ import Testing
     world.traderStock = [stock]
 
     #expect(world.finalScore(catalog: resources) == resource.scoreValue * 6)
+}
+
+@Test func finalScoreDoesNotChangeWhenStacksAreSplitOrCombined() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let resource = try #require(resources.resources.first { $0.scoreValue > 0 })
+    let block = try #require(world.base)
+    let plain = Stock(number: resource.id, quantity: 6, flags: 3, contents: [])
+    let cargo = Stock(number: resource.id, quantity: 1, flags: 3, contents: [])
+    let provisioned = Stock(number: resource.id, quantity: 3, flags: 3, contents: [cargo])
+    let deposit = Stock(number: resource.id, quantity: 7, flags: 1, contents: [])
+    world.occupied = [block]
+    world.pending = []
+    world.land[block]?.stock = [plain, deposit]
+    let looseScore = world.finalScore(catalog: resources)
+    #expect(looseScore == resource.scoreValue * 2)
+    try world.splitStock(at: block, index: 0, quantity: 2)
+    #expect(world.finalScore(catalog: resources) == looseScore)
+    try world.combineStock(at: block, index: 0)
+    #expect(world.finalScore(catalog: resources) == looseScore)
+
+    world.land[block]?.stock = [provisioned, plain, deposit]
+    let provisionedScore = world.finalScore(catalog: resources)
+    #expect(provisionedScore == resource.scoreValue * 3)
+    try world.combineStock(at: block, index: 0)
+    #expect(world.finalScore(catalog: resources) == provisionedScore)
+    try world.splitStock(at: block, index: 0, quantity: 2)
+    #expect(world.finalScore(catalog: resources) == provisionedScore)
+}
+
+@Test func dispatchingMatchingLooseVehiclesDoesNotIncreaseFinalScore() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let vehicle = try #require(resources.resources.first {
+        $0.transports && $0.movable && $0.airSpeed > 0 && $0.basic.isEmpty && $0.active.isEmpty && $0.scoreValue > 0
+    })
+    let origin = try #require(world.base)
+    let destination = origin.moved(dx: 1, dy: 0)
+    let stock = Stock(number: vehicle.id, quantity: 1, flags: 3, contents: [])
+    world.land[origin]?.stock = [stock, stock]
+    world.land[destination] = Land(climate: 0, altitude: 1, stock: [])
+    world.pending = []
+    world.occupied = [origin]
+    #expect(world.finalScore(catalog: resources) == vehicle.scoreValue)
+
+    for _ in 0..<2 {
+        var plan = try world.planTransport(from: origin, vehicleIndex: 0, mode: .air, catalog: resources)
+        try world.plotWaypoint(destination, in: &plan, catalog: resources)
+        try world.transport(plan, catalog: resources)
+        #expect(world.finalScore(catalog: resources) == vehicle.scoreValue)
+    }
+    #expect(!world.occupied.contains(origin))
+    #expect(world.pending.count == 2)
+}
+
+@Test func finalScoreCountsTransportAtTheSameLandfallAsCancellation() throws {
+    var world = try voltar()
+    let resources = try catalog()
+    let resource = try #require(resources.resources.first {
+        $0.transports && $0.basic.isEmpty && $0.active.isEmpty && $0.scoreValue > 0
+    })
+    let origin = try #require(world.base)
+    let landing = origin.moved(dx: 1, dy: 0)
+    let destination = origin.moved(dx: 2, dy: 0)
+    let stock = Stock(number: resource.id, quantity: 1, flags: 3, contents: [])
+    world.land[origin]?.stock = [stock]
+    world.land[landing] = Land(climate: 0, altitude: 1, stock: [])
+    world.land[destination] = Land(climate: 0, altitude: 1, stock: [])
+    world.occupied = [origin]
+    world.pending = [Pending(block: origin, code: Action.transportation.rawValue, started: world.time,
+                             estimated: GameTime(seconds: world.time.totalSeconds + 6 * 8 * 3_600),
+                             updatesLeft: 6, speed: 10, distance: 0,
+                             equipment: [stock], objects: [], route: [
+                                Waypoint(block: landing, distance: 10),
+                                Waypoint(block: destination, distance: 50),
+                             ])]
+    #expect(world.finalScore(catalog: resources) == resource.scoreValue)
+
+    var random = SystemRandomNumberGenerator()
+    world.advanceToNextUpdate(catalog: resources, using: &random)
+    #expect(world.pending.count == 1)
+    #expect(world.finalScore(catalog: resources) == 2 * resource.scoreValue)
+    try world.cancelPending(at: 0, catalog: resources, using: &random)
+    #expect(world.land[landing]?.stock == [stock])
+    #expect(world.finalScore(catalog: resources) == 2 * resource.scoreValue)
 }
