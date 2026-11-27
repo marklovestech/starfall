@@ -182,8 +182,14 @@ final class GameSession {
             }
             return true
         } catch {
-            self.error = "Could not update the Hall of Fame. \(error.localizedDescription)"
-            return false
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.messageText = "Could not save your Hall of Fame score."
+            alert.informativeText = error.localizedDescription
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+            discardWorld()
+            return true
         }
     }
 
